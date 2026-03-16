@@ -25,7 +25,7 @@ canvas#mx{position:fixed;top:0;left:0;width:100%;height:100%;opacity:.08;pointer
 .auth-logo{font-family:'VT323',monospace;font-size:64px;line-height:.9;color:var(--g);text-shadow:2px 0 var(--red),-2px 0 var(--cyan);animation:glitch 5s infinite;margin-bottom:6px}
 .auth-logo span{color:var(--red)}
 .auth-sub{font-size:10px;letter-spacing:3px;color:var(--gk);margin-bottom:32px}
-.auth-label{font-size:10px;letter-spacing:2px;color:var(--gk);margin-bottom:8px;text-transform:uppercase}
+.auth-label{font-size:10px;letter-spacing:2px;color:var(--gk);margin-bottom:8px;text-transform:uppercase;display:block}
 .auth-inp{width:100%;background:#000;border:1px solid var(--gb);color:var(--g);font-family:'Share Tech Mono',monospace;font-size:16px;padding:13px;outline:none;margin-bottom:12px;letter-spacing:3px}
 .auth-inp:focus{border-color:var(--gd)}
 .auth-inp::placeholder{color:#1a3a1a;letter-spacing:1px}
@@ -135,7 +135,6 @@ canvas#mx{position:fixed;top:0;left:0;width:100%;height:100%;opacity:.08;pointer
 .sc-frame{width:100%;display:block;border:none;background:#000;filter:hue-rotate(90deg) saturate(1.8) brightness(.9)}
 .sc-link{display:block;text-align:center;padding:11px;font-size:10px;color:var(--gk);letter-spacing:1px;text-decoration:none;border-top:1px solid var(--gb);transition:.2s}
 .sc-link:hover{color:var(--g)}
-.sc-note{font-size:10px;color:#1a3a1a;letter-spacing:2px;text-align:center;line-height:1.8;margin-top:8px}
 
 #screen-admin{padding:0 16px 80px}
 .admin-hdr{text-align:center;padding:24px 0 20px;border-bottom:1px solid var(--gb);margin-bottom:24px}
@@ -165,10 +164,9 @@ canvas#mx{position:fixed;top:0;left:0;width:100%;height:100%;opacity:.08;pointer
   <div class="auth-box">
     <div class="auth-logo">SONORA<br><span>XI</span></div>
     <div class="auth-sub">// ACCESO RESTRINGIDO · VIE 29 MAY 2026</div>
-    <div class="auth-label">// Contraseña de acceso</div>
-    <input class="auth-inp" id="inp-pwd" type="password" placeholder="••••••••••"
-      onkeydown="if(event.key==='Enter')doLogin()"/>
-    <button class="auth-btn" onclick="doLogin()">Entrar →</button>
+    <span class="auth-label">// Contraseña de acceso</span>
+    <input class="auth-inp" id="inp-pwd" type="password" placeholder="••••••••••"/>
+    <button class="auth-btn" id="btn-login">Entrar →</button>
     <div class="auth-err" id="auth-err"></div>
     <div class="auth-info">Solo pueden acceder personas invitadas.<br>Si no tienes la contraseña, contacta con los organizadores.</div>
   </div>
@@ -183,10 +181,10 @@ canvas#mx{position:fixed;top:0;left:0;width:100%;height:100%;opacity:.08;pointer
     <div class="hdr-sub">VIE 29 MAY 2026 · <span class="blink">UBICACIÓN CLASIFICADA</span></div>
   </div>
   <div class="tabs">
-    <button class="tb on" onclick="sw('cd',this)">[ CUENTA ]</button>
-    <button class="tb" onclick="sw('brd',this)">[ TABLÓN ]</button>
-    <button class="tb" onclick="sw('cp',this)">[ CARPOOL ]</button>
-    <button class="tb" onclick="sw('sc',this)">[ SEÑAL ]</button>
+    <button class="tb on" id="tab-cd">[ CUENTA ]</button>
+    <button class="tb" id="tab-brd">[ TABLÓN ]</button>
+    <button class="tb" id="tab-cp">[ CARPOOL ]</button>
+    <button class="tb" id="tab-sc">[ SEÑAL ]</button>
   </div>
 
   <!-- CUENTA ATRÁS -->
@@ -205,8 +203,7 @@ canvas#mx{position:fixed;top:0;left:0;width:100%;height:100%;opacity:.08;pointer
       <div class="prog-label"><span>PROGRESO HACIA EL EVENTO</span><span id="pct">0%</span></div>
       <div class="prog-bar"><div class="prog-fill" id="pfill" style="width:0%"></div></div>
     </div>
-    <!-- ELIMINA ESTE BOTÓN ANTES DE PUBLICAR -->
-    <button class="demo-btn" onclick="toggleUnlock()">[ simular desbloqueo ]</button>
+    <button class="demo-btn" id="btn-demo">[ simular desbloqueo ]</button>
     <div class="locked" id="locked-box">
       <div class="lock-txt">DATOS CIFRADOS · EN ESPERA DE AUTORIZACIÓN</div>
       <div class="lock-rows">
@@ -225,29 +222,29 @@ canvas#mx{position:fixed;top:0;left:0;width:100%;height:100%;opacity:.08;pointer
 
   <!-- TABLÓN -->
   <div id="tc-brd" class="tc">
-    <div class="sec-desc">Deja avisos para el resto. Selecciona una categoría y escribe tu mensaje. Los admins pueden verificar los avisos importantes.</div>
+    <div class="sec-desc">Deja avisos para el resto. Selecciona una categoría y escribe tu mensaje. Los admins pueden marcar los avisos como verificados.</div>
     <div class="board-hdr">
       <div class="board-title">// CANAL EN VIVO</div>
       <div class="live-dot">● TRANSMITIENDO</div>
     </div>
     <div class="tags-row">
-      <button class="tag-btn" onclick="setTag('ice','[HIELO]',this)">[HIELO]</button>
-      <button class="tag-btn" onclick="setTag('beer','[BIRRAS]',this)">[BIRRAS]</button>
-      <button class="tag-btn" onclick="setTag('gf','[SIN GLUTEN]',this)">[SIN GLUTEN]</button>
-      <button class="tag-btn" onclick="setTag('allergy','[ALÉRGENOS]',this)">[ALÉRGENOS]</button>
-      <button class="tag-btn" onclick="setTag('food','[COMIDA]',this)">[COMIDA]</button>
-      <button class="tag-btn sel" onclick="setTag('other','[OTROS]',this)">[OTROS]</button>
+      <button class="tag-btn" data-id="ice" data-label="[HIELO]">[HIELO]</button>
+      <button class="tag-btn" data-id="beer" data-label="[BIRRAS]">[BIRRAS]</button>
+      <button class="tag-btn" data-id="gf" data-label="[SIN GLUTEN]">[SIN GLUTEN]</button>
+      <button class="tag-btn" data-id="allergy" data-label="[ALÉRGENOS]">[ALÉRGENOS]</button>
+      <button class="tag-btn" data-id="food" data-label="[COMIDA]">[COMIDA]</button>
+      <button class="tag-btn sel" data-id="other" data-label="[OTROS]">[OTROS]</button>
     </div>
     <div class="inp-row">
       <input class="msg-inp" id="minp" placeholder="Escribe tu aviso..." maxlength="140"/>
-      <button class="send-btn" onclick="sendMsg()">→</button>
+      <button class="send-btn" id="btn-send">→</button>
     </div>
     <div class="msgs" id="mlist"></div>
   </div>
 
   <!-- CARPOOL -->
   <div id="tc-cp" class="tc">
-    <div class="sec-desc">Organízate para los viajes. Si ofreces plaza deja tu contacto. Tu entrada aparecerá una vez validada por los admins. Conduce con cuidado!</div>
+    <div class="sec-desc">Organízate para los viajes. Si ofreces plaza deja tu contacto. Tu entrada aparece una vez validada por los admins. Conduce con cuidado!</div>
     <div class="cp-form">
       <span class="cp-label">// Registrar plaza disponible</span>
       <div class="cp-row">
@@ -257,9 +254,9 @@ canvas#mx{position:fixed;top:0;left:0;width:100%;height:100%;opacity:.08;pointer
         </select>
       </div>
       <input class="cp-inp" id="cpcont" placeholder="@telegram o WhatsApp" style="width:100%;margin-bottom:10px"/>
-      <button class="offer-btn" onclick="addCar()">[ Publicar plaza ] →</button>
+      <button class="offer-btn" id="btn-car">[ Publicar plaza ] →</button>
     </div>
-    <div class="car-legend">✓ validado por admins &nbsp;·&nbsp; ○ pendiente de revisión</div>
+    <div class="car-legend">✓ validado por admins · ○ pendiente de revisión</div>
     <div class="car-list" id="carlist"></div>
   </div>
 
@@ -272,32 +269,32 @@ canvas#mx{position:fixed;top:0;left:0;width:100%;height:100%;opacity:.08;pointer
           <div class="sc-dot"></div>
           <div class="sc-name" id="sc-artist-name">// CARGANDO SEÑAL...</div>
         </div>
-        <button class="sc-next" onclick="nextArtist()">SIGUIENTE ›</button>
+        <button class="sc-next" id="btn-next">SIGUIENTE ›</button>
       </div>
       <iframe class="sc-frame" id="sc-frame" height="300" scrolling="no" allow="autoplay" src="about:blank"></iframe>
       <a class="sc-link" id="sc-link" href="https://soundcloud.com" target="_blank">→ ABRIR EN SOUNDCLOUD</a>
     </div>
-    <div class="sc-note">// SEÑAL DE AUDIO EN VIVO · ROTACIÓN ALEATORIA ENTRE ARTISTAS</div>
+    <div style="font-size:10px;color:#1a3a1a;letter-spacing:2px;text-align:center;margin-top:8px">// SEÑAL DE AUDIO EN VIVO · ROTACIÓN ALEATORIA</div>
   </div>
 </div>
 </div>
 
 <!-- ADMIN -->
 <div id="screen-admin" class="screen">
-<div class="wrap">
+<div class="wrap" style="padding:20px 0 80px">
   <div class="admin-hdr">
     <div class="admin-title">// ADMIN //</div>
     <div class="admin-sub">SONORA XI · PANEL DE CONTROL</div>
   </div>
   <div class="admin-section">
-    <div class="admin-sec-title">// Plazas carpool pendientes de validación</div>
+    <div class="admin-sec-title">// Plazas carpool pendientes</div>
     <div id="admin-cars"></div>
   </div>
   <div class="admin-section">
-    <div class="admin-sec-title">// Mensajes tablón pendientes de verificación</div>
+    <div class="admin-sec-title">// Mensajes tablón pendientes</div>
     <div id="admin-msgs"></div>
   </div>
-  <button class="admin-back" onclick="showScreen('app')">← Volver a la web</button>
+  <button class="admin-back" id="btn-back">← Volver a la web</button>
 </div>
 </div>
 
@@ -307,19 +304,15 @@ import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 // ══════════════════════════════════════════
-//  CONFIGURACIÓN — edita aquí
+//  CONFIGURACIÓN
 // ══════════════════════════════════════════
-
-const ACCESS_PASSWORD = "sonora2026";       // ← contraseña para asistentes
-const ADMIN_PASSWORD  = "sonora2026admin";  // ← contraseña para admins
-
-const ADDRESS_TEXT   = "NAVE INDUSTRIAL 4"; // ← dirección que se revela
-const ADDRESS_DETAIL = "Aquí la dirección completa · Valencia"; // ← detalle
-const MAP_LINK       = "https://maps.google.com/?q=TU+UBICACION"; // ← link mapa real
-
-const TARGET = new Date('2026-05-29T22:00:00'); // ← fecha/hora del evento
+const ACCESS_PASSWORD = "sonora2026";
+const ADMIN_PASSWORD  = "sonora2026admin";
+const ADDRESS_TEXT    = "NAVE INDUSTRIAL 4";
+const ADDRESS_DETAIL  = "Aquí la dirección completa · Valencia";
+const MAP_LINK        = "https://maps.google.com/?q=TU+UBICACION";
+const TARGET = new Date('2026-05-29T22:00:00');
 const START  = new Date('2026-01-01T00:00:00');
-
 const SC_ARTISTS = [
   { name:"FRANCIS ESPINACO", url:"https://soundcloud.com/user-845235880" },
   { name:"SENMERI",          url:"https://soundcloud.com/senmeri/tracks" },
@@ -330,7 +323,6 @@ const SC_ARTISTS = [
   { name:"DEEJEYA",          url:"https://soundcloud.com/deejeya/tracks" },
   { name:"JUAN CARMONA",     url:"https://soundcloud.com/juan-carmona-513512584/tracks" },
 ];
-
 const firebaseConfig = {
   apiKey:            "AIzaSyDcGB33_ApiA8O2JdGf2nZ_Ob_3DLTxLxM",
   authDomain:        "sonora-xi.firebaseapp.com",
@@ -341,12 +333,14 @@ const firebaseConfig = {
 };
 
 // ══════════════════════════════════════════
-//  INIT
+//  INIT FIREBASE
 // ══════════════════════════════════════════
 const fbApp = initializeApp(firebaseConfig);
 const db    = getFirestore(fbApp);
 
-// MATRIX RAIN
+// ══════════════════════════════════════════
+//  MATRIX RAIN
+// ══════════════════════════════════════════
 const canvas = document.getElementById('mx');
 const ctx    = canvas.getContext('2d');
 function resize(){ canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
@@ -370,19 +364,27 @@ setInterval(() => {
 }, 50);
 
 // ══════════════════════════════════════════
-//  AUTH
+//  PANTALLAS
+// ══════════════════════════════════════════
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+}
+
+// ══════════════════════════════════════════
+//  AUTH — contraseña simple, sin módulos externos
 // ══════════════════════════════════════════
 const SK = 'sonora_xi_auth';
-function isLoggedIn(){ return sessionStorage.getItem(SK) === 'ok'; }
 
-window.doLogin = function(){
+function doLogin() {
   const val = document.getElementById('inp-pwd').value;
   const err = document.getElementById('auth-err');
-  if (val === ADMIN_PASSWORD){
+  err.textContent = '';
+  if (val === ADMIN_PASSWORD) {
     sessionStorage.setItem(SK, 'ok');
     showScreen('admin');
     initAdmin();
-  } else if (val === ACCESS_PASSWORD){
+  } else if (val === ACCESS_PASSWORD) {
     sessionStorage.setItem(SK, 'ok');
     showScreen('app');
     initApp();
@@ -391,30 +393,38 @@ window.doLogin = function(){
     document.getElementById('inp-pwd').value = '';
     setTimeout(() => { err.textContent = ''; }, 3000);
   }
-};
+}
 
-if (isLoggedIn()){ showScreen('app'); initApp(); }
-else { showScreen('auth'); }
+// Listeners con addEventListener — sin onclick inline
+document.getElementById('btn-login').addEventListener('click', doLogin);
+document.getElementById('inp-pwd').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+document.getElementById('btn-back').addEventListener('click', () => showScreen('app'));
+
+// Sesión persistente
+if (sessionStorage.getItem(SK) === 'ok') {
+  showScreen('app');
+  initApp();
+}
 
 // ══════════════════════════════════════════
-//  PANTALLAS / TABS
+//  TABS
 // ══════════════════════════════════════════
-window.showScreen = function(n){
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById('screen-' + n).classList.add('active');
-};
-window.sw = function(id, btn){
+function sw(id) {
   document.querySelectorAll('.tc').forEach(t => t.classList.remove('on'));
   document.querySelectorAll('.tb').forEach(b => b.classList.remove('on'));
   document.getElementById('tc-' + id).classList.add('on');
-  btn.classList.add('on');
-};
+  document.getElementById('tab-' + id).classList.add('on');
+}
+document.getElementById('tab-cd').addEventListener('click',  () => sw('cd'));
+document.getElementById('tab-brd').addEventListener('click', () => sw('brd'));
+document.getElementById('tab-cp').addEventListener('click',  () => sw('cp'));
+document.getElementById('tab-sc').addEventListener('click',  () => sw('sc'));
 
 // ══════════════════════════════════════════
 //  CUENTA ATRÁS
 // ══════════════════════════════════════════
 let unlocked = false;
-function updateCD(){
+function updateCD() {
   const now  = new Date();
   const diff = Math.max(0, TARGET - now);
   if (diff === 0 && !unlocked) triggerUnlock();
@@ -426,147 +436,180 @@ function updateCD(){
   document.getElementById('hh').textContent = String(h).padStart(2,'0');
   document.getElementById('mm').textContent = String(m).padStart(2,'0');
   document.getElementById('ss').textContent = String(s).padStart(2,'0');
-  const pct = Math.min(100,Math.max(0,Math.round(((now-START)/(TARGET-START))*100)));
+  const pct = Math.min(100, Math.max(0, Math.round(((now-START)/(TARGET-START))*100)));
   document.getElementById('pct').textContent = pct + '%';
   document.getElementById('pfill').style.width = pct + '%';
 }
-function typeAddr(txt, el, i=0){
-  if(i<=txt.length){ el.textContent=txt.slice(0,i)+(i<txt.length?'█':''); setTimeout(()=>typeAddr(txt,el,i+1),55); }
+function typeAddr(txt, el, i=0) {
+  if (i <= txt.length) {
+    el.textContent = txt.slice(0,i) + (i < txt.length ? '█' : '');
+    setTimeout(() => typeAddr(txt, el, i+1), 55);
+  }
 }
-function triggerUnlock(){
+function triggerUnlock() {
   unlocked = true;
-  document.getElementById('locked-box').style.display = 'none';
+  document.getElementById('locked-box').style.display  = 'none';
   document.getElementById('unlocked-box').classList.add('show');
-  document.getElementById('addr-detail').textContent = ADDRESS_DETAIL;
-  document.getElementById('map-link').href = MAP_LINK;
+  document.getElementById('addr-detail').textContent   = ADDRESS_DETAIL;
+  document.getElementById('map-link').href             = MAP_LINK;
   typeAddr(ADDRESS_TEXT, document.getElementById('addr-type'));
 }
-window.toggleUnlock = function(){
-  if(unlocked){ unlocked=false; document.getElementById('locked-box').style.display='block'; document.getElementById('unlocked-box').classList.remove('show'); document.getElementById('addr-type').textContent=''; }
-  else triggerUnlock();
-};
+document.getElementById('btn-demo').addEventListener('click', () => {
+  if (unlocked) {
+    unlocked = false;
+    document.getElementById('locked-box').style.display = 'block';
+    document.getElementById('unlocked-box').classList.remove('show');
+    document.getElementById('addr-type').textContent = '';
+  } else { triggerUnlock(); }
+});
 
 // ══════════════════════════════════════════
 //  TABLÓN
 // ══════════════════════════════════════════
 const TAG_BC = { ice:'b-ice', beer:'b-beer', gf:'b-gf', allergy:'b-allergy', food:'b-food', other:'b-other' };
-let curTagId='other', curTagLabel='[OTROS]';
-window.setTag = function(id, label, btn){
-  curTagId=id; curTagLabel=label;
-  document.querySelectorAll('.tag-btn').forEach(b=>b.classList.remove('sel'));
-  btn.classList.add('sel');
-};
-function initMsgs(){
-  onSnapshot(query(collection(db,'messages'),orderBy('ts','desc')), snap => {
+let curTagId = 'other', curTagLabel = '[OTROS]';
+
+document.querySelectorAll('.tag-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    curTagId    = btn.dataset.id;
+    curTagLabel = btn.dataset.label;
+    document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('sel'));
+    btn.classList.add('sel');
+  });
+});
+
+function initMsgs() {
+  onSnapshot(query(collection(db,'messages'), orderBy('ts','desc')), snap => {
     const list = document.getElementById('mlist');
     list.innerHTML = '';
-    if(snap.empty){ list.innerHTML='<div class="empty-msg">// Sin transmisiones todavía</div>'; return; }
+    if (snap.empty) { list.innerHTML = '<div class="empty-msg">// Sin transmisiones todavía</div>'; return; }
     snap.forEach(ds => {
       const m  = ds.data();
       const d  = document.createElement('div');
       d.className = 'msg';
-      const bc = TAG_BC[m.tagId]||'b-other';
-      const ver = m.verified ? '<span class="mverified">✓ verificado</span>' : '<span class="munverified">○ sin verificar</span>';
+      const bc  = TAG_BC[m.tagId] || 'b-other';
+      const ver = m.verified
+        ? '<span class="mverified">✓ verificado</span>'
+        : '<span class="munverified">○ sin verificar</span>';
       d.innerHTML = `<span class="mbadge ${bc}">${m.tag}</span><span class="mtxt">${esc(m.txt)}${ver}</span><span class="mtime">${m.time}</span>`;
       list.appendChild(d);
     });
   });
 }
-window.sendMsg = async function(){
+
+async function sendMsg() {
   const inp = document.getElementById('minp');
-  const txt = inp.value.trim(); if(!txt) return;
-  const now = new Date();
-  const time = now.getHours()+':'+String(now.getMinutes()).padStart(2,'0');
-  await addDoc(collection(db,'messages'),{ tagId:curTagId, tag:curTagLabel, txt, time, ts:now.getTime(), verified:false });
-  inp.value='';
-};
-document.getElementById('minp').addEventListener('keydown', e=>{ if(e.key==='Enter') window.sendMsg(); });
+  const txt = inp.value.trim(); if (!txt) return;
+  const now  = new Date();
+  const time = now.getHours() + ':' + String(now.getMinutes()).padStart(2,'0');
+  await addDoc(collection(db,'messages'), { tagId:curTagId, tag:curTagLabel, txt, time, ts:now.getTime(), verified:false });
+  inp.value = '';
+}
+document.getElementById('btn-send').addEventListener('click', sendMsg);
+document.getElementById('minp').addEventListener('keydown', e => { if (e.key === 'Enter') sendMsg(); });
 
 // ══════════════════════════════════════════
 //  CARPOOL
 // ══════════════════════════════════════════
-function initCars(){
-  onSnapshot(query(collection(db,'carpool'),orderBy('ts','desc')), snap => {
+function initCars() {
+  onSnapshot(query(collection(db,'carpool'), orderBy('ts','desc')), snap => {
     const list = document.getElementById('carlist');
     list.innerHTML = '';
-    if(snap.empty){ list.innerHTML='<div class="empty-msg">// Sin plazas publicadas todavía</div>'; return; }
+    if (snap.empty) { list.innerHTML = '<div class="empty-msg">// Sin plazas publicadas todavía</div>'; return; }
     snap.forEach(ds => {
       const c = { id:ds.id, ...ds.data() };
       const d = document.createElement('div');
-      d.className = 'car-item'+(c.approved?'':' pending');
-      const st = c.approved ? '<div class="car-status ok">✓ validado</div>' : '<div class="car-status wait">○ pendiente de validación</div>';
+      d.className = 'car-item' + (c.approved ? '' : ' pending');
+      const st = c.approved
+        ? '<div class="car-status ok">✓ validado</div>'
+        : '<div class="car-status wait">○ pendiente de validación</div>';
       d.innerHTML = `<div><div class="car-from">${esc(c.from)}</div><div class="car-contact">${esc(c.contact||'—')}</div>${st}</div><div class="car-seats">${c.seats} PLAZAS</div>`;
       list.appendChild(d);
     });
   });
 }
-window.addCar = async function(){
-  const from=document.getElementById('cpfrom').value.trim();
-  const contact=document.getElementById('cpcont').value.trim();
-  const seats=parseInt(document.getElementById('cpseats').value);
-  if(!from) return;
-  await addDoc(collection(db,'carpool'),{ from, contact, seats, ts:Date.now(), approved:false });
-  document.getElementById('cpfrom').value='';
-  document.getElementById('cpcont').value='';
-};
+
+document.getElementById('btn-car').addEventListener('click', async () => {
+  const from    = document.getElementById('cpfrom').value.trim();
+  const contact = document.getElementById('cpcont').value.trim();
+  const seats   = parseInt(document.getElementById('cpseats').value);
+  if (!from) return;
+  await addDoc(collection(db,'carpool'), { from, contact, seats, ts:Date.now(), approved:false });
+  document.getElementById('cpfrom').value = '';
+  document.getElementById('cpcont').value = '';
+});
 
 // ══════════════════════════════════════════
 //  SOUNDCLOUD
 // ══════════════════════════════════════════
 let scIdx = Math.floor(Math.random() * SC_ARTISTS.length);
-function loadSC(idx){
+function loadSC(idx) {
   const a   = SC_ARTISTS[idx];
   const enc = encodeURIComponent(a.url);
-  document.getElementById('sc-frame').src = `https://w.soundcloud.com/player/?url=${enc}&color=%2300ff41&auto_play=true&hide_related=false&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=true`;
-  document.getElementById('sc-link').href = a.url;
-  document.getElementById('sc-link').textContent = '→ ABRIR EN SOUNDCLOUD: '+a.url.replace('https://','');
-  document.getElementById('sc-artist-name').textContent = '// SEÑAL · '+a.name;
+  document.getElementById('sc-frame').src            = `https://w.soundcloud.com/player/?url=${enc}&color=%2300ff41&auto_play=true&hide_related=false&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=true`;
+  document.getElementById('sc-link').href            = a.url;
+  document.getElementById('sc-link').textContent     = '→ ABRIR EN SOUNDCLOUD: ' + a.url.replace('https://','');
+  document.getElementById('sc-artist-name').textContent = '// SEÑAL · ' + a.name;
 }
-window.nextArtist = function(){ scIdx=(scIdx+1)%SC_ARTISTS.length; loadSC(scIdx); };
+document.getElementById('btn-next').addEventListener('click', () => {
+  scIdx = (scIdx + 1) % SC_ARTISTS.length;
+  loadSC(scIdx);
+});
 
 // ══════════════════════════════════════════
 //  ADMIN
 // ══════════════════════════════════════════
-window.initAdmin = function(){
-  onSnapshot(query(collection(db,'carpool'),orderBy('ts','asc')), snap => {
-    const el=document.getElementById('admin-cars'); el.innerHTML=''; let n=0;
+function initAdmin() {
+  onSnapshot(query(collection(db,'carpool'), orderBy('ts','asc')), snap => {
+    const el = document.getElementById('admin-cars');
+    el.innerHTML = ''; let n = 0;
     snap.forEach(ds => {
-      const c={id:ds.id,...ds.data()}; if(c.approved) return; n++;
-      const d=document.createElement('div'); d.className='admin-item';
-      d.innerHTML=`<div class="admin-item-info"><div class="admin-item-name">${esc(c.from)} · ${c.seats} plazas</div><div class="admin-item-meta">${esc(c.contact||'—')}</div></div><div class="admin-actions"><button class="btn-ok" onclick="approveDoc('carpool','${c.id}',true)">✓ VALIDAR</button><button class="btn-ko" onclick="approveDoc('carpool','${c.id}',false)">✗ BORRAR</button></div>`;
-      el.appendChild(d);
+      const c = { id:ds.id, ...ds.data() }; if (c.approved) return; n++;
+      const d = document.createElement('div'); d.className = 'admin-item';
+      const btnOk = document.createElement('button'); btnOk.className='btn-ok'; btnOk.textContent='✓ VALIDAR';
+      const btnKo = document.createElement('button'); btnKo.className='btn-ko'; btnKo.textContent='✗ BORRAR';
+      btnOk.addEventListener('click', async () => await updateDoc(doc(db,'carpool',c.id), {approved:true}));
+      btnKo.addEventListener('click', async () => await deleteDoc(doc(db,'carpool',c.id)));
+      d.innerHTML = `<div class="admin-item-info"><div class="admin-item-name">${esc(c.from)} · ${c.seats} plazas</div><div class="admin-item-meta">${esc(c.contact||'—')}</div></div>`;
+      const actions = document.createElement('div'); actions.className='admin-actions';
+      actions.appendChild(btnOk); actions.appendChild(btnKo);
+      d.appendChild(actions); el.appendChild(d);
     });
-    if(!n) el.innerHTML='<div class="empty-msg">// Todo validado</div>';
+    if (!n) el.innerHTML = '<div class="empty-msg">// Todo validado</div>';
   });
-  onSnapshot(query(collection(db,'messages'),orderBy('ts','asc')), snap => {
-    const el=document.getElementById('admin-msgs'); el.innerHTML=''; let n=0;
+
+  onSnapshot(query(collection(db,'messages'), orderBy('ts','asc')), snap => {
+    const el = document.getElementById('admin-msgs');
+    el.innerHTML = ''; let n = 0;
     snap.forEach(ds => {
-      const m={id:ds.id,...ds.data()}; if(m.verified) return; n++;
-      const d=document.createElement('div'); d.className='admin-item';
-      d.innerHTML=`<div class="admin-item-info"><div class="admin-item-name">${m.tag} ${esc(m.txt)}</div><div class="admin-item-meta">${m.time}</div></div><div class="admin-actions"><button class="btn-ok" onclick="verifyMsg('${m.id}',true)">✓ VERIFICAR</button><button class="btn-ko" onclick="verifyMsg('${m.id}',false)">✗ BORRAR</button></div>`;
-      el.appendChild(d);
+      const m = { id:ds.id, ...ds.data() }; if (m.verified) return; n++;
+      const d = document.createElement('div'); d.className = 'admin-item';
+      const btnOk = document.createElement('button'); btnOk.className='btn-ok'; btnOk.textContent='✓ VERIFICAR';
+      const btnKo = document.createElement('button'); btnKo.className='btn-ko'; btnKo.textContent='✗ BORRAR';
+      btnOk.addEventListener('click', async () => await updateDoc(doc(db,'messages',m.id), {verified:true}));
+      btnKo.addEventListener('click', async () => await deleteDoc(doc(db,'messages',m.id)));
+      d.innerHTML = `<div class="admin-item-info"><div class="admin-item-name">${m.tag} ${esc(m.txt)}</div><div class="admin-item-meta">${m.time}</div></div>`;
+      const actions = document.createElement('div'); actions.className='admin-actions';
+      actions.appendChild(btnOk); actions.appendChild(btnKo);
+      d.appendChild(actions); el.appendChild(d);
     });
-    if(!n) el.innerHTML='<div class="empty-msg">// Sin mensajes pendientes</div>';
+    if (!n) el.innerHTML = '<div class="empty-msg">// Sin mensajes pendientes</div>';
   });
-};
-window.approveDoc = async function(col,id,ok){
-  ok ? await updateDoc(doc(db,col,id),{approved:true}) : await deleteDoc(doc(db,col,id));
-};
-window.verifyMsg = async function(id,ok){
-  ok ? await updateDoc(doc(db,'messages',id),{verified:true}) : await deleteDoc(doc(db,'messages',id));
-};
+}
 
 // ══════════════════════════════════════════
 //  APP INIT
 // ══════════════════════════════════════════
-let appInited=false;
-window.initApp = function(){
-  if(appInited) return; appInited=true;
-  setInterval(updateCD,1000); updateCD();
+let appInited = false;
+function initApp() {
+  if (appInited) return; appInited = true;
+  setInterval(updateCD, 1000); updateCD();
   initMsgs(); initCars(); loadSC(scIdx);
-};
+}
 
-function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
 </script>
 </body>
 </html>
