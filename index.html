@@ -168,7 +168,7 @@ canvas#mx{position:fixed;top:0;left:0;width:100%;height:100%;opacity:.08;pointer
     <input class="auth-inp" id="inp-pwd" type="password" placeholder="••••••••••"/>
     <button class="auth-btn" id="btn-login">Entrar →</button>
     <div class="auth-err" id="auth-err"></div>
-    <div class="auth-info">Solo pueden acceder personas invitadas.<br>Si no tienes la contraseña, contacta con los organizadores.</div>
+    <div class="auth-info">Solo pueden acceder personas invitadas.<br>Si no tienes la contraseña, contacta con lxs organizadorxs.</div>
   </div>
 </div>
 
@@ -178,13 +178,13 @@ canvas#mx{position:fixed;top:0;left:0;width:100%;height:100%;opacity:.08;pointer
   <div class="hdr">
     <div class="sys-tag">// SISTEMA ENCRIPTADO · ACCESO RESTRINGIDO</div>
     <div class="glitch">SONORA<br><span>XI</span></div>
-    <div class="hdr-sub">VIE 29 MAY 2026 · <span class="blink">UBICACIÓN CLASIFICADA</span></div>
+    <div class="hdr-sub">VIE 29 MAY 2026 · <span class="blink">UBICACIÓN POR DESCLASIFICAR</span></div>
   </div>
   <div class="tabs">
-    <button class="tb on" id="tab-cd">[ CUENTA ]</button>
-    <button class="tb" id="tab-brd">[ TABLÓN ]</button>
+    <button class="tb on" id="tab-cd">[ CUENTA ATRÁS ]</button>
+    <button class="tb" id="tab-brd">[ TABLÓN NECESIDADES ]</button>
     <button class="tb" id="tab-cp">[ CARPOOL ]</button>
-    <button class="tb" id="tab-sc">[ SEÑAL ]</button>
+    <button class="tb" id="tab-sc">[ SEÑAL ACÚSTICA ]</button>
   </div>
 
   <!-- CUENTA ATRÁS -->
@@ -205,7 +205,7 @@ canvas#mx{position:fixed;top:0;left:0;width:100%;height:100%;opacity:.08;pointer
     </div>
     <button class="demo-btn" id="btn-demo">[ simular desbloqueo ]</button>
     <div class="locked" id="locked-box">
-      <div class="lock-txt">DATOS CIFRADOS · EN ESPERA DE AUTORIZACIÓN</div>
+      <div class="lock-txt">DATOS ENCRIPTADOS · SIN AUTORIZACIÓN</div>
       <div class="lock-rows">
         <div class="lock-row">█████████████████████████████</div>
         <div class="lock-row">████████████████████</div>
@@ -220,15 +220,15 @@ canvas#mx{position:fixed;top:0;left:0;width:100%;height:100%;opacity:.08;pointer
     </div>
   </div>
 
-  <!-- TABLÓN -->
+  <!-- TABLÓN NECESIDADES -->
   <div id="tc-brd" class="tc">
-    <div class="sec-desc">Deja avisos para el resto. Selecciona una categoría y escribe tu mensaje. Los admins pueden marcar los avisos como verificados.</div>
+    <div class="sec-desc">Deja avisos para el resto de necesidades que puedan surgir antes y durante la fiesta. Selecciona una categoría y escribe tu mensaje. Los admins pueden marcar los avisos como verificados.</div>
     <div class="board-hdr">
       <div class="board-title">// CANAL EN VIVO</div>
       <div class="live-dot">● TRANSMITIENDO</div>
     </div>
     <div class="tags-row">
-      <button class="tag-btn" data-id="ice" data-label="[HIELO]">[HIELO]</button>
+      <button class="tag-btn" data-id="ice" data-label="[HIELO]">[HIELOS]</button>
       <button class="tag-btn" data-id="beer" data-label="[BIRRAS]">[BIRRAS]</button>
       <button class="tag-btn" data-id="gf" data-label="[SIN GLUTEN]">[SIN GLUTEN]</button>
       <button class="tag-btn" data-id="allergy" data-label="[ALÉRGENOS]">[ALÉRGENOS]</button>
@@ -244,7 +244,7 @@ canvas#mx{position:fixed;top:0;left:0;width:100%;height:100%;opacity:.08;pointer
 
   <!-- CARPOOL -->
   <div id="tc-cp" class="tc">
-    <div class="sec-desc">Organízate para los viajes. Si ofreces plaza deja tu contacto. Tu entrada aparece una vez validada por los admins. Conduce con cuidado!</div>
+    <div class="sec-desc">Organízate para los viajes. Si ofreces plaza deja tu contacto. Tu entrada aparecerá una vez validada por los admins para evitar info errónea. Conduce con cuidado!</div>
     <div class="cp-form">
       <span class="cp-label">// Registrar plaza disponible</span>
       <div class="cp-row">
@@ -260,9 +260,9 @@ canvas#mx{position:fixed;top:0;left:0;width:100%;height:100%;opacity:.08;pointer
     <div class="car-list" id="carlist"></div>
   </div>
 
-  <!-- SEÑAL -->
+  <!-- SEÑAL ACÚSTICA -->
   <div id="tc-sc" class="tc">
-    <div class="sec-desc">Música para el camino y para el evento. Rota entre los artistas del cartel. Pulsa SIGUIENTE para cambiar.</div>
+    <div class="sec-desc">Música para el camino y para el evento. Rota entre los artistas del cartel. Pulsa SIGUIENTE para cambiar de artista.</div>
     <div class="sc-wrap">
       <div class="sc-hdr">
         <div class="sc-hdr-left">
