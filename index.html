@@ -185,7 +185,7 @@ canvas#mx{position:fixed;top:0;left:0;width:100%;height:100%;opacity:.08;pointer
     <button class="tb" id="tab-brd">[TABLÓN AVISOS]</button>
     <button class="tb" id="tab-cp">[CARPOOL]</button>
     <button class="tb" id="tab-sc">[INTERFERENCIAS]</button>
-    <button class="tb" id="tab-rt">[CAJA RITMOS]</button>
+  
   </div>
 
   <!-- CUENTA ATRÁS -->
@@ -280,69 +280,8 @@ canvas#mx{position:fixed;top:0;left:0;width:100%;height:100%;opacity:.08;pointer
 </div>
 </div>
 
-  <div id="tc-rt" class="tc">
-  <div class="sec-desc">Drum machine. Al activar los ritmos se mutea la música. Pulsa [SEÑAL] para volver.</div>
-  <div style="border:1px solid var(--gb);overflow:hidden;background:#000;width:100%">
-    <iframe id="er99-frame" src="er99/index.html"
-      style="width:100%;height:600px;border:none;display:block"
-      allow="autoplay">
-    </iframe>
-  </div>
-</div>
-  
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Mi página con ER-99 (TR-909 virtual)</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 20px;
-      font-family: Arial, sans-serif;
-      background: #111;
-      color: #eee;
-    }
-    h1 { text-align: center; }
-    .container {
-      position: relative;
-      width: 100%;
-      max-width: 1200px;
-      margin: 0 auto;
-      aspect-ratio: 16 / 10;   /* Ajusta según el ratio que veas mejor (el ER-99 es algo panorámico) */
-      overflow: hidden;
-      border: 2px solid #444;
-      border-radius: 12px;
-      background: #000;
-    }
-    iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
-  </style>
-</head>
-<body>
+ 
 
-  <h1>ER-99 – Emulador Roland TR-909 en tu navegador</h1>
-  
-  <div class="container">
-    <iframe 
-      src="https://extralifeinstruments.com/er-99/"
-      allowfullscreen
-      allow="autoplay; microphone; fullscreen"
-      loading="lazy"
-    ></iframe>
-  </div>
-
-  <p style="text-align: center; margin-top: 20px;">
-    Hecho con <a href="https://extralifeinstruments.com/er-99/" target="_blank">ER-99</a> de Extralife Instruments • 
-    Código fuente: <a href="https://github.com/matthewcieplak/er-99" target="_blank">GitHub</a>
-  </p>
 
 </body>
 </html>
