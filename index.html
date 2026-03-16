@@ -5,124 +5,212 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#000000">
 <title>SONORA XI</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
+
+<!-- ==========================================================
+  SONORA XI — index.html
+
+  SETUP (3 pasos):
+  1. Cambia ACCESS_PASSWORD por tu contraseña
+  2. Cambia ADMIN_PASSWORD por la contraseña de admin
+  3. Rellena el bloque FIREBASE CONFIG con tus credenciales
+     (Firebase Console > Project Settings > Your apps)
+     — Solo necesitas Firestore, NO hace falta Authentication —
+
+  PANEL ADMIN: abre la web y escribe la contraseña admin
+  AÑADIR DJs:  busca el bloque SC_ARTISTS y añade líneas
+========================================================== -->
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:#000;color:#00ff41;font-family:'Share Tech Mono',monospace;min-height:100vh;overflow-x:hidden}
-canvas#mx{position:fixed;top:0;left:0;width:100%;height:100%;opacity:0.07;pointer-events:none;z-index:0}
-.wrap{position:relative;z-index:1;max-width:620px;margin:0 auto;padding:0 16px 60px}
+:root{
+  --g:#00ff41;--gd:#00c032;--gk:#007a1f;
+  --gb:#003b0f;--gb2:#001a05;
+  --red:#ff003c;--cyan:#00f3ff;
+  --sf:#0a0f0a;--sf2:#0f160f;
+}
+body{background:#000;color:var(--g);font-family:'Share Tech Mono',monospace;min-height:100vh;overflow-x:hidden;font-size:14px}
+canvas#mx{position:fixed;top:0;left:0;width:100%;height:100%;opacity:.08;pointer-events:none;z-index:0}
 
-/* HEADER */
-.hdr{text-align:center;padding:32px 0 24px;border-bottom:1px solid #003b0f}
-.sys-tag{font-size:10px;letter-spacing:4px;color:#005c18;margin-bottom:8px}
-.glitch{font-family:'VT323',monospace;font-size:clamp(64px,18vw,120px);line-height:0.85;color:#00ff41;text-shadow:2px 0 #ff003c,-2px 0 #00f3ff;animation:glitch 5s infinite}
-.glitch span{color:#ff003c}
-@keyframes glitch{0%,94%,100%{text-shadow:2px 0 #ff003c,-2px 0 #00f3ff}95%{text-shadow:-4px 0 #ff003c,4px 0 #00f3ff;transform:translateX(2px)}97%{text-shadow:4px 0 #ff003c,-4px 0 #00f3ff;transform:translateX(-2px)}}
-.hdr-sub{font-size:10px;color:#005c18;letter-spacing:3px;margin-top:14px}
+/* ── SCREENS ── */
+.screen{display:none;position:relative;z-index:1}
+.screen.active{display:block}
+
+/* ── AUTH ── */
+#screen-auth{min-height:100vh;display:none;flex-direction:column;align-items:center;justify-content:center;padding:32px 20px}
+#screen-auth.active{display:flex}
+.auth-box{width:100%;max-width:380px;border:1px solid var(--gb);padding:36px 28px;background:var(--sf)}
+.auth-logo{font-family:'VT323',monospace;font-size:64px;line-height:.9;color:var(--g);text-shadow:2px 0 var(--red),-2px 0 var(--cyan);animation:glitch 5s infinite;margin-bottom:6px}
+.auth-logo span{color:var(--red)}
+.auth-sub{font-size:10px;letter-spacing:3px;color:var(--gk);margin-bottom:32px}
+.auth-label{font-size:10px;letter-spacing:2px;color:var(--gk);margin-bottom:8px;text-transform:uppercase}
+.auth-inp{width:100%;background:#000;border:1px solid var(--gb);color:var(--g);font-family:'Share Tech Mono',monospace;font-size:16px;padding:13px;outline:none;margin-bottom:12px;letter-spacing:3px}
+.auth-inp:focus{border-color:var(--gd)}
+.auth-inp::placeholder{color:#1a3a1a;letter-spacing:1px}
+.auth-btn{width:100%;background:var(--g);color:#000;border:none;padding:14px;font-family:'Share Tech Mono',monospace;font-size:12px;font-weight:700;letter-spacing:2px;cursor:pointer;text-transform:uppercase;transition:.15s}
+.auth-btn:hover{background:var(--gd)}
+.auth-err{font-size:11px;color:var(--red);margin-top:10px;letter-spacing:1px;min-height:18px}
+.auth-info{font-size:10px;color:#1a3a1a;margin-top:18px;letter-spacing:1px;line-height:1.8}
+
+/* ── MAIN APP ── */
+#screen-app{padding:0 16px 80px}
+.wrap{max-width:620px;margin:0 auto}
+
+.hdr{text-align:center;padding:32px 0 24px;border-bottom:1px solid var(--gb)}
+.sys-tag{font-size:10px;letter-spacing:4px;color:var(--gk);margin-bottom:8px}
+.glitch{font-family:'VT323',monospace;font-size:clamp(64px,18vw,120px);line-height:.85;color:var(--g);text-shadow:2px 0 var(--red),-2px 0 var(--cyan);animation:glitch 5s infinite}
+.glitch span{color:var(--red)}
+@keyframes glitch{0%,94%,100%{text-shadow:2px 0 var(--red),-2px 0 var(--cyan)}95%{text-shadow:-4px 0 var(--red),4px 0 var(--cyan);transform:translateX(2px)}97%{text-shadow:4px 0 var(--red),-4px 0 var(--cyan);transform:translateX(-2px)}}
+.hdr-sub{font-size:11px;color:var(--gk);letter-spacing:3px;margin-top:14px}
 .blink{animation:blink 1s step-end infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
 
-/* TABS */
-.tabs{display:flex;border-bottom:1px solid #003b0f;margin-top:24px}
-.tb{flex:1;background:none;border:none;border-bottom:2px solid transparent;color:#005c18;font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;padding:13px 4px;cursor:pointer;text-transform:uppercase;transition:.15s}
-.tb.on{color:#00ff41;border-bottom-color:#00ff41}
-.tb:hover:not(.on){color:#00a82b}
+/* ── TABS ── */
+.tabs{display:flex;border-bottom:1px solid var(--gb);margin-top:24px}
+.tb{flex:1;background:none;border:none;border-bottom:2px solid transparent;color:var(--gk);font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;padding:13px 4px;cursor:pointer;text-transform:uppercase;transition:.15s}
+.tb.on{color:var(--g);border-bottom-color:var(--g)}
+.tb:hover:not(.on){color:var(--gd)}
 .tc{display:none;padding-top:24px}
 .tc.on{display:block}
 
-/* COUNTDOWN */
-.cd-label{font-size:9px;letter-spacing:4px;color:#004d15;margin-bottom:20px;text-align:center}
+/* ── SECTION DESC ── */
+.sec-desc{font-size:11px;color:var(--gk);letter-spacing:1px;line-height:1.8;border-left:2px solid var(--gb);padding:8px 12px;margin-bottom:22px;background:var(--sf)}
+
+/* ── COUNTDOWN ── */
+.cd-label{font-size:10px;letter-spacing:4px;color:var(--gk);margin-bottom:20px;text-align:center}
 .cd-grid{display:flex;justify-content:center;gap:8px;margin-bottom:28px;flex-wrap:wrap}
 .cd-unit{text-align:center}
-.cd-num{font-family:'VT323',monospace;font-size:clamp(56px,15vw,90px);color:#00ff41;line-height:1;display:block;text-shadow:0 0 20px #00ff4188}
-.cd-name{font-size:8px;color:#004d15;letter-spacing:2px;margin-top:2px}
-.cd-sep{font-family:'VT323',monospace;font-size:80px;color:#003b0f;align-self:center;margin-top:-8px}
-.demo-btn{display:block;margin:0 auto 20px;background:none;border:1px solid #003b0f;color:#004d15;font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;padding:7px 16px;cursor:pointer;text-transform:uppercase;transition:.2s}
-.demo-btn:hover{border-color:#00ff41;color:#00ff41}
+.cd-num{font-family:'VT323',monospace;font-size:clamp(60px,16vw,96px);color:var(--g);line-height:1;display:block;text-shadow:0 0 24px #00ff4166}
+.cd-name{font-size:9px;color:var(--gk);letter-spacing:2px;margin-top:2px}
+.cd-sep{font-family:'VT323',monospace;font-size:80px;color:var(--gb);align-self:center;margin-top:-8px}
 .prog-wrap{margin-bottom:24px}
-.prog-label{font-size:9px;color:#004d15;letter-spacing:2px;margin-bottom:6px;display:flex;justify-content:space-between}
-.prog-bar{height:2px;background:#001a05}
-.prog-fill{height:100%;background:#00ff41;box-shadow:0 0 8px #00ff41;transition:width 1s linear}
-
-/* LOCKED / UNLOCKED */
-.locked{border:1px solid #003b0f;padding:32px;text-align:center;background:rgba(0,10,0,0.6)}
-.lock-txt{font-size:10px;color:#004d15;letter-spacing:2px;text-transform:uppercase}
+.prog-label{font-size:10px;color:var(--gk);letter-spacing:2px;margin-bottom:6px;display:flex;justify-content:space-between}
+.prog-bar{height:2px;background:var(--gb2)}
+.prog-fill{height:100%;background:var(--g);box-shadow:0 0 8px var(--g);transition:width 1s linear}
+.demo-btn{display:block;margin:0 auto 20px;background:none;border:1px solid var(--gb);color:var(--gk);font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;padding:7px 16px;cursor:pointer;text-transform:uppercase;transition:.2s}
+.demo-btn:hover{border-color:var(--g);color:var(--g)}
+.locked{border:1px solid var(--gb);padding:32px;text-align:center;background:var(--sf)}
+.lock-txt{font-size:11px;color:var(--gk);letter-spacing:2px;text-transform:uppercase}
 .lock-rows{margin:16px 0 0;display:flex;flex-direction:column;gap:4px}
-.lock-row{font-size:11px;color:#002a0a;letter-spacing:1px}
-.unlocked{display:none;border:1px solid #00ff41;padding:24px;background:rgba(0,20,0,0.8);text-align:center;box-shadow:0 0 30px #00ff4122}
+.lock-row{font-size:12px;color:#002a0a}
+.unlocked{display:none;border:1px solid var(--g);padding:24px;background:rgba(0,20,0,.9);text-align:center;box-shadow:0 0 40px #00ff4120}
 .unlocked.show{display:block;animation:reveal .4s steps(20) forwards}
-@keyframes reveal{from{opacity:0;clip-path:inset(0 100% 0 0)}to{opacity:1;clip-path:inset(0 0% 0 0)}}
-.addr-big{font-family:'VT323',monospace;font-size:34px;color:#00ff41;letter-spacing:3px;margin-bottom:6px;text-shadow:0 0 20px #00ff41;min-height:42px}
-.addr-sub{font-size:11px;color:#005c18;margin-bottom:20px}
-.map-btn{display:inline-block;background:#00ff41;color:#000;padding:10px 28px;font-family:'Share Tech Mono',monospace;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;text-decoration:none;cursor:pointer;border:none}
+@keyframes reveal{from{opacity:0;clip-path:inset(0 100% 0 0)}to{opacity:1;clip-path:inset(0 0 0 0)}}
+.addr-big{font-family:'VT323',monospace;font-size:36px;color:var(--g);letter-spacing:3px;margin-bottom:6px;text-shadow:0 0 24px var(--g);min-height:44px}
+.addr-sub{font-size:12px;color:var(--gk);margin-bottom:20px}
+.map-btn{display:inline-block;background:var(--g);color:#000;padding:11px 28px;font-family:'Share Tech Mono',monospace;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;text-decoration:none;cursor:pointer;border:none}
 
-/* TABLÓN */
-.board-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
-.board-title{font-size:9px;letter-spacing:3px;color:#004d15;text-transform:uppercase}
-.live-dot{font-size:9px;color:#00ff41;letter-spacing:1px}
+/* ── TABLÓN ── */
+.board-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.board-title{font-size:10px;letter-spacing:3px;color:var(--gk);text-transform:uppercase}
+.live-dot{font-size:10px;color:var(--g);letter-spacing:1px}
 .tags-row{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
-.tag-btn{background:none;border:1px solid #003b0f;color:#004d15;font-family:'Share Tech Mono',monospace;font-size:9px;padding:5px 10px;cursor:pointer;letter-spacing:1px;transition:.15s}
-.tag-btn:hover{border-color:#00ff41;color:#00ff41}
+.tag-btn{background:none;border:1px solid var(--gb);color:var(--gk);font-family:'Share Tech Mono',monospace;font-size:9px;padding:5px 10px;cursor:pointer;letter-spacing:1px;transition:.15s}
+.tag-btn:hover,.tag-btn.sel{border-color:var(--g);color:var(--g);background:rgba(0,255,65,.05)}
 .inp-row{display:flex;gap:6px;margin-bottom:16px}
-.msg-inp{flex:1;background:#000;border:1px solid #003b0f;color:#00ff41;font-family:'Share Tech Mono',monospace;font-size:12px;padding:10px;outline:none;transition:.2s}
-.msg-inp:focus{border-color:#00ff41;box-shadow:0 0 8px #00ff4133}
-.msg-inp::placeholder{color:#003b0f}
-.send-btn{background:#00ff41;color:#000;border:none;padding:10px 14px;font-family:'Share Tech Mono',monospace;font-size:14px;font-weight:700;cursor:pointer}
-.msgs{display:flex;flex-direction:column;gap:6px;max-height:300px;overflow-y:auto}
+.msg-inp{flex:1;background:#000;border:1px solid var(--gb);color:var(--g);font-family:'Share Tech Mono',monospace;font-size:13px;padding:11px;outline:none;transition:.2s}
+.msg-inp:focus{border-color:var(--gd)}
+.msg-inp::placeholder{color:#1a3a1a}
+.send-btn{background:var(--g);color:#000;border:none;padding:11px 16px;font-family:'Share Tech Mono',monospace;font-size:15px;font-weight:700;cursor:pointer}
+.msgs{display:flex;flex-direction:column;gap:7px;max-height:340px;overflow-y:auto}
 .msgs::-webkit-scrollbar{width:2px}
-.msgs::-webkit-scrollbar-thumb{background:#003b0f}
-.msg{background:rgba(0,15,0,0.7);border:1px solid #001a05;border-left:2px solid #00ff41;padding:8px 12px;display:flex;gap:10px;align-items:flex-start;animation:fadeup .2s ease}
+.msgs::-webkit-scrollbar-thumb{background:var(--gb)}
+.msg{background:var(--sf2);border:1px solid #0d200d;border-left:2px solid var(--g);padding:9px 13px;display:flex;gap:10px;align-items:flex-start;animation:fadeup .2s ease}
 @keyframes fadeup{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
-.mbadge{font-family:'VT323',monospace;font-size:13px;padding:2px 6px;flex-shrink:0;letter-spacing:1px;font-weight:700}
+.mbadge{font-family:'VT323',monospace;font-size:13px;padding:2px 7px;flex-shrink:0;letter-spacing:1px;font-weight:700}
 .b-ice{background:#001a2a;color:#00d4ff;border:1px solid #003a4a}
-.b-car{background:#0a1a00;color:#80ff00;border:1px solid #1a3a00}
-.b-hype{background:#1a0000;color:#ff4040;border:1px solid #3a0000}
-.b-info{background:#001a0a;color:#00ff41;border:1px solid #003b0f}
-.mtxt{font-size:11px;color:#00a82b;flex:1;line-height:1.5}
-.mtime{font-size:9px;color:#003b0f;flex-shrink:0}
+.b-beer{background:#1a1000;color:#ffcc00;border:1px solid #3a2800}
+.b-gf{background:#0a1a0a;color:#80ff40;border:1px solid #1a3a1a}
+.b-allergy{background:#1a0a00;color:#ff8c00;border:1px solid #3a2000}
+.b-food{background:#100a1a;color:#cc88ff;border:1px solid #2a1a3a}
+.b-other{background:#0f0f0f;color:#aaa;border:1px solid #2a2a2a}
+.mtxt{font-size:12px;color:#88cc88;flex:1;line-height:1.5}
+.mtime{font-size:9px;color:#1a3a1a;flex-shrink:0;white-space:nowrap}
+.mverified{font-size:9px;color:var(--g);margin-left:6px}
+.munverified{font-size:9px;color:#333;margin-left:6px}
 
-/* CARPOOL */
-.cp-form{border:1px solid #003b0f;padding:18px;background:rgba(0,10,0,0.6);margin-bottom:16px}
-.cp-label{font-size:9px;letter-spacing:2px;color:#004d15;text-transform:uppercase;margin-bottom:8px;display:block}
+/* ── CARPOOL ── */
+.cp-form{border:1px solid var(--gb);padding:20px;background:var(--sf);margin-bottom:18px}
+.cp-label{font-size:10px;letter-spacing:2px;color:var(--gk);text-transform:uppercase;margin-bottom:10px;display:block}
 .cp-row{display:flex;gap:8px;margin-bottom:10px}
-.cp-inp{flex:1;background:#000;border:1px solid #003b0f;color:#00ff41;font-family:'Share Tech Mono',monospace;font-size:12px;padding:9px;outline:none}
-.cp-inp:focus{border-color:#00a82b}
-.cp-inp::placeholder{color:#003b0f}
-.cp-sel{background:#000;border:1px solid #003b0f;color:#00ff41;font-family:'Share Tech Mono',monospace;font-size:12px;padding:9px;width:72px;outline:none}
-.offer-btn{background:#00ff41;color:#000;border:none;padding:11px 16px;font-family:'Share Tech Mono',monospace;font-size:10px;font-weight:700;letter-spacing:1px;cursor:pointer;width:100%;text-transform:uppercase}
-.car-list{display:flex;flex-direction:column;gap:6px}
-.car-item{border:1px solid #001a05;border-left:2px solid #80ff00;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;background:rgba(0,10,0,0.5);animation:fadeup .2s ease}
-.car-from{font-size:13px;color:#00a82b}
-.car-contact{font-size:10px;color:#004d15;margin-top:2px}
-.car-seats{background:#001a00;color:#80ff00;border:1px solid #1a3a00;font-size:10px;font-weight:700;padding:4px 10px;letter-spacing:1px}
+.cp-inp{flex:1;background:#000;border:1px solid var(--gb);color:var(--g);font-family:'Share Tech Mono',monospace;font-size:13px;padding:10px;outline:none}
+.cp-inp:focus{border-color:var(--gd)}
+.cp-inp::placeholder{color:#1a3a1a}
+.cp-sel{background:#000;border:1px solid var(--gb);color:var(--g);font-family:'Share Tech Mono',monospace;font-size:13px;padding:10px;width:76px;outline:none}
+.offer-btn{background:var(--g);color:#000;border:none;padding:12px 16px;font-family:'Share Tech Mono',monospace;font-size:11px;font-weight:700;letter-spacing:1px;cursor:pointer;width:100%;text-transform:uppercase}
+.car-legend{font-size:10px;color:var(--gk);letter-spacing:1px;margin-bottom:14px}
+.car-list{display:flex;flex-direction:column;gap:7px}
+.car-item{border:1px solid #0d200d;border-left:2px solid #80ff00;padding:11px 15px;display:flex;justify-content:space-between;align-items:center;background:var(--sf2);animation:fadeup .2s ease}
+.car-item.pending{border-left-color:#333;opacity:.65}
+.car-from{font-size:14px;color:#88cc88}
+.car-contact{font-size:10px;color:var(--gk);margin-top:3px}
+.car-status{font-size:9px;margin-top:3px;letter-spacing:1px}
+.car-status.ok{color:var(--g)}
+.car-status.wait{color:#444}
+.car-seats{background:#001a00;color:#80ff00;border:1px solid #1a3a00;font-size:10px;font-weight:700;padding:4px 10px;letter-spacing:1px;flex-shrink:0}
 
-/* SOUNDCLOUD */
-.sc-wrap{border:1px solid #003b0f;overflow:hidden;background:#000}
-.sc-hdr{padding:14px 16px;border-bottom:1px solid #003b0f;display:flex;align-items:center;gap:10px}
-.sc-dot{width:8px;height:8px;background:#00ff41;border-radius:50%;flex-shrink:0;animation:pulse 1.5s ease-in-out infinite}
+/* ── SEÑAL ── */
+.sc-wrap{border:1px solid var(--gb);overflow:hidden;background:#000;margin-bottom:12px}
+.sc-hdr{padding:14px 16px;border-bottom:1px solid var(--gb);display:flex;align-items:center;justify-content:space-between;gap:10px}
+.sc-hdr-left{display:flex;align-items:center;gap:10px}
+.sc-dot{width:8px;height:8px;background:var(--g);border-radius:50%;flex-shrink:0;animation:pulse 1.5s ease-in-out infinite}
 @keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 #00ff4166}50%{opacity:.6;box-shadow:0 0 0 6px #00ff4100}}
-.sc-name{font-size:10px;letter-spacing:3px;color:#00a82b;text-transform:uppercase}
-.sc-frame{width:100%;display:block;border:none;background:#000;filter:hue-rotate(90deg) saturate(2) brightness(0.85)}
-.sc-link{display:block;text-align:center;padding:12px;font-size:9px;color:#004d15;letter-spacing:2px;text-decoration:none;border-top:1px solid #003b0f;transition:.2s}
-.sc-link:hover{color:#00ff41}
-.sc-note{margin-top:12px;font-size:9px;color:#003b0f;letter-spacing:2px;text-align:center;line-height:1.8}
+.sc-name{font-size:10px;letter-spacing:2px;color:var(--gd);text-transform:uppercase}
+.sc-next{background:none;border:1px solid var(--gb);color:var(--gk);font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:1px;padding:5px 10px;cursor:pointer;transition:.15s;white-space:nowrap}
+.sc-next:hover{border-color:var(--g);color:var(--g)}
+.sc-frame{width:100%;display:block;border:none;background:#000;filter:hue-rotate(90deg) saturate(1.8) brightness(.9)}
+.sc-link{display:block;text-align:center;padding:11px;font-size:10px;color:var(--gk);letter-spacing:1px;text-decoration:none;border-top:1px solid var(--gb);transition:.2s}
+.sc-link:hover{color:var(--g)}
+.sc-note{font-size:10px;color:#1a3a1a;letter-spacing:2px;text-align:center;line-height:1.8;margin-top:8px}
+
+/* ── ADMIN PANEL ── */
+#screen-admin{padding:0 16px 80px}
+.admin-hdr{text-align:center;padding:24px 0 20px;border-bottom:1px solid var(--gb);margin-bottom:24px}
+.admin-title{font-family:'VT323',monospace;font-size:52px;color:var(--red);letter-spacing:4px}
+.admin-sub{font-size:9px;color:var(--gk);letter-spacing:3px;margin-top:6px}
+.admin-section{margin-bottom:32px}
+.admin-sec-title{font-size:10px;letter-spacing:3px;color:var(--gk);text-transform:uppercase;margin-bottom:14px;padding-bottom:6px;border-bottom:1px solid var(--gb)}
+.admin-item{border:1px solid var(--gb);padding:12px 14px;margin-bottom:8px;background:var(--sf);display:flex;justify-content:space-between;align-items:center;gap:12px}
+.admin-item-info{flex:1;min-width:0}
+.admin-item-name{font-size:13px;color:#88cc88;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.admin-item-meta{font-size:10px;color:var(--gk);margin-top:3px}
+.admin-actions{display:flex;gap:6px;flex-shrink:0}
+.btn-ok{background:#003b0f;color:var(--g);border:1px solid var(--g);font-family:'Share Tech Mono',monospace;font-size:9px;padding:5px 10px;cursor:pointer;letter-spacing:1px;transition:.15s}
+.btn-ok:hover{background:var(--g);color:#000}
+.btn-ko{background:#200000;color:var(--red);border:1px solid var(--red);font-family:'Share Tech Mono',monospace;font-size:9px;padding:5px 10px;cursor:pointer;letter-spacing:1px;transition:.15s}
+.btn-ko:hover{background:var(--red);color:#000}
+.admin-back{display:block;margin:0 auto;background:none;border:1px solid var(--gb);color:var(--gk);font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:2px;padding:10px 24px;cursor:pointer;text-transform:uppercase;transition:.2s}
+.admin-back:hover{border-color:var(--g);color:var(--g)}
+.empty-msg{font-size:11px;color:#1a3a1a;letter-spacing:2px;padding:16px 0;text-align:center}
 </style>
 </head>
 <body>
 
 <canvas id="mx"></canvas>
 
+<!-- ══ SCREEN: AUTH ══ -->
+<div id="screen-auth" class="screen active">
+  <div class="auth-box">
+    <div class="auth-logo">SONORA<br><span>XI</span></div>
+    <div class="auth-sub">// ACCESO RESTRINGIDO · VIE 29 MAY 2026</div>
+    <div class="auth-label">// Contraseña de acceso</div>
+    <input class="auth-inp" id="inp-pwd" type="password" placeholder="••••••••••"
+      onkeydown="if(event.key==='Enter')doLogin()"/>
+    <button class="auth-btn" onclick="doLogin()">Entrar →</button>
+    <div class="auth-err" id="auth-err"></div>
+    <div class="auth-info">Solo pueden acceder personas invitadas.<br>Si no tienes la contraseña, contacta con los organizadores.</div>
+  </div>
+</div>
+
+<!-- ══ SCREEN: MAIN APP ══ -->
+<div id="screen-app" class="screen">
 <div class="wrap">
 
-  <!-- HEADER -->
   <div class="hdr">
     <div class="sys-tag">// SISTEMA ENCRIPTADO · ACCESO RESTRINGIDO</div>
     <div class="glitch">SONORA<br><span>XI</span></div>
     <div class="hdr-sub">VIE 29 MAY 2026 · <span class="blink">UBICACIÓN CLASIFICADA</span></div>
   </div>
 
-  <!-- TABS -->
   <div class="tabs">
     <button class="tb on" onclick="sw('cd',this)">[ CUENTA ]</button>
     <button class="tb" onclick="sw('brd',this)">[ TABLÓN ]</button>
@@ -130,10 +218,9 @@ canvas#mx{position:fixed;top:0;left:0;width:100%;height:100%;opacity:0.07;pointe
     <button class="tb" onclick="sw('sc',this)">[ SEÑAL ]</button>
   </div>
 
-  <!-- TAB: CUENTA ATRÁS -->
+  <!-- CUENTA ATRÁS -->
   <div id="tc-cd" class="tc on">
-    <div style="padding-top:4px"></div>
-    <div class="cd-label">// REVELACIÓN DE UBICACIÓN EN</div>
+    <div class="cd-label">// CUENTA ATRÁS PARA LA REVELACIÓN</div>
     <div class="cd-grid">
       <div class="cd-unit"><span class="cd-num" id="dd">00</span><div class="cd-name">días</div></div>
       <div class="cd-sep">:</div>
@@ -147,10 +234,8 @@ canvas#mx{position:fixed;top:0;left:0;width:100%;height:100%;opacity:0.07;pointe
       <div class="prog-label"><span>PROGRESO HACIA EL EVENTO</span><span id="pct">0%</span></div>
       <div class="prog-bar"><div class="prog-fill" id="pfill" style="width:0%"></div></div>
     </div>
-
-    <!-- QUITAR ESTE BOTÓN ANTES DEL EVENTO -->
+    <!-- ELIMINA ESTE BOTÓN ANTES DE PUBLICAR -->
     <button class="demo-btn" onclick="toggleUnlock()">[ simular desbloqueo ]</button>
-
     <div class="locked" id="locked-box">
       <div class="lock-txt">DATOS CIFRADOS · EN ESPERA DE AUTORIZACIÓN</div>
       <div class="lock-rows">
@@ -159,89 +244,158 @@ canvas#mx{position:fixed;top:0;left:0;width:100%;height:100%;opacity:0.07;pointe
         <div class="lock-row">███████████████████████████</div>
       </div>
     </div>
-
     <div class="unlocked" id="unlocked-box">
-      <div style="font-size:9px;letter-spacing:4px;color:#004d15;margin-bottom:14px">// SEÑAL RECIBIDA · DESCIFRADO COMPLETO</div>
-      <!-- CAMBIA ESTA DIRECCIÓN -->
+      <div style="font-size:9px;letter-spacing:4px;color:var(--gk);margin-bottom:14px">// SEÑAL RECIBIDA · DESCIFRADO COMPLETO</div>
       <div class="addr-big" id="addr-type"></div>
-      <div class="addr-sub">Aquí va la dirección completa · Valencia</div>
-      <!-- CAMBIA ESTE LINK AL MAPA REAL -->
-      <a class="map-btn" href="https://maps.google.com" target="_blank">→ ABRIR MAPA</a>
+      <div class="addr-sub" id="addr-detail">Aquí va la dirección completa · Valencia</div>
+      <!-- ★ CAMBIA href POR EL LINK DE GOOGLE MAPS REAL -->
+      <a class="map-btn" id="map-link" href="https://maps.google.com" target="_blank">→ ABRIR MAPA</a>
     </div>
   </div>
 
-  <!-- TAB: TABLÓN -->
+  <!-- TABLÓN -->
   <div id="tc-brd" class="tc">
+    <div class="sec-desc">Deja avisos para el resto. Selecciona una categoría y escribe tu mensaje. Los admins pueden verificar los avisos importantes.</div>
     <div class="board-hdr">
       <div class="board-title">// CANAL EN VIVO</div>
       <div class="live-dot">● TRANSMITIENDO</div>
     </div>
     <div class="tags-row">
-      <button class="tag-btn" onclick="setTag('[ICE]')">[ICE] hielo</button>
-      <button class="tag-btn" onclick="setTag('[MOV]')">[MOV] llegando</button>
-      <button class="tag-btn" onclick="setTag('[!!]')">[!!] hype</button>
-      <button class="tag-btn" onclick="setTag('[SYS]')">[SYS] info</button>
+      <button class="tag-btn" onclick="setTag('ice','[HIELO]',this)">[HIELO]</button>
+      <button class="tag-btn" onclick="setTag('beer','[BIRRAS]',this)">[BIRRAS]</button>
+      <button class="tag-btn" onclick="setTag('gf','[SIN GLUTEN]',this)">[SIN GLUTEN]</button>
+      <button class="tag-btn" onclick="setTag('allergy','[ALÉRGENOS]',this)">[ALÉRGENOS]</button>
+      <button class="tag-btn" onclick="setTag('food','[COMIDA]',this)">[COMIDA]</button>
+      <button class="tag-btn sel" onclick="setTag('other','[OTROS]',this)">[OTROS]</button>
     </div>
     <div class="inp-row">
-      <input class="msg-inp" id="minp" placeholder="Enviar transmisión..." maxlength="120"/>
+      <input class="msg-inp" id="minp" placeholder="Escribe tu aviso..." maxlength="140"/>
       <button class="send-btn" onclick="sendMsg()">→</button>
     </div>
     <div class="msgs" id="mlist"></div>
   </div>
 
-  <!-- TAB: CARPOOL -->
+  <!-- CARPOOL -->
   <div id="tc-cp" class="tc">
+    <div class="sec-desc">Organízate para los viajes. Si ofreces plaza deja tu contacto. Tu entrada aparecerá una vez validada por los admins. Conduce con cuidado!</div>
     <div class="cp-form">
-      <span class="cp-label">// REGISTRAR PLAZA DISPONIBLE</span>
+      <span class="cp-label">// Registrar plaza disponible</span>
       <div class="cp-row">
-        <input class="cp-inp" id="cpfrom" placeholder="Origen (ej: Russafa)"/>
+        <input class="cp-inp" id="cpfrom" placeholder="Salgo desde..."/>
         <select class="cp-sel" id="cpseats">
           <option>1</option><option>2</option><option selected>3</option><option>4</option>
         </select>
       </div>
-      <input class="cp-inp" id="cpcont" placeholder="Contacto: @telegram o WhatsApp" style="width:100%;margin-bottom:10px"/>
-      <button class="offer-btn" onclick="addCar()">[ PUBLICAR PLAZA ] →</button>
+      <input class="cp-inp" id="cpcont" placeholder="@telegram o WhatsApp" style="width:100%;margin-bottom:10px"/>
+      <button class="offer-btn" onclick="addCar()">[ Publicar plaza ] →</button>
     </div>
+    <div class="car-legend">✓ validado por admins &nbsp;·&nbsp; ○ pendiente de revisión</div>
     <div class="car-list" id="carlist"></div>
   </div>
 
-  <!-- TAB: SEÑAL / SOUNDCLOUD -->
+  <!-- SEÑAL -->
   <div id="tc-sc" class="tc">
+    <div class="sec-desc">Música para el camino y para el evento. Rota entre los artistas del cartel. Pulsa SIGUIENTE para cambiar.</div>
     <div class="sc-wrap">
       <div class="sc-hdr">
-        <div class="sc-dot"></div>
-        <div class="sc-name">// SEÑAL DE AUDIO · FRANCIS ESPINACO</div>
+        <div class="sc-hdr-left">
+          <div class="sc-dot"></div>
+          <div class="sc-name" id="sc-artist-name">// CARGANDO SEÑAL...</div>
+        </div>
+        <button class="sc-next" onclick="nextArtist()">SIGUIENTE ›</button>
       </div>
-      <!-- PLAYER DE SOUNDCLOUD — cambia la URL si hace falta -->
-      <iframe class="sc-frame"
-        src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/user-845235880&color=%2300ff41&auto_play=false&hide_related=false&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=true"
-        height="300" scrolling="no" allow="autoplay">
-      </iframe>
-      <a class="sc-link" href="https://soundcloud.com/user-845235880" target="_blank">
-        → ABRIR SOUNDCLOUD: soundcloud.com/user-845235880
-      </a>
+      <iframe class="sc-frame" id="sc-frame" height="300" scrolling="no" allow="autoplay" src="about:blank"></iframe>
+      <a class="sc-link" id="sc-link" href="https://soundcloud.com" target="_blank">→ ABRIR EN SOUNDCLOUD</a>
     </div>
-    <div class="sc-note">
-      // AUDIO CIFRADO VÍA SOUNDCLOUD<br>
-      // REPRODUCCIÓN DIRECTA EN EL NAVEGADOR
-    </div>
+    <div class="sc-note">// SEÑAL DE AUDIO EN VIVO · ROTACIÓN ALEATORIA ENTRE ARTISTAS</div>
   </div>
 
-</div><!-- /wrap -->
+</div>
+</div>
 
-<script>
-// ============================================================
-// MATRIX RAIN
-// ============================================================
+<!-- ══ SCREEN: ADMIN ══ -->
+<div id="screen-admin" class="screen">
+<div class="wrap">
+  <div class="admin-hdr">
+    <div class="admin-title">// ADMIN //</div>
+    <div class="admin-sub">SONORA XI · PANEL DE CONTROL</div>
+  </div>
+  <div class="admin-section">
+    <div class="admin-sec-title">// Plazas carpool pendientes de validación</div>
+    <div id="admin-cars"></div>
+  </div>
+  <div class="admin-section">
+    <div class="admin-sec-title">// Mensajes tablón pendientes de verificación</div>
+    <div id="admin-msgs"></div>
+  </div>
+  <button class="admin-back" onclick="showScreen('app')">← Volver a la web</button>
+</div>
+</div>
+
+<!-- ══ FIREBASE + LÓGICA ══ -->
+<script type="module">
+import { initializeApp }   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc, query, orderBy }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+// ════════════════════════════════════════════
+//  ★ CONFIGURACIÓN — cambia estos valores
+// ════════════════════════════════════════════
+
+// Contraseña de acceso para todos los asistentes
+const ACCESS_PASSWORD = "sonora2026";
+
+// Contraseña del panel admin (entra como invitado y escribe esta)
+const ADMIN_PASSWORD  = "sonora2026admin";
+
+// Dirección que se revela cuando llega la hora
+const ADDRESS_TEXT    = "NAVE INDUSTRIAL 4";
+const ADDRESS_DETAIL  = "Pol. El Bony · Carretera de Silla, km 3 · Valencia";
+const MAP_LINK        = "https://maps.google.com/?q=TU+UBICACION"; // ← pon el link real
+
+// Fecha y hora del evento (ISO 8601 local)
+const TARGET = new Date('2026-05-29T22:00:00');
+const START  = new Date('2026-01-01T00:00:00');
+
+// Perfiles de SoundCloud (se rotan aleatoriamente)
+const SC_ARTISTS = [
+  { name:"FRANCIS ESPINACO",  url:"https://soundcloud.com/user-845235880" },
+  { name:"SENMERI",           url:"https://soundcloud.com/senmeri/tracks" },
+  { name:"MIREIA CAMARENA",   url:"https://soundcloud.com/mireia-camarena/tracks" },
+  { name:"USER901179098",     url:"https://soundcloud.com/user901179098/tracks" },
+  { name:"CLARA ZARAGOZA",    url:"https://soundcloud.com/clara-zaragoza-175684940/tracks" },
+  { name:"TORETTO SOUNDS",    url:"https://soundcloud.com/toretto-sounds/tracks" },
+  { name:"DEEJEYA",           url:"https://soundcloud.com/deejeya/tracks" },
+  { name:"JUAN CARMONA",      url:"https://soundcloud.com/juan-carmona-513512584/tracks" },
+];
+
+// Firebase config — pega aquí el tuyo
+const firebaseConfig = {
+  apiKey:            "TU_API_KEY",
+  authDomain:        "TU_PROJECT.firebaseapp.com",
+  projectId:         "TU_PROJECT_ID",
+  storageBucket:     "TU_PROJECT.appspot.com",
+  messagingSenderId: "TU_SENDER_ID",
+  appId:             "TU_APP_ID"
+};
+
+// ════════════════════════════════════════════
+//  Init Firebase
+// ════════════════════════════════════════════
+const fbApp = initializeApp(firebaseConfig);
+const db    = getFirestore(fbApp);
+
+// ════════════════════════════════════════════
+//  MATRIX RAIN
+// ════════════════════════════════════════════
 const canvas = document.getElementById('mx');
-const ctx = canvas.getContext('2d');
-function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-resize();
-window.addEventListener('resize', resize);
-const chars = 'SONORAXI01アイウエオカキクケコ░▒▓01110100';
-const cols = Math.floor(window.innerWidth / 16);
+const ctx    = canvas.getContext('2d');
+function resize(){ canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+resize(); window.addEventListener('resize', resize);
+const chars = 'SONORAXI01アイウエオカキクケコ░▒▓';
+const cols  = Math.floor(window.innerWidth / 16);
 const drops = Array(cols).fill(0);
-function drawMatrix() {
+setInterval(() => {
   ctx.fillStyle = 'rgba(0,0,0,0.05)';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.font = '14px monospace';
@@ -254,129 +408,272 @@ function drawMatrix() {
     if (y * 16 > canvas.height && Math.random() > 0.975) drops[i] = 0;
     drops[i]++;
   });
-}
-setInterval(drawMatrix, 50);
+}, 50);
 
-// ============================================================
-// CUENTA ATRÁS
-// Cambia la fecha/hora aquí: 'YYYY-MM-DDTHH:MM:SS'
-// ============================================================
-const TARGET = new Date('2026-05-29T22:00:00');
-const START  = new Date('2026-01-01T00:00:00');
+// ════════════════════════════════════════════
+//  AUTH — contraseña única
+// ════════════════════════════════════════════
+const SESSION_KEY = 'sonora_xi_auth';
+
+function isLoggedIn(){ return sessionStorage.getItem(SESSION_KEY) === 'ok'; }
+
+window.doLogin = function(){
+  const val = document.getElementById('inp-pwd').value;
+  const err = document.getElementById('auth-err');
+  if (val === ADMIN_PASSWORD){
+    sessionStorage.setItem(SESSION_KEY, 'ok');
+    showScreen('admin');
+    initAdmin();
+  } else if (val === ACCESS_PASSWORD){
+    sessionStorage.setItem(SESSION_KEY, 'ok');
+    showScreen('app');
+    initApp();
+  } else {
+    err.textContent = '// Contraseña incorrecta. Inténtalo de nuevo.';
+    document.getElementById('inp-pwd').value = '';
+    setTimeout(() => { err.textContent = ''; }, 3000);
+  }
+};
+
+// Comprueba sesión al cargar
+if (isLoggedIn()){
+  showScreen('app');
+  initApp();
+} else {
+  showScreen('auth');
+}
+
+// ════════════════════════════════════════════
+//  PANTALLAS
+// ════════════════════════════════════════════
+window.showScreen = function(name){
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+};
+
+// ════════════════════════════════════════════
+//  TABS
+// ════════════════════════════════════════════
+window.sw = function(id, btn){
+  document.querySelectorAll('.tc').forEach(t => t.classList.remove('on'));
+  document.querySelectorAll('.tb').forEach(b => b.classList.remove('on'));
+  document.getElementById('tc-' + id).classList.add('on');
+  btn.classList.add('on');
+};
+
+// ════════════════════════════════════════════
+//  CUENTA ATRÁS
+// ════════════════════════════════════════════
 let unlocked = false;
 
-function updateCD() {
-  const now = new Date();
-  let diff = Math.max(0, TARGET - now);
+function updateCD(){
+  const now  = new Date();
+  const diff = Math.max(0, TARGET - now);
   if (diff === 0 && !unlocked) triggerUnlock();
   const d = Math.floor(diff / 86400000);
   const h = Math.floor((diff % 86400000) / 3600000);
   const m = Math.floor((diff % 3600000) / 60000);
   const s = Math.floor((diff % 60000) / 1000);
-  document.getElementById('dd').textContent = String(d).padStart(2, '0');
-  document.getElementById('hh').textContent = String(h).padStart(2, '0');
-  document.getElementById('mm').textContent = String(m).padStart(2, '0');
-  document.getElementById('ss').textContent = String(s).padStart(2, '0');
+  document.getElementById('dd').textContent = String(d).padStart(2,'0');
+  document.getElementById('hh').textContent = String(h).padStart(2,'0');
+  document.getElementById('mm').textContent = String(m).padStart(2,'0');
+  document.getElementById('ss').textContent = String(s).padStart(2,'0');
   const pct = Math.min(100, Math.max(0, Math.round(((now - START) / (TARGET - START)) * 100)));
   document.getElementById('pct').textContent = pct + '%';
   document.getElementById('pfill').style.width = pct + '%';
 }
 
-// ============================================================
-// REVEAL DE DIRECCIÓN
-// Cambia el texto aquí por la dirección real
-// ============================================================
-const ADDRESS_TEXT = 'NAVE INDUSTRIAL 4';
-
-function typeAddr(txt, el, i = 0) {
-  if (i <= txt.length) {
+function typeAddr(txt, el, i = 0){
+  if (i <= txt.length){
     el.textContent = txt.slice(0, i) + (i < txt.length ? '█' : '');
     setTimeout(() => typeAddr(txt, el, i + 1), 55);
   }
 }
 
-function triggerUnlock() {
+function triggerUnlock(){
   unlocked = true;
   document.getElementById('locked-box').style.display = 'none';
-  const ub = document.getElementById('unlocked-box');
-  ub.classList.add('show');
+  document.getElementById('unlocked-box').classList.add('show');
+  document.getElementById('addr-detail').textContent  = ADDRESS_DETAIL;
+  document.getElementById('map-link').href            = MAP_LINK;
   typeAddr(ADDRESS_TEXT, document.getElementById('addr-type'));
 }
 
-function toggleUnlock() {
-  if (unlocked) {
+window.toggleUnlock = function(){
+  if (unlocked){
     unlocked = false;
     document.getElementById('locked-box').style.display = 'block';
     document.getElementById('unlocked-box').classList.remove('show');
     document.getElementById('addr-type').textContent = '';
-  } else {
-    triggerUnlock();
-  }
+  } else { triggerUnlock(); }
+};
+
+// ════════════════════════════════════════════
+//  TABLÓN — Firestore realtime
+// ════════════════════════════════════════════
+const TAG_BC = { ice:'b-ice', beer:'b-beer', gf:'b-gf', allergy:'b-allergy', food:'b-food', other:'b-other' };
+let curTagId = 'other', curTagLabel = '[OTROS]';
+
+window.setTag = function(id, label, btn){
+  curTagId = id; curTagLabel = label;
+  document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('sel'));
+  btn.classList.add('sel');
+};
+
+function initMsgs(){
+  const q = query(collection(db,'messages'), orderBy('ts','desc'));
+  onSnapshot(q, snap => {
+    const list = document.getElementById('mlist');
+    list.innerHTML = '';
+    if (snap.empty){ list.innerHTML = '<div class="empty-msg">// Sin transmisiones todavía</div>'; return; }
+    snap.forEach(ds => renderMsg(ds.data()));
+  });
 }
 
-setInterval(updateCD, 1000);
-updateCD();
-
-// ============================================================
-// TABS
-// ============================================================
-function sw(id, btn) {
-  document.querySelectorAll('.tc').forEach(t => t.classList.remove('on'));
-  document.querySelectorAll('.tb').forEach(b => b.classList.remove('on'));
-  document.getElementById('tc-' + id).classList.add('on');
-  btn.classList.add('on');
-}
-
-// ============================================================
-// TABLÓN DE MENSAJES (local — sin backend por ahora)
-// ============================================================
-function tagBc(t) {
-  if (t.includes('ICE')) return 'b-ice';
-  if (t.includes('MOV')) return 'b-car';
-  if (t.includes('!!'))  return 'b-hype';
-  return 'b-info';
-}
-
-function renderMsg(m, prepend = false) {
+function renderMsg(m){
   const list = document.getElementById('mlist');
-  const d = document.createElement('div');
+  const d    = document.createElement('div');
   d.className = 'msg';
-  d.innerHTML = `<span class="mbadge ${m.bc}">${m.tag}</span><span class="mtxt">${m.txt}</span><span class="mtime">${m.t}</span>`;
-  prepend ? list.prepend(d) : list.appendChild(d);
+  const bc  = TAG_BC[m.tagId] || 'b-other';
+  const ver = m.verified
+    ? '<span class="mverified">✓ verificado</span>'
+    : '<span class="munverified">○ sin verificar</span>';
+  d.innerHTML = `<span class="mbadge ${bc}">${m.tag}</span><span class="mtxt">${esc(m.txt)}${ver}</span><span class="mtime">${m.time}</span>`;
+  list.appendChild(d);
 }
 
-let curTag = '';
-function setTag(t) { curTag = t; document.getElementById('minp').focus(); }
-
-function sendMsg() {
+window.sendMsg = async function(){
   const inp = document.getElementById('minp');
   const txt = inp.value.trim();
   if (!txt) return;
-  const tag = curTag || '[SYS]';
-  const now = new Date();
-  const t = now.getHours() + ':' + String(now.getMinutes()).padStart(2, '0');
-  renderMsg({ tag, bc: tagBc(tag), txt, t }, true);
+  const now  = new Date();
+  const time = now.getHours() + ':' + String(now.getMinutes()).padStart(2,'0');
+  await addDoc(collection(db,'messages'), { tagId:curTagId, tag:curTagLabel, txt, time, ts:now.getTime(), verified:false });
   inp.value = '';
-  curTag = '';
-}
-document.getElementById('minp').addEventListener('keydown', e => { if (e.key === 'Enter') sendMsg(); });
+};
 
-// ============================================================
-// CARPOOL (local — sin backend por ahora)
-// ============================================================
-function addCar() {
+document.getElementById('minp').addEventListener('keydown', e => { if (e.key === 'Enter') window.sendMsg(); });
+
+// ════════════════════════════════════════════
+//  CARPOOL — Firestore realtime
+// ════════════════════════════════════════════
+function initCars(){
+  const q = query(collection(db,'carpool'), orderBy('ts','desc'));
+  onSnapshot(q, snap => {
+    const list = document.getElementById('carlist');
+    list.innerHTML = '';
+    if (snap.empty){ list.innerHTML = '<div class="empty-msg">// Sin plazas publicadas todavía</div>'; return; }
+    snap.forEach(ds => renderCar({ id:ds.id, ...ds.data() }));
+  });
+}
+
+function renderCar(c){
+  const list = document.getElementById('carlist');
+  const d    = document.createElement('div');
+  d.className = 'car-item' + (c.approved ? '' : ' pending');
+  const st   = c.approved
+    ? '<div class="car-status ok">✓ validado</div>'
+    : '<div class="car-status wait">○ pendiente de validación</div>';
+  d.innerHTML = `<div><div class="car-from">${esc(c.from)}</div><div class="car-contact">${esc(c.contact||'—')}</div>${st}</div><div class="car-seats">${c.seats} PLAZAS</div>`;
+  list.appendChild(d);
+}
+
+window.addCar = async function(){
   const from    = document.getElementById('cpfrom').value.trim();
   const contact = document.getElementById('cpcont').value.trim();
-  const seats   = document.getElementById('cpseats').value;
+  const seats   = parseInt(document.getElementById('cpseats').value);
   if (!from) return;
-  const list = document.getElementById('carlist');
-  const d = document.createElement('div');
-  d.className = 'car-item';
-  d.innerHTML = `<div><div class="car-from">${from}</div><div class="car-contact">${contact || '—'}</div></div><div class="car-seats">${seats} PLAZAS</div>`;
-  list.prepend(d);
+  await addDoc(collection(db,'carpool'), { from, contact, seats, ts:Date.now(), approved:false });
   document.getElementById('cpfrom').value = '';
   document.getElementById('cpcont').value = '';
+};
+
+// ════════════════════════════════════════════
+//  SOUNDCLOUD — rotación aleatoria
+// ════════════════════════════════════════════
+let scIdx = Math.floor(Math.random() * SC_ARTISTS.length);
+
+function loadSC(idx){
+  const a   = SC_ARTISTS[idx];
+  const enc = encodeURIComponent(a.url);
+  document.getElementById('sc-frame').src            = `https://w.soundcloud.com/player/?url=${enc}&color=%2300ff41&auto_play=true&hide_related=false&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=true`;
+  document.getElementById('sc-link').href            = a.url;
+  document.getElementById('sc-link').textContent     = '→ ABRIR EN SOUNDCLOUD: ' + a.url.replace('https://','');
+  document.getElementById('sc-artist-name').textContent = '// SEÑAL · ' + a.name;
 }
+
+window.nextArtist = function(){
+  scIdx = (scIdx + 1) % SC_ARTISTS.length;
+  loadSC(scIdx);
+};
+
+// ════════════════════════════════════════════
+//  ADMIN PANEL
+// ════════════════════════════════════════════
+window.initAdmin = function(){
+  // carpool pendiente
+  onSnapshot(query(collection(db,'carpool'), orderBy('ts','asc')), snap => {
+    const el = document.getElementById('admin-cars');
+    el.innerHTML = '';
+    let n = 0;
+    snap.forEach(ds => {
+      const c = { id:ds.id, ...ds.data() };
+      if (c.approved) return;
+      n++;
+      const d = document.createElement('div');
+      d.className = 'admin-item';
+      d.innerHTML = `<div class="admin-item-info"><div class="admin-item-name">${esc(c.from)} · ${c.seats} plazas</div><div class="admin-item-meta">${esc(c.contact||'—')}</div></div><div class="admin-actions"><button class="btn-ok" onclick="approveDoc('carpool','${c.id}',true)">✓ VALIDAR</button><button class="btn-ko" onclick="approveDoc('carpool','${c.id}',false)">✗ BORRAR</button></div>`;
+      el.appendChild(d);
+    });
+    if (!n) el.innerHTML = '<div class="empty-msg">// Todo validado</div>';
+  });
+
+  // mensajes pendientes
+  onSnapshot(query(collection(db,'messages'), orderBy('ts','asc')), snap => {
+    const el = document.getElementById('admin-msgs');
+    el.innerHTML = '';
+    let n = 0;
+    snap.forEach(ds => {
+      const m = { id:ds.id, ...ds.data() };
+      if (m.verified) return;
+      n++;
+      const d = document.createElement('div');
+      d.className = 'admin-item';
+      d.innerHTML = `<div class="admin-item-info"><div class="admin-item-name">${m.tag} ${esc(m.txt)}</div><div class="admin-item-meta">${m.time}</div></div><div class="admin-actions"><button class="btn-ok" onclick="verifyMsg('${m.id}',true)">✓ VERIFICAR</button><button class="btn-ko" onclick="verifyMsg('${m.id}',false)">✗ BORRAR</button></div>`;
+      el.appendChild(d);
+    });
+    if (!n) el.innerHTML = '<div class="empty-msg">// Sin mensajes pendientes</div>';
+  });
+};
+
+window.approveDoc = async function(col, id, ok){
+  ok ? await updateDoc(doc(db,col,id),{approved:true}) : await deleteDoc(doc(db,col,id));
+};
+window.verifyMsg = async function(id, ok){
+  ok ? await updateDoc(doc(db,'messages',id),{verified:true}) : await deleteDoc(doc(db,'messages',id));
+};
+
+// ════════════════════════════════════════════
+//  APP INIT
+// ════════════════════════════════════════════
+let appInited = false;
+window.initApp = function(){
+  if (appInited) return;
+  appInited = true;
+  setInterval(updateCD, 1000);
+  updateCD();
+  initMsgs();
+  initCars();
+  loadSC(scIdx);
+};
+
+// ════════════════════════════════════════════
+//  UTILS
+// ════════════════════════════════════════════
+function esc(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
 </script>
 </body>
 </html>
