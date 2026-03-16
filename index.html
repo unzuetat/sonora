@@ -6,20 +6,6 @@
 <meta name="theme-color" content="#000000">
 <title>SONORA XI</title>
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
-
-<!-- ==========================================================
-  SONORA XI — index.html
-
-  SETUP (3 pasos):
-  1. Cambia ACCESS_PASSWORD por tu contraseña
-  2. Cambia ADMIN_PASSWORD por la contraseña de admin
-  3. Rellena el bloque FIREBASE CONFIG con tus credenciales
-     (Firebase Console > Project Settings > Your apps)
-     — Solo necesitas Firestore, NO hace falta Authentication —
-
-  PANEL ADMIN: abre la web y escribe la contraseña admin
-  AÑADIR DJs:  busca el bloque SC_ARTISTS y añade líneas
-========================================================== -->
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -30,12 +16,9 @@
 }
 body{background:#000;color:var(--g);font-family:'Share Tech Mono',monospace;min-height:100vh;overflow-x:hidden;font-size:14px}
 canvas#mx{position:fixed;top:0;left:0;width:100%;height:100%;opacity:.08;pointer-events:none;z-index:0}
-
-/* ── SCREENS ── */
 .screen{display:none;position:relative;z-index:1}
 .screen.active{display:block}
 
-/* ── AUTH ── */
 #screen-auth{min-height:100vh;display:none;flex-direction:column;align-items:center;justify-content:center;padding:32px 20px}
 #screen-auth.active{display:flex}
 .auth-box{width:100%;max-width:380px;border:1px solid var(--gb);padding:36px 28px;background:var(--sf)}
@@ -51,10 +34,8 @@ canvas#mx{position:fixed;top:0;left:0;width:100%;height:100%;opacity:.08;pointer
 .auth-err{font-size:11px;color:var(--red);margin-top:10px;letter-spacing:1px;min-height:18px}
 .auth-info{font-size:10px;color:#1a3a1a;margin-top:18px;letter-spacing:1px;line-height:1.8}
 
-/* ── MAIN APP ── */
 #screen-app{padding:0 16px 80px}
 .wrap{max-width:620px;margin:0 auto}
-
 .hdr{text-align:center;padding:32px 0 24px;border-bottom:1px solid var(--gb)}
 .sys-tag{font-size:10px;letter-spacing:4px;color:var(--gk);margin-bottom:8px}
 .glitch{font-family:'VT323',monospace;font-size:clamp(64px,18vw,120px);line-height:.85;color:var(--g);text-shadow:2px 0 var(--red),-2px 0 var(--cyan);animation:glitch 5s infinite}
@@ -64,7 +45,6 @@ canvas#mx{position:fixed;top:0;left:0;width:100%;height:100%;opacity:.08;pointer
 .blink{animation:blink 1s step-end infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
 
-/* ── TABS ── */
 .tabs{display:flex;border-bottom:1px solid var(--gb);margin-top:24px}
 .tb{flex:1;background:none;border:none;border-bottom:2px solid transparent;color:var(--gk);font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;padding:13px 4px;cursor:pointer;text-transform:uppercase;transition:.15s}
 .tb.on{color:var(--g);border-bottom-color:var(--g)}
@@ -72,10 +52,8 @@ canvas#mx{position:fixed;top:0;left:0;width:100%;height:100%;opacity:.08;pointer
 .tc{display:none;padding-top:24px}
 .tc.on{display:block}
 
-/* ── SECTION DESC ── */
 .sec-desc{font-size:11px;color:var(--gk);letter-spacing:1px;line-height:1.8;border-left:2px solid var(--gb);padding:8px 12px;margin-bottom:22px;background:var(--sf)}
 
-/* ── COUNTDOWN ── */
 .cd-label{font-size:10px;letter-spacing:4px;color:var(--gk);margin-bottom:20px;text-align:center}
 .cd-grid{display:flex;justify-content:center;gap:8px;margin-bottom:28px;flex-wrap:wrap}
 .cd-unit{text-align:center}
@@ -99,7 +77,6 @@ canvas#mx{position:fixed;top:0;left:0;width:100%;height:100%;opacity:.08;pointer
 .addr-sub{font-size:12px;color:var(--gk);margin-bottom:20px}
 .map-btn{display:inline-block;background:var(--g);color:#000;padding:11px 28px;font-family:'Share Tech Mono',monospace;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;text-decoration:none;cursor:pointer;border:none}
 
-/* ── TABLÓN ── */
 .board-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
 .board-title{font-size:10px;letter-spacing:3px;color:var(--gk);text-transform:uppercase}
 .live-dot{font-size:10px;color:var(--g);letter-spacing:1px}
@@ -128,7 +105,6 @@ canvas#mx{position:fixed;top:0;left:0;width:100%;height:100%;opacity:.08;pointer
 .mverified{font-size:9px;color:var(--g);margin-left:6px}
 .munverified{font-size:9px;color:#333;margin-left:6px}
 
-/* ── CARPOOL ── */
 .cp-form{border:1px solid var(--gb);padding:20px;background:var(--sf);margin-bottom:18px}
 .cp-label{font-size:10px;letter-spacing:2px;color:var(--gk);text-transform:uppercase;margin-bottom:10px;display:block}
 .cp-row{display:flex;gap:8px;margin-bottom:10px}
@@ -148,7 +124,6 @@ canvas#mx{position:fixed;top:0;left:0;width:100%;height:100%;opacity:.08;pointer
 .car-status.wait{color:#444}
 .car-seats{background:#001a00;color:#80ff00;border:1px solid #1a3a00;font-size:10px;font-weight:700;padding:4px 10px;letter-spacing:1px;flex-shrink:0}
 
-/* ── SEÑAL ── */
 .sc-wrap{border:1px solid var(--gb);overflow:hidden;background:#000;margin-bottom:12px}
 .sc-hdr{padding:14px 16px;border-bottom:1px solid var(--gb);display:flex;align-items:center;justify-content:space-between;gap:10px}
 .sc-hdr-left{display:flex;align-items:center;gap:10px}
@@ -162,7 +137,6 @@ canvas#mx{position:fixed;top:0;left:0;width:100%;height:100%;opacity:.08;pointer
 .sc-link:hover{color:var(--g)}
 .sc-note{font-size:10px;color:#1a3a1a;letter-spacing:2px;text-align:center;line-height:1.8;margin-top:8px}
 
-/* ── ADMIN PANEL ── */
 #screen-admin{padding:0 16px 80px}
 .admin-hdr{text-align:center;padding:24px 0 20px;border-bottom:1px solid var(--gb);margin-bottom:24px}
 .admin-title{font-family:'VT323',monospace;font-size:52px;color:var(--red);letter-spacing:4px}
@@ -184,10 +158,9 @@ canvas#mx{position:fixed;top:0;left:0;width:100%;height:100%;opacity:.08;pointer
 </style>
 </head>
 <body>
-
 <canvas id="mx"></canvas>
 
-<!-- ══ SCREEN: AUTH ══ -->
+<!-- AUTH -->
 <div id="screen-auth" class="screen active">
   <div class="auth-box">
     <div class="auth-logo">SONORA<br><span>XI</span></div>
@@ -201,16 +174,14 @@ canvas#mx{position:fixed;top:0;left:0;width:100%;height:100%;opacity:.08;pointer
   </div>
 </div>
 
-<!-- ══ SCREEN: MAIN APP ══ -->
+<!-- APP -->
 <div id="screen-app" class="screen">
 <div class="wrap">
-
   <div class="hdr">
     <div class="sys-tag">// SISTEMA ENCRIPTADO · ACCESO RESTRINGIDO</div>
     <div class="glitch">SONORA<br><span>XI</span></div>
     <div class="hdr-sub">VIE 29 MAY 2026 · <span class="blink">UBICACIÓN CLASIFICADA</span></div>
   </div>
-
   <div class="tabs">
     <button class="tb on" onclick="sw('cd',this)">[ CUENTA ]</button>
     <button class="tb" onclick="sw('brd',this)">[ TABLÓN ]</button>
@@ -247,9 +218,8 @@ canvas#mx{position:fixed;top:0;left:0;width:100%;height:100%;opacity:.08;pointer
     <div class="unlocked" id="unlocked-box">
       <div style="font-size:9px;letter-spacing:4px;color:var(--gk);margin-bottom:14px">// SEÑAL RECIBIDA · DESCIFRADO COMPLETO</div>
       <div class="addr-big" id="addr-type"></div>
-      <div class="addr-sub" id="addr-detail">Aquí va la dirección completa · Valencia</div>
-      <!-- ★ CAMBIA href POR EL LINK DE GOOGLE MAPS REAL -->
-      <a class="map-btn" id="map-link" href="https://maps.google.com" target="_blank">→ ABRIR MAPA</a>
+      <div class="addr-sub" id="addr-detail"></div>
+      <a class="map-btn" id="map-link" href="#" target="_blank">→ ABRIR MAPA</a>
     </div>
   </div>
 
@@ -309,11 +279,10 @@ canvas#mx{position:fixed;top:0;left:0;width:100%;height:100%;opacity:.08;pointer
     </div>
     <div class="sc-note">// SEÑAL DE AUDIO EN VIVO · ROTACIÓN ALEATORIA ENTRE ARTISTAS</div>
   </div>
-
 </div>
 </div>
 
-<!-- ══ SCREEN: ADMIN ══ -->
+<!-- ADMIN -->
 <div id="screen-admin" class="screen">
 <div class="wrap">
   <div class="admin-hdr">
@@ -332,62 +301,52 @@ canvas#mx{position:fixed;top:0;left:0;width:100%;height:100%;opacity:.08;pointer
 </div>
 </div>
 
-<!-- ══ FIREBASE + LÓGICA ══ -->
 <script type="module">
 import { initializeApp }   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc, query, orderBy }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-// ════════════════════════════════════════════
-//  ★ CONFIGURACIÓN — cambia estos valores
-// ════════════════════════════════════════════
+// ══════════════════════════════════════════
+//  CONFIGURACIÓN — edita aquí
+// ══════════════════════════════════════════
 
-// Contraseña de acceso para todos los asistentes
-const ACCESS_PASSWORD = "sonora2026";
+const ACCESS_PASSWORD = "sonora2026";       // ← contraseña para asistentes
+const ADMIN_PASSWORD  = "sonora2026admin";  // ← contraseña para admins
 
-// Contraseña del panel admin (entra como invitado y escribe esta)
-const ADMIN_PASSWORD  = "sonora2026admin";
+const ADDRESS_TEXT   = "NAVE INDUSTRIAL 4"; // ← dirección que se revela
+const ADDRESS_DETAIL = "Aquí la dirección completa · Valencia"; // ← detalle
+const MAP_LINK       = "https://maps.google.com/?q=TU+UBICACION"; // ← link mapa real
 
-// Dirección que se revela cuando llega la hora
-const ADDRESS_TEXT    = "NAVE INDUSTRIAL 4";
-const ADDRESS_DETAIL  = "Pol. El Bony · Carretera de Silla, km 3 · Valencia";
-const MAP_LINK        = "https://maps.google.com/?q=TU+UBICACION"; // ← pon el link real
-
-// Fecha y hora del evento (ISO 8601 local)
-const TARGET = new Date('2026-05-29T22:00:00');
+const TARGET = new Date('2026-05-29T22:00:00'); // ← fecha/hora del evento
 const START  = new Date('2026-01-01T00:00:00');
 
-// Perfiles de SoundCloud (se rotan aleatoriamente)
 const SC_ARTISTS = [
-  { name:"FRANCIS ESPINACO",  url:"https://soundcloud.com/user-845235880" },
-  { name:"SENMERI",           url:"https://soundcloud.com/senmeri/tracks" },
-  { name:"MIREIA CAMARENA",   url:"https://soundcloud.com/mireia-camarena/tracks" },
-  { name:"USER901179098",     url:"https://soundcloud.com/user901179098/tracks" },
-  { name:"CLARA ZARAGOZA",    url:"https://soundcloud.com/clara-zaragoza-175684940/tracks" },
-  { name:"TORETTO SOUNDS",    url:"https://soundcloud.com/toretto-sounds/tracks" },
-  { name:"DEEJEYA",           url:"https://soundcloud.com/deejeya/tracks" },
-  { name:"JUAN CARMONA",      url:"https://soundcloud.com/juan-carmona-513512584/tracks" },
+  { name:"FRANCIS ESPINACO", url:"https://soundcloud.com/user-845235880" },
+  { name:"SENMERI",          url:"https://soundcloud.com/senmeri/tracks" },
+  { name:"MIREIA CAMARENA",  url:"https://soundcloud.com/mireia-camarena/tracks" },
+  { name:"USER901179098",    url:"https://soundcloud.com/user901179098/tracks" },
+  { name:"CLARA ZARAGOZA",   url:"https://soundcloud.com/clara-zaragoza-175684940/tracks" },
+  { name:"TORETTO SOUNDS",   url:"https://soundcloud.com/toretto-sounds/tracks" },
+  { name:"DEEJEYA",          url:"https://soundcloud.com/deejeya/tracks" },
+  { name:"JUAN CARMONA",     url:"https://soundcloud.com/juan-carmona-513512584/tracks" },
 ];
 
-// Firebase config — pega aquí el tuyo
 const firebaseConfig = {
-  apiKey:            "TU_API_KEY",
-  authDomain:        "TU_PROJECT.firebaseapp.com",
-  projectId:         "TU_PROJECT_ID",
-  storageBucket:     "TU_PROJECT.appspot.com",
-  messagingSenderId: "TU_SENDER_ID",
-  appId:             "TU_APP_ID"
+  apiKey:            "AIzaSyDcGB33_ApiA8O2JdGf2nZ_Ob_3DLTxLxM",
+  authDomain:        "sonora-xi.firebaseapp.com",
+  projectId:         "sonora-xi",
+  storageBucket:     "sonora-xi.firebasestorage.app",
+  messagingSenderId: "805583969323",
+  appId:             "1:805583969323:web:c896edfd0f3f719ef79e6e"
 };
 
-// ════════════════════════════════════════════
-//  Init Firebase
-// ════════════════════════════════════════════
+// ══════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════
 const fbApp = initializeApp(firebaseConfig);
 const db    = getFirestore(fbApp);
 
-// ════════════════════════════════════════════
-//  MATRIX RAIN
-// ════════════════════════════════════════════
+// MATRIX RAIN
 const canvas = document.getElementById('mx');
 const ctx    = canvas.getContext('2d');
 function resize(){ canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
@@ -410,22 +369,21 @@ setInterval(() => {
   });
 }, 50);
 
-// ════════════════════════════════════════════
-//  AUTH — contraseña única
-// ════════════════════════════════════════════
-const SESSION_KEY = 'sonora_xi_auth';
-
-function isLoggedIn(){ return sessionStorage.getItem(SESSION_KEY) === 'ok'; }
+// ══════════════════════════════════════════
+//  AUTH
+// ══════════════════════════════════════════
+const SK = 'sonora_xi_auth';
+function isLoggedIn(){ return sessionStorage.getItem(SK) === 'ok'; }
 
 window.doLogin = function(){
   const val = document.getElementById('inp-pwd').value;
   const err = document.getElementById('auth-err');
   if (val === ADMIN_PASSWORD){
-    sessionStorage.setItem(SESSION_KEY, 'ok');
+    sessionStorage.setItem(SK, 'ok');
     showScreen('admin');
     initAdmin();
   } else if (val === ACCESS_PASSWORD){
-    sessionStorage.setItem(SESSION_KEY, 'ok');
+    sessionStorage.setItem(SK, 'ok');
     showScreen('app');
     initApp();
   } else {
@@ -435,25 +393,16 @@ window.doLogin = function(){
   }
 };
 
-// Comprueba sesión al cargar
-if (isLoggedIn()){
-  showScreen('app');
-  initApp();
-} else {
-  showScreen('auth');
-}
+if (isLoggedIn()){ showScreen('app'); initApp(); }
+else { showScreen('auth'); }
 
-// ════════════════════════════════════════════
-//  PANTALLAS
-// ════════════════════════════════════════════
-window.showScreen = function(name){
+// ══════════════════════════════════════════
+//  PANTALLAS / TABS
+// ══════════════════════════════════════════
+window.showScreen = function(n){
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById('screen-' + name).classList.add('active');
+  document.getElementById('screen-' + n).classList.add('active');
 };
-
-// ════════════════════════════════════════════
-//  TABS
-// ════════════════════════════════════════════
 window.sw = function(id, btn){
   document.querySelectorAll('.tc').forEach(t => t.classList.remove('on'));
   document.querySelectorAll('.tb').forEach(b => b.classList.remove('on'));
@@ -461,11 +410,10 @@ window.sw = function(id, btn){
   btn.classList.add('on');
 };
 
-// ════════════════════════════════════════════
+// ══════════════════════════════════════════
 //  CUENTA ATRÁS
-// ════════════════════════════════════════════
+// ══════════════════════════════════════════
 let unlocked = false;
-
 function updateCD(){
   const now  = new Date();
   const diff = Math.max(0, TARGET - now);
@@ -478,202 +426,147 @@ function updateCD(){
   document.getElementById('hh').textContent = String(h).padStart(2,'0');
   document.getElementById('mm').textContent = String(m).padStart(2,'0');
   document.getElementById('ss').textContent = String(s).padStart(2,'0');
-  const pct = Math.min(100, Math.max(0, Math.round(((now - START) / (TARGET - START)) * 100)));
+  const pct = Math.min(100,Math.max(0,Math.round(((now-START)/(TARGET-START))*100)));
   document.getElementById('pct').textContent = pct + '%';
   document.getElementById('pfill').style.width = pct + '%';
 }
-
-function typeAddr(txt, el, i = 0){
-  if (i <= txt.length){
-    el.textContent = txt.slice(0, i) + (i < txt.length ? '█' : '');
-    setTimeout(() => typeAddr(txt, el, i + 1), 55);
-  }
+function typeAddr(txt, el, i=0){
+  if(i<=txt.length){ el.textContent=txt.slice(0,i)+(i<txt.length?'█':''); setTimeout(()=>typeAddr(txt,el,i+1),55); }
 }
-
 function triggerUnlock(){
   unlocked = true;
   document.getElementById('locked-box').style.display = 'none';
   document.getElementById('unlocked-box').classList.add('show');
-  document.getElementById('addr-detail').textContent  = ADDRESS_DETAIL;
-  document.getElementById('map-link').href            = MAP_LINK;
+  document.getElementById('addr-detail').textContent = ADDRESS_DETAIL;
+  document.getElementById('map-link').href = MAP_LINK;
   typeAddr(ADDRESS_TEXT, document.getElementById('addr-type'));
 }
-
 window.toggleUnlock = function(){
-  if (unlocked){
-    unlocked = false;
-    document.getElementById('locked-box').style.display = 'block';
-    document.getElementById('unlocked-box').classList.remove('show');
-    document.getElementById('addr-type').textContent = '';
-  } else { triggerUnlock(); }
+  if(unlocked){ unlocked=false; document.getElementById('locked-box').style.display='block'; document.getElementById('unlocked-box').classList.remove('show'); document.getElementById('addr-type').textContent=''; }
+  else triggerUnlock();
 };
 
-// ════════════════════════════════════════════
-//  TABLÓN — Firestore realtime
-// ════════════════════════════════════════════
+// ══════════════════════════════════════════
+//  TABLÓN
+// ══════════════════════════════════════════
 const TAG_BC = { ice:'b-ice', beer:'b-beer', gf:'b-gf', allergy:'b-allergy', food:'b-food', other:'b-other' };
-let curTagId = 'other', curTagLabel = '[OTROS]';
-
+let curTagId='other', curTagLabel='[OTROS]';
 window.setTag = function(id, label, btn){
-  curTagId = id; curTagLabel = label;
-  document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('sel'));
+  curTagId=id; curTagLabel=label;
+  document.querySelectorAll('.tag-btn').forEach(b=>b.classList.remove('sel'));
   btn.classList.add('sel');
 };
-
 function initMsgs(){
-  const q = query(collection(db,'messages'), orderBy('ts','desc'));
-  onSnapshot(q, snap => {
+  onSnapshot(query(collection(db,'messages'),orderBy('ts','desc')), snap => {
     const list = document.getElementById('mlist');
     list.innerHTML = '';
-    if (snap.empty){ list.innerHTML = '<div class="empty-msg">// Sin transmisiones todavía</div>'; return; }
-    snap.forEach(ds => renderMsg(ds.data()));
+    if(snap.empty){ list.innerHTML='<div class="empty-msg">// Sin transmisiones todavía</div>'; return; }
+    snap.forEach(ds => {
+      const m  = ds.data();
+      const d  = document.createElement('div');
+      d.className = 'msg';
+      const bc = TAG_BC[m.tagId]||'b-other';
+      const ver = m.verified ? '<span class="mverified">✓ verificado</span>' : '<span class="munverified">○ sin verificar</span>';
+      d.innerHTML = `<span class="mbadge ${bc}">${m.tag}</span><span class="mtxt">${esc(m.txt)}${ver}</span><span class="mtime">${m.time}</span>`;
+      list.appendChild(d);
+    });
   });
 }
-
-function renderMsg(m){
-  const list = document.getElementById('mlist');
-  const d    = document.createElement('div');
-  d.className = 'msg';
-  const bc  = TAG_BC[m.tagId] || 'b-other';
-  const ver = m.verified
-    ? '<span class="mverified">✓ verificado</span>'
-    : '<span class="munverified">○ sin verificar</span>';
-  d.innerHTML = `<span class="mbadge ${bc}">${m.tag}</span><span class="mtxt">${esc(m.txt)}${ver}</span><span class="mtime">${m.time}</span>`;
-  list.appendChild(d);
-}
-
 window.sendMsg = async function(){
   const inp = document.getElementById('minp');
-  const txt = inp.value.trim();
-  if (!txt) return;
-  const now  = new Date();
-  const time = now.getHours() + ':' + String(now.getMinutes()).padStart(2,'0');
-  await addDoc(collection(db,'messages'), { tagId:curTagId, tag:curTagLabel, txt, time, ts:now.getTime(), verified:false });
-  inp.value = '';
+  const txt = inp.value.trim(); if(!txt) return;
+  const now = new Date();
+  const time = now.getHours()+':'+String(now.getMinutes()).padStart(2,'0');
+  await addDoc(collection(db,'messages'),{ tagId:curTagId, tag:curTagLabel, txt, time, ts:now.getTime(), verified:false });
+  inp.value='';
 };
+document.getElementById('minp').addEventListener('keydown', e=>{ if(e.key==='Enter') window.sendMsg(); });
 
-document.getElementById('minp').addEventListener('keydown', e => { if (e.key === 'Enter') window.sendMsg(); });
-
-// ════════════════════════════════════════════
-//  CARPOOL — Firestore realtime
-// ════════════════════════════════════════════
+// ══════════════════════════════════════════
+//  CARPOOL
+// ══════════════════════════════════════════
 function initCars(){
-  const q = query(collection(db,'carpool'), orderBy('ts','desc'));
-  onSnapshot(q, snap => {
+  onSnapshot(query(collection(db,'carpool'),orderBy('ts','desc')), snap => {
     const list = document.getElementById('carlist');
     list.innerHTML = '';
-    if (snap.empty){ list.innerHTML = '<div class="empty-msg">// Sin plazas publicadas todavía</div>'; return; }
-    snap.forEach(ds => renderCar({ id:ds.id, ...ds.data() }));
+    if(snap.empty){ list.innerHTML='<div class="empty-msg">// Sin plazas publicadas todavía</div>'; return; }
+    snap.forEach(ds => {
+      const c = { id:ds.id, ...ds.data() };
+      const d = document.createElement('div');
+      d.className = 'car-item'+(c.approved?'':' pending');
+      const st = c.approved ? '<div class="car-status ok">✓ validado</div>' : '<div class="car-status wait">○ pendiente de validación</div>';
+      d.innerHTML = `<div><div class="car-from">${esc(c.from)}</div><div class="car-contact">${esc(c.contact||'—')}</div>${st}</div><div class="car-seats">${c.seats} PLAZAS</div>`;
+      list.appendChild(d);
+    });
   });
 }
-
-function renderCar(c){
-  const list = document.getElementById('carlist');
-  const d    = document.createElement('div');
-  d.className = 'car-item' + (c.approved ? '' : ' pending');
-  const st   = c.approved
-    ? '<div class="car-status ok">✓ validado</div>'
-    : '<div class="car-status wait">○ pendiente de validación</div>';
-  d.innerHTML = `<div><div class="car-from">${esc(c.from)}</div><div class="car-contact">${esc(c.contact||'—')}</div>${st}</div><div class="car-seats">${c.seats} PLAZAS</div>`;
-  list.appendChild(d);
-}
-
 window.addCar = async function(){
-  const from    = document.getElementById('cpfrom').value.trim();
-  const contact = document.getElementById('cpcont').value.trim();
-  const seats   = parseInt(document.getElementById('cpseats').value);
-  if (!from) return;
-  await addDoc(collection(db,'carpool'), { from, contact, seats, ts:Date.now(), approved:false });
-  document.getElementById('cpfrom').value = '';
-  document.getElementById('cpcont').value = '';
+  const from=document.getElementById('cpfrom').value.trim();
+  const contact=document.getElementById('cpcont').value.trim();
+  const seats=parseInt(document.getElementById('cpseats').value);
+  if(!from) return;
+  await addDoc(collection(db,'carpool'),{ from, contact, seats, ts:Date.now(), approved:false });
+  document.getElementById('cpfrom').value='';
+  document.getElementById('cpcont').value='';
 };
 
-// ════════════════════════════════════════════
-//  SOUNDCLOUD — rotación aleatoria
-// ════════════════════════════════════════════
+// ══════════════════════════════════════════
+//  SOUNDCLOUD
+// ══════════════════════════════════════════
 let scIdx = Math.floor(Math.random() * SC_ARTISTS.length);
-
 function loadSC(idx){
   const a   = SC_ARTISTS[idx];
   const enc = encodeURIComponent(a.url);
-  document.getElementById('sc-frame').src            = `https://w.soundcloud.com/player/?url=${enc}&color=%2300ff41&auto_play=true&hide_related=false&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=true`;
-  document.getElementById('sc-link').href            = a.url;
-  document.getElementById('sc-link').textContent     = '→ ABRIR EN SOUNDCLOUD: ' + a.url.replace('https://','');
-  document.getElementById('sc-artist-name').textContent = '// SEÑAL · ' + a.name;
+  document.getElementById('sc-frame').src = `https://w.soundcloud.com/player/?url=${enc}&color=%2300ff41&auto_play=true&hide_related=false&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=true`;
+  document.getElementById('sc-link').href = a.url;
+  document.getElementById('sc-link').textContent = '→ ABRIR EN SOUNDCLOUD: '+a.url.replace('https://','');
+  document.getElementById('sc-artist-name').textContent = '// SEÑAL · '+a.name;
 }
+window.nextArtist = function(){ scIdx=(scIdx+1)%SC_ARTISTS.length; loadSC(scIdx); };
 
-window.nextArtist = function(){
-  scIdx = (scIdx + 1) % SC_ARTISTS.length;
-  loadSC(scIdx);
-};
-
-// ════════════════════════════════════════════
-//  ADMIN PANEL
-// ════════════════════════════════════════════
+// ══════════════════════════════════════════
+//  ADMIN
+// ══════════════════════════════════════════
 window.initAdmin = function(){
-  // carpool pendiente
-  onSnapshot(query(collection(db,'carpool'), orderBy('ts','asc')), snap => {
-    const el = document.getElementById('admin-cars');
-    el.innerHTML = '';
-    let n = 0;
+  onSnapshot(query(collection(db,'carpool'),orderBy('ts','asc')), snap => {
+    const el=document.getElementById('admin-cars'); el.innerHTML=''; let n=0;
     snap.forEach(ds => {
-      const c = { id:ds.id, ...ds.data() };
-      if (c.approved) return;
-      n++;
-      const d = document.createElement('div');
-      d.className = 'admin-item';
-      d.innerHTML = `<div class="admin-item-info"><div class="admin-item-name">${esc(c.from)} · ${c.seats} plazas</div><div class="admin-item-meta">${esc(c.contact||'—')}</div></div><div class="admin-actions"><button class="btn-ok" onclick="approveDoc('carpool','${c.id}',true)">✓ VALIDAR</button><button class="btn-ko" onclick="approveDoc('carpool','${c.id}',false)">✗ BORRAR</button></div>`;
+      const c={id:ds.id,...ds.data()}; if(c.approved) return; n++;
+      const d=document.createElement('div'); d.className='admin-item';
+      d.innerHTML=`<div class="admin-item-info"><div class="admin-item-name">${esc(c.from)} · ${c.seats} plazas</div><div class="admin-item-meta">${esc(c.contact||'—')}</div></div><div class="admin-actions"><button class="btn-ok" onclick="approveDoc('carpool','${c.id}',true)">✓ VALIDAR</button><button class="btn-ko" onclick="approveDoc('carpool','${c.id}',false)">✗ BORRAR</button></div>`;
       el.appendChild(d);
     });
-    if (!n) el.innerHTML = '<div class="empty-msg">// Todo validado</div>';
+    if(!n) el.innerHTML='<div class="empty-msg">// Todo validado</div>';
   });
-
-  // mensajes pendientes
-  onSnapshot(query(collection(db,'messages'), orderBy('ts','asc')), snap => {
-    const el = document.getElementById('admin-msgs');
-    el.innerHTML = '';
-    let n = 0;
+  onSnapshot(query(collection(db,'messages'),orderBy('ts','asc')), snap => {
+    const el=document.getElementById('admin-msgs'); el.innerHTML=''; let n=0;
     snap.forEach(ds => {
-      const m = { id:ds.id, ...ds.data() };
-      if (m.verified) return;
-      n++;
-      const d = document.createElement('div');
-      d.className = 'admin-item';
-      d.innerHTML = `<div class="admin-item-info"><div class="admin-item-name">${m.tag} ${esc(m.txt)}</div><div class="admin-item-meta">${m.time}</div></div><div class="admin-actions"><button class="btn-ok" onclick="verifyMsg('${m.id}',true)">✓ VERIFICAR</button><button class="btn-ko" onclick="verifyMsg('${m.id}',false)">✗ BORRAR</button></div>`;
+      const m={id:ds.id,...ds.data()}; if(m.verified) return; n++;
+      const d=document.createElement('div'); d.className='admin-item';
+      d.innerHTML=`<div class="admin-item-info"><div class="admin-item-name">${m.tag} ${esc(m.txt)}</div><div class="admin-item-meta">${m.time}</div></div><div class="admin-actions"><button class="btn-ok" onclick="verifyMsg('${m.id}',true)">✓ VERIFICAR</button><button class="btn-ko" onclick="verifyMsg('${m.id}',false)">✗ BORRAR</button></div>`;
       el.appendChild(d);
     });
-    if (!n) el.innerHTML = '<div class="empty-msg">// Sin mensajes pendientes</div>';
+    if(!n) el.innerHTML='<div class="empty-msg">// Sin mensajes pendientes</div>';
   });
 };
-
-window.approveDoc = async function(col, id, ok){
+window.approveDoc = async function(col,id,ok){
   ok ? await updateDoc(doc(db,col,id),{approved:true}) : await deleteDoc(doc(db,col,id));
 };
-window.verifyMsg = async function(id, ok){
+window.verifyMsg = async function(id,ok){
   ok ? await updateDoc(doc(db,'messages',id),{verified:true}) : await deleteDoc(doc(db,'messages',id));
 };
 
-// ════════════════════════════════════════════
+// ══════════════════════════════════════════
 //  APP INIT
-// ════════════════════════════════════════════
-let appInited = false;
+// ══════════════════════════════════════════
+let appInited=false;
 window.initApp = function(){
-  if (appInited) return;
-  appInited = true;
-  setInterval(updateCD, 1000);
-  updateCD();
-  initMsgs();
-  initCars();
-  loadSC(scIdx);
+  if(appInited) return; appInited=true;
+  setInterval(updateCD,1000); updateCD();
+  initMsgs(); initCars(); loadSC(scIdx);
 };
 
-// ════════════════════════════════════════════
-//  UTILS
-// ════════════════════════════════════════════
-function esc(s){
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 </script>
 </body>
 </html>
