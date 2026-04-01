@@ -464,7 +464,18 @@ body.night .msg-reply{background:rgba(45,164,78,.1);color:#6ddb8a}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 .sc-name{font-family:'EB Garamond',serif;font-style:italic;font-size:13px;letter-spacing:2px;color:var(--crema);margin-left:6px;flex:1}
 .sc-next{background:var(--amarillo);border:2px solid var(--crema);color:var(--negro);font-family:'EB Garamond',serif;font-weight:700;font-size:12px;letter-spacing:1px;padding:4px 12px;cursor:pointer}
-.sc-frame{width:100%;display:block;border:none;background:#f2f2f2}
+.sc-frame{width:100%;display:none;border:none;background:#f2f2f2}
+.sc-frame.loaded{display:block}
+.sc-play-btn{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  width:100%;padding:20px;
+  background:var(--negro);color:var(--amarillo);
+  font-family:'EB Garamond',serif;font-weight:700;
+  font-size:16px;letter-spacing:2px;
+  border:none;cursor:pointer;transition:.15s;
+}
+.sc-play-btn:hover{background:#333}
+body.night .sc-play-btn{background:var(--bg);color:var(--amarillo)}
 .sc-artist-desc{
   font-family:'EB Garamond',serif;font-style:italic;
   font-size:13px;color:#888;letter-spacing:1px;
@@ -1068,6 +1079,7 @@ body.night .night-toggle{
             <button class="sc-next" id="btn-next">Siguiente ›</button>
           </div>
           <div class="sc-artist-desc" id="sc-artist-desc"></div>
+          <button class="sc-play-btn" id="sc-play">▶ Reproducir</button>
           <iframe class="sc-frame" id="sc-frame" height="280" scrolling="no" frameborder="no" allow="autoplay" src="about:blank"></iframe>
           <div class="sc-links">
             <a id="sc-link-sc" href="https://soundcloud.com" target="_blank">soundcloud</a>
@@ -1145,6 +1157,7 @@ body.night .night-toggle{
             <button class="sc-next" id="btn-next2">Siguiente ›</button>
           </div>
           <div class="sc-artist-desc" id="sc-artist-desc2"></div>
+          <button class="sc-play-btn" id="sc-play2">▶ Reproducir</button>
           <iframe class="sc-frame" id="sc-frame2" height="280" scrolling="no" frameborder="no" allow="autoplay" src="about:blank"></iframe>
           <div class="sc-links">
             <a id="sc-link-sc2" href="https://soundcloud.com" target="_blank">soundcloud</a>
@@ -1580,7 +1593,10 @@ const scUrl = (url) => {
 
 function loadSC(idx){
   const a = SC_ARTISTS[idx];
-  document.getElementById('sc-frame').src = scUrl(a.url);
+  // Don't load iframe yet — wait for user click
+  document.getElementById('sc-frame').classList.remove('loaded');
+  document.getElementById('sc-frame').src = 'about:blank';
+  document.getElementById('sc-play').style.display = 'flex';
   document.getElementById('sc-link-sc').href = a.sc;
   document.getElementById('sc-link-ig').href = a.ig;
   document.getElementById('sc-artist-name').textContent = a.name;
@@ -1588,12 +1604,22 @@ function loadSC(idx){
 }
 function loadSC2(idx){
   const a = SC_ARTISTS[idx];
-  document.getElementById('sc-frame2').src = scUrl(a.url);
+  document.getElementById('sc-frame2').classList.remove('loaded');
+  document.getElementById('sc-frame2').src = 'about:blank';
+  document.getElementById('sc-play2').style.display = 'flex';
   document.getElementById('sc-link-sc2').href = a.sc;
   document.getElementById('sc-link-ig2').href = a.ig;
   document.getElementById('sc-artist-name2').textContent = a.name;
   document.getElementById('sc-artist-desc2').textContent = a.customDesc || a.desc || '';
 }
+function playSC(frameId, btnId){
+  const a = SC_ARTISTS[scIdx];
+  document.getElementById(frameId).src = scUrl(a.url);
+  document.getElementById(frameId).classList.add('loaded');
+  document.getElementById(btnId).style.display = 'none';
+}
+document.getElementById('sc-play').addEventListener('click', () => playSC('sc-frame','sc-play'));
+document.getElementById('sc-play2').addEventListener('click', () => playSC('sc-frame2','sc-play2'));
 function nextSC(){ scIdx = (scIdx+1) % SC_ARTISTS.length; loadSC(scIdx); loadSC2(scIdx); }
 document.getElementById('btn-next').addEventListener('click', nextSC);
 document.getElementById('btn-next2').addEventListener('click', nextSC);
