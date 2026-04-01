@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#5bb8f5">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="sonorin.jpg">
 <title>SAN SONORÍN</title>
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,700;0,800;1,400;1,700;1,800&display=swap" rel="stylesheet">
 <style>
@@ -32,85 +34,92 @@ body{
 .screen.active{display:block}
 
 /* ══════════════════════════════════
-   AUTH — díptico
+   AUTH — ilustración fullscreen + form overlay
 ══════════════════════════════════ */
 #screen-auth{
   min-height:100vh;
   display:none;
-  align-items:stretch;
+  position:relative;
+  overflow:hidden;
 }
-#screen-auth.active{display:flex}
+#screen-auth.active{display:block}
 
-.auth-img{
-  width:50%;
-  flex-shrink:0;
+.auth-bg{
+  width:100%;
+  min-height:100vh;
   background-image:url('sonorin.jpg');
   background-size:contain;
   background-repeat:no-repeat;
   background-position:center center;
   background-color:var(--crema);
-  border-right:4px solid var(--negro);
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  padding:0 20px 40px;
+}
+
+/* Degradado inferior para legibilidad del form */
+.auth-bg::after{
+  content:'';
+  position:absolute;
+  bottom:0;left:0;right:0;
+  height:55%;
+  background:linear-gradient(0deg,
+    rgba(26,26,26,.88) 0%,
+    rgba(26,26,26,.6) 40%,
+    transparent 100%
+  );
+  pointer-events:none;
+  z-index:1;
 }
 
 .auth-form{
-  flex:1;
-  background:var(--crema);
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  padding:32px 24px;
+  position:relative;
+  z-index:2;
+  width:100%;
+  max-width:340px;
   text-align:center;
+  padding-bottom:20px;
+  /* empieza oculto */
+  opacity:0;
+  transform:translateY(30px);
+  transition:opacity .8s ease, transform .8s ease;
+}
+.auth-form.visible{
+  opacity:1;
+  transform:translateY(0);
 }
 
 .auth-eyebrow{
   font-family:'EB Garamond',serif;
   font-style:italic;font-weight:400;
   font-size:12px;letter-spacing:3px;
-  color:#aaa;margin-bottom:10px;
-}
-
-.auth-title{
-  font-family:'EB Garamond',serif;font-weight:800;
-  font-size:clamp(48px,10vw,72px);
-  line-height:.82;
-  color:var(--negro);
-  -webkit-text-stroke:2px var(--negro);
-  paint-order:stroke fill;
-  letter-spacing:2px;display:block;margin-bottom:4px;
-}
-
-.auth-xi{
-  font-family:'EB Garamond',serif;font-weight:800;
-  font-size:clamp(32px,6vw,48px);
-  color:var(--rojo);
-  -webkit-text-stroke:2px var(--negro);
-  paint-order:stroke fill;
-  letter-spacing:8px;display:block;margin-bottom:16px;
-}
-
-.auth-rule{
-  border:none;border-top:2px solid var(--negro);
-  margin:0 0 16px;
+  color:rgba(255,255,255,.85);margin-bottom:12px;
+  text-shadow:0 1px 4px rgba(0,0,0,.6);
 }
 
 .auth-label{
   font-family:'EB Garamond',serif;font-weight:700;
   font-size:13px;letter-spacing:2px;
-  color:var(--negro);margin-bottom:8px;
+  color:var(--amarillo);margin-bottom:8px;
   display:block;text-transform:uppercase;
+  text-shadow:0 1px 4px rgba(0,0,0,.6);
 }
 
 .auth-inp{
-  width:100%;background:#fff;
-  border:3px solid var(--negro);
-  color:var(--negro);
+  width:100%;
+  background:rgba(255,255,255,.12);
+  border:2px solid rgba(255,255,255,.25);
+  color:#fff;
   font-family:'EB Garamond',serif;font-style:italic;
-  font-size:18px;padding:12px;
+  font-size:18px;padding:14px;
   outline:none;margin-bottom:12px;
   text-align:center;letter-spacing:4px;
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
 }
-.auth-inp:focus{border-color:var(--rojo)}
-.auth-inp::placeholder{color:#ccc;letter-spacing:2px;font-size:13px}
+.auth-inp:focus{border-color:var(--amarillo)}
+.auth-inp::placeholder{color:rgba(255,255,255,.3);letter-spacing:2px;font-size:13px}
 
 .auth-btn{
   width:100%;background:var(--rojo);color:var(--amarillo);
@@ -119,21 +128,42 @@ body{
   font-size:20px;letter-spacing:3px;
   cursor:pointer;
   box-shadow:5px 5px 0 var(--negro);
-  transition:.1s;
+  transition:.15s;
   -webkit-text-stroke:.5px var(--negro);paint-order:stroke fill;
 }
 .auth-btn:hover{transform:translate(2px,2px);box-shadow:3px 3px 0 var(--negro)}
 
 .auth-err{
   font-family:'EB Garamond',serif;font-style:italic;
-  font-size:13px;color:var(--rojo);
+  font-size:13px;color:var(--amarillo);
   margin-top:10px;min-height:18px;text-align:center;
+  text-shadow:0 1px 3px rgba(0,0,0,.5);
 }
 
 .auth-info{
   font-family:'EB Garamond',serif;font-style:italic;
-  font-size:12px;color:#aaa;
-  margin-top:16px;letter-spacing:1px;line-height:1.8;
+  font-size:12px;color:rgba(255,255,255,.65);
+  margin-top:14px;letter-spacing:1px;line-height:1.8;
+  text-shadow:0 1px 3px rgba(0,0,0,.5);
+}
+
+/* Tap hint que desaparece cuando llega el form */
+.auth-tap{
+  position:absolute;
+  bottom:28%;left:0;right:0;
+  z-index:2;
+  text-align:center;
+  font-family:'EB Garamond',serif;font-style:italic;
+  font-size:13px;letter-spacing:3px;
+  color:rgba(255,255,255,.5);
+  animation:fadeInOut 2s ease forwards;
+  pointer-events:none;
+}
+@keyframes fadeInOut{
+  0%{opacity:0}
+  30%{opacity:.6}
+  80%{opacity:.6}
+  100%{opacity:0}
 }
 
 /* ══════════════════════════════════
@@ -147,7 +177,7 @@ body{
 
 .hdr-eyebrow{
   font-family:'EB Garamond',serif;font-style:italic;
-  font-size:12px;letter-spacing:3px;color:var(--azul-dark);margin-bottom:6px;
+  font-size:16px;letter-spacing:3px;color:var(--azul-dark);margin-bottom:6px;
 }
 
 .hdr-title{
@@ -180,7 +210,7 @@ body{
 
 .hdr-sub{
   font-family:'EB Garamond',serif;font-style:italic;
-  font-size:13px;color:var(--azul-dark);
+  font-size:17px;color:var(--azul-dark);
   letter-spacing:2px;margin-top:10px;
   animation:blink 1.2s step-end infinite;
 }
@@ -203,7 +233,8 @@ body{
 }
 .tb:hover:not(.on){background:rgba(255,255,255,.15)}
 .tc{display:none;padding-top:22px}
-.tc.on{display:block}
+.tc.on{display:block;animation:tabIn .25s ease forwards}
+@keyframes tabIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
 /* CARD */
 .card{
@@ -391,7 +422,19 @@ body{
 .mtime{font-family:'EB Garamond',serif;font-style:italic;font-size:11px;color:#bbb;flex-shrink:0;white-space:nowrap}
 .mverified{font-size:12px;color:var(--verde);margin-left:5px;font-weight:700}
 .munverified{font-size:12px;color:#ddd;margin-left:5px}
+.mauthor{
+  display:block;font-weight:700;font-size:12px;
+  letter-spacing:1px;color:var(--azul-dark);margin-bottom:2px;
+}
+body.night .mauthor{color:var(--glow-azul)}
 .empty-msg{font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:#aaa;padding:14px 0;text-align:center}
+.msg-reply{
+  display:block;margin-top:6px;padding:6px 10px;
+  background:rgba(45,164,78,.08);border-left:3px solid var(--verde);
+  font-family:'EB Garamond',serif;font-size:13px;font-style:italic;
+  color:var(--verde);
+}
+body.night .msg-reply{background:rgba(45,164,78,.1);color:#6ddb8a}
 
 /* CARPOOL */
 .cp-form{background:#fff8e7;border:2px solid var(--negro);padding:18px;margin-bottom:16px}
@@ -421,7 +464,14 @@ body{
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 .sc-name{font-family:'EB Garamond',serif;font-style:italic;font-size:13px;letter-spacing:2px;color:var(--crema);margin-left:6px;flex:1}
 .sc-next{background:var(--amarillo);border:2px solid var(--crema);color:var(--negro);font-family:'EB Garamond',serif;font-weight:700;font-size:12px;letter-spacing:1px;padding:4px 12px;cursor:pointer}
-.sc-frame{width:100%;display:block;border:none;background:#000}
+.sc-frame{width:100%;display:block;border:none;background:#f2f2f2}
+.sc-artist-desc{
+  font-family:'EB Garamond',serif;font-style:italic;
+  font-size:13px;color:#888;letter-spacing:1px;
+  padding:8px 14px;background:var(--crema);
+  border-bottom:1px solid #e0d8c8;
+}
+body.night .sc-artist-desc{background:var(--bg-card);color:var(--text-dim);border-bottom-color:var(--border)}
 .sc-links{display:flex;justify-content:center;gap:20px;padding:10px;border-top:2px solid var(--negro);background:var(--crema)}
 .sc-links a{font-family:'EB Garamond',serif;font-style:italic;font-size:13px;letter-spacing:2px;color:var(--negro);text-decoration:none;border-bottom:2px solid var(--rojo);padding-bottom:1px}
 .sc-links a:hover{color:var(--rojo)}
@@ -438,7 +488,7 @@ body{
 .admin-sub{font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:#888;letter-spacing:2px;margin-top:4px}
 .admin-section{margin-bottom:28px}
 .admin-sec-title{font-family:'EB Garamond',serif;font-weight:700;font-size:13px;letter-spacing:2px;color:#888;text-transform:uppercase;margin-bottom:12px;padding-bottom:6px;border-bottom:2px dashed #ccc}
-.admin-item{background:#fff8e7;border:2px solid var(--negro);padding:10px 14px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.admin-item{background:#fff8e7;border:2px solid var(--negro);padding:10px 14px;margin-bottom:8px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px}
 .admin-item-info{flex:1;min-width:0}
 .admin-item-name{font-family:'EB Garamond',serif;font-weight:800;font-size:15px;color:var(--negro);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .admin-item-meta{font-family:'EB Garamond',serif;font-style:italic;font-size:12px;color:#888;margin-top:2px}
@@ -448,23 +498,460 @@ body{
 .btn-strike{background:#e67e22;color:#fff;border:2px solid var(--negro);font-family:'EB Garamond',serif;font-weight:700;font-size:12px;padding:4px 8px;cursor:pointer;letter-spacing:1px}
 .admin-back{display:block;margin:0 auto;background:none;border:2px solid var(--negro);color:var(--negro);font-family:'EB Garamond',serif;font-style:italic;font-size:15px;letter-spacing:2px;padding:10px 28px;cursor:pointer;box-shadow:3px 3px 0 var(--negro)}
 .admin-back:hover{background:rgba(0,0,0,.05)}
+
+/* EDICIONES ASISTIDAS */
+.ed-role{
+  font-family:'EB Garamond',serif;font-weight:800;
+  font-size:20px;letter-spacing:3px;color:var(--rojo);
+  text-align:center;margin-bottom:14px;
+  -webkit-text-stroke:1px var(--negro);paint-order:stroke fill;
+}
+.ed-grid{
+  display:flex;flex-direction:column;gap:6px;
+}
+.ed-chip{
+  background:#fff;border:2px solid var(--negro);
+  padding:10px 14px;text-align:left;cursor:pointer;
+  font-family:'EB Garamond',serif;
+  color:var(--negro);
+  box-shadow:2px 2px 0 var(--negro);transition:.15s;
+  display:flex;align-items:center;gap:10px;
+}
+.ed-chip:hover{background:#f0e8d0}
+.ed-chip.on{
+  background:var(--rojo);color:var(--amarillo);
+  border-color:var(--negro);
+}
+.ed-num{
+  font-weight:800;font-size:15px;letter-spacing:1px;
+  min-width:32px;flex-shrink:0;
+}
+.ed-name{
+  font-weight:800;font-size:15px;flex-shrink:0;
+}
+.ed-sub{
+  font-style:italic;font-size:14px;
+  opacity:.7;flex:1;min-width:0;
+}
+.ed-date{
+  font-style:italic;font-size:11px;letter-spacing:1px;
+  opacity:.5;flex-shrink:0;
+}
+.ed-chip.on .ed-sub,.ed-chip.on .ed-date{opacity:.7}
+.ed-chip.locked-ed{
+  cursor:default;opacity:.5;
+  border-style:dashed;
+  box-shadow:none;
+}
+.ed-chip.locked-ed:hover{background:#fff}
+body.night .ed-chip.locked-ed:hover{background:var(--bg-card)}
+body.night .ed-chip{background:var(--bg-card);border-color:var(--border);color:var(--text);box-shadow:2px 2px 0 #000}
+body.night .ed-chip.on{background:var(--rojo);color:var(--amarillo)}
+body.night .ed-role{color:var(--amarillo);-webkit-text-stroke:1px transparent;text-shadow:0 0 10px var(--glow-amarillo)}
+
+/* ADMIN LINK */
+.admin-link{
+  background:var(--negro);color:var(--amarillo);
+  border:2px solid var(--negro);
+  font-family:'EB Garamond',serif;font-weight:700;
+  font-size:14px;letter-spacing:2px;
+  padding:10px 24px;cursor:pointer;
+  box-shadow:3px 3px 0 var(--negro);
+  transition:.15s;
+}
+.admin-link:hover{transform:translate(1px,1px);box-shadow:2px 2px 0 var(--negro)}
+body.night .admin-link{background:var(--bg-card);border-color:var(--border);color:var(--amarillo);box-shadow:3px 3px 0 #000}
+
+/* ADMIN MODAL */
+.admin-modal{
+  position:fixed;top:0;left:0;right:0;bottom:0;
+  background:rgba(0,0,0,.7);z-index:10000;
+  display:flex;align-items:center;justify-content:center;
+  padding:20px;
+}
+.admin-modal-box{
+  background:var(--crema);border:3px solid var(--negro);
+  box-shadow:8px 8px 0 var(--negro);
+  padding:28px;max-width:360px;width:100%;text-align:center;
+}
+body.night .admin-modal-box{background:var(--bg-card);border-color:var(--border);box-shadow:8px 8px 0 #000}
+
+/* ADMIN INFO FORM */
+.admin-info-form{display:flex;flex-direction:column;gap:12px}
+.admin-field{display:flex;flex-direction:column;gap:4px}
+.admin-field-label{
+  font-family:'EB Garamond',serif;font-weight:700;
+  font-size:13px;letter-spacing:2px;color:var(--negro);
+  text-transform:uppercase;
+}
+.admin-textarea{
+  background:#fff;border:2px solid var(--negro);
+  font-family:'EB Garamond',serif;font-size:14px;
+  padding:10px;outline:none;resize:vertical;
+  line-height:1.6;
+}
+.admin-textarea:focus{border-color:var(--rojo)}
+body.night .admin-field-label{color:var(--text-dim)}
+body.night .admin-textarea{background:var(--bg-input);border-color:var(--border);color:var(--text)}
+
+/* INFO SECTION (dynamic) */
+.info-section{
+  border-bottom:1px solid #e0d8c8;padding:12px 0;
+}
+.info-section:last-child{border-bottom:none}
+.info-section-title{
+  font-family:'EB Garamond',serif;font-weight:800;
+  font-size:15px;color:var(--negro);letter-spacing:1px;
+  display:flex;align-items:center;gap:8px;
+  cursor:pointer;
+}
+.info-section-title .info-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.info-section-content{
+  font-family:'EB Garamond',serif;font-size:14px;
+  color:#555;line-height:1.8;padding:8px 0 4px 18px;
+  white-space:pre-line;
+}
+.info-section-content:empty{display:none}
+.info-section-content:empty::after{
+  content:'Próximamente...';display:block;
+  font-style:italic;color:#bbb;
+}
+body.night .info-section{border-bottom-color:var(--border)}
+body.night .info-section-title{color:var(--text)}
+body.night .info-section-content{color:var(--text-dim)}
+
+/* TOAST */
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--negro);color:var(--amarillo);
+  font-family:'EB Garamond',serif;font-weight:700;
+  font-size:14px;letter-spacing:2px;
+  padding:12px 24px;
+  border:2px solid var(--amarillo);
+  box-shadow:4px 4px 0 rgba(0,0,0,.3);
+  z-index:9999;opacity:0;
+  transition:opacity .3s ease,transform .3s ease;
+  pointer-events:none;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* COPY BTN */
+.copy-btn{
+  display:inline-block;background:none;color:var(--verde);
+  border:2px solid var(--verde);padding:6px 16px;margin-top:12px;
+  font-family:'EB Garamond',serif;font-weight:700;
+  font-size:13px;letter-spacing:2px;cursor:pointer;
+  transition:.15s;
+}
+.copy-btn:hover{background:var(--verde);color:#fff}
+
+/* DEMO BUTTONS — hidden by default, show via ?dev=1 */
+.demo-btn{display:none!important}
+body.dev-mode .demo-btn{display:block!important;margin:0 auto 12px;background:none;border:2px dashed var(--negro);color:var(--negro);font-family:'EB Garamond',serif;font-style:italic;font-size:13px;letter-spacing:2px;padding:6px 16px;cursor:pointer}
+
+/* SEND BTN COOLDOWN */
+.send-btn:disabled,.offer-btn:disabled{opacity:.4;cursor:not-allowed}
+
+/* ══════════════════════════════════
+   RPG LAYER
+══════════════════════════════════ */
+
+/* XP BAR */
+.xp-wrap{margin-bottom:16px}
+.xp-hdr{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.xp-level{
+  font-family:'EB Garamond',serif;font-weight:800;
+  font-size:13px;letter-spacing:2px;color:var(--rojo);
+  text-transform:uppercase;
+}
+.xp-pct{
+  font-family:'EB Garamond',serif;font-weight:800;font-style:italic;
+  font-size:13px;letter-spacing:1px;color:#888;
+}
+.xp-bar{
+  height:18px;background:#fff;border:3px solid var(--negro);
+  overflow:hidden;position:relative;
+  box-shadow:inset 0 2px 4px rgba(0,0,0,.1);
+}
+.xp-fill{
+  height:100%;
+  background:repeating-linear-gradient(
+    90deg,
+    var(--rojo) 0,var(--rojo) 6px,
+    var(--amarillo) 6px,var(--amarillo) 12px
+  );
+  transition:width 1s ease;
+  position:relative;
+}
+/* Shimmer on the XP fill */
+.xp-fill::after{
+  content:'';position:absolute;top:0;left:0;right:0;bottom:0;
+  background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.3) 50%,transparent 100%);
+  animation:xpShimmer 2s ease-in-out infinite;
+}
+@keyframes xpShimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+
+/* Notches on bar every 20% */
+.xp-bar::after{
+  content:'';position:absolute;top:0;bottom:0;left:0;right:0;
+  background:repeating-linear-gradient(90deg,
+    transparent 0, transparent calc(20% - 1px),
+    var(--negro) calc(20% - 1px), var(--negro) calc(20% + 1px),
+    transparent calc(20% + 1px)
+  );
+  pointer-events:none;z-index:1;
+}
+
+.xp-rank{
+  font-family:'EB Garamond',serif;font-style:italic;
+  font-size:12px;letter-spacing:2px;color:#aaa;
+  text-align:center;margin-top:6px;
+}
+
+/* LOCKED — RPG boss door style */
+.locked{position:relative;overflow:hidden}
+.locked::before{
+  content:'';position:absolute;top:0;left:0;right:0;bottom:0;
+  background:repeating-linear-gradient(
+    0deg,
+    transparent 0,transparent 3px,
+    rgba(0,0,0,.03) 3px,rgba(0,0,0,.03) 4px
+  );
+  pointer-events:none;
+}
+
+/* QUEST BADGE on card titles */
+.quest-badge{
+  display:inline-block;
+  background:var(--amarillo);color:var(--negro);
+  font-family:'EB Garamond',serif;font-weight:800;
+  font-size:9px;letter-spacing:2px;
+  padding:2px 6px;margin-left:8px;
+  border:2px solid var(--negro);
+  vertical-align:middle;
+  text-transform:uppercase;
+}
+
+/* PARTY MEMBER count in caravana */
+.party-count{
+  font-family:'EB Garamond',serif;font-weight:800;
+  font-size:12px;letter-spacing:2px;color:var(--verde);
+  text-align:center;margin-bottom:12px;
+}
+
+/* ══════════════════════════════════
+   DARK MODE — NIGHT
+══════════════════════════════════ */
+body.night{
+  --bg:#0a0e1a;
+  --bg-card:#121828;
+  --bg-input:#0d1220;
+  --text:#e8e4d8;
+  --text-dim:#666;
+  --border:#2a3a5a;
+  --glow-rojo:rgba(232,0,26,.4);
+  --glow-amarillo:rgba(247,226,0,.3);
+  --glow-azul:rgba(91,184,245,.3);
+}
+
+body.night{background:var(--bg)}
+body.night #screen-app{background:var(--bg)}
+body.night #screen-admin{background:var(--bg)}
+
+/* Header */
+body.night .hdr{border-bottom-color:var(--border)}
+body.night .hdr-eyebrow{color:var(--glow-azul)}
+body.night .hdr-title{
+  text-shadow:0 0 30px var(--glow-amarillo),0 0 60px var(--glow-amarillo);
+}
+body.night .hdr-xi{
+  text-shadow:0 0 20px var(--glow-rojo),0 0 40px var(--glow-rojo);
+}
+body.night .hdr-date{
+  background:var(--rojo);box-shadow:5px 5px 0 #000,0 0 20px var(--glow-rojo);
+}
+body.night .hdr-sub{color:var(--glow-azul)}
+
+/* Tabs */
+body.night .tabs{border-top-color:var(--border)}
+body.night .tb{background:var(--bg);color:var(--text-dim);border-right-color:var(--border)}
+body.night .tb.on{background:var(--amarillo);color:var(--negro)}
+body.night .tb:hover:not(.on){background:rgba(91,184,245,.08)}
+
+/* Cards */
+body.night .card{
+  background:var(--bg-card);border-color:var(--border);
+  box-shadow:6px 6px 0 #000;
+}
+body.night .card-stripe{opacity:.6}
+body.night .card-title{color:var(--amarillo);border-bottom-color:var(--border)}
+body.night .card-body{color:var(--text)}
+
+/* Sec desc */
+body.night .sec-desc{
+  background:rgba(91,184,245,.05);color:#889;
+  border-left-color:var(--border);
+}
+
+/* Countdown */
+body.night .cd-num{
+  background:var(--bg);color:var(--amarillo);
+  border-color:var(--border);
+  box-shadow:4px 4px 0 #000,0 0 15px var(--glow-amarillo);
+  -webkit-text-stroke:2px rgba(0,0,0,.5);
+}
+body.night .cd-sep{color:var(--text-dim)}
+body.night .cd-name{color:var(--text-dim)}
+
+/* XP bar night */
+body.night .xp-bar{background:var(--bg);border-color:var(--border);box-shadow:inset 0 2px 4px rgba(0,0,0,.4)}
+body.night .xp-fill{
+  background:repeating-linear-gradient(90deg,
+    var(--rojo) 0,var(--rojo) 6px,
+    #ff4444 6px,#ff4444 12px
+  );
+  box-shadow:0 0 10px var(--glow-rojo);
+}
+body.night .xp-level{color:var(--amarillo);text-shadow:0 0 8px var(--glow-amarillo)}
+body.night .xp-rank{color:var(--text-dim)}
+
+/* Locked */
+body.night .locked{
+  border-color:var(--border);
+  background:rgba(232,0,26,.04);
+}
+body.night .lock-txt{color:var(--text);text-shadow:0 0 8px var(--glow-rojo)}
+body.night .lock-squiggles{color:var(--text-dim)}
+
+/* Unlocked */
+body.night .unlocked{
+  background:rgba(45,164,78,.08);border-color:var(--verde);
+  box-shadow:5px 5px 0 #000,0 0 20px rgba(45,164,78,.2);
+}
+body.night .addr-big{color:var(--amarillo);text-shadow:0 0 12px var(--glow-amarillo)}
+body.night .addr-sub{color:var(--text-dim)}
+
+/* Messages */
+body.night .msg{
+  background:var(--bg-card);border-color:var(--border);
+  border-left-color:var(--rojo);
+}
+body.night .mtxt{color:var(--text)}
+body.night .mtime{color:var(--text-dim)}
+
+/* Input fields */
+body.night .msg-inp{background:var(--bg-input);border-color:var(--border);color:var(--text)}
+body.night .msg-inp::placeholder{color:#555}
+body.night .send-btn{box-shadow:3px 3px 0 #000}
+
+/* Tags */
+body.night .tag-btn{
+  background:var(--bg);border-color:var(--border);color:var(--text-dim);
+  box-shadow:2px 2px 0 #000;
+}
+body.night .tag-btn:hover,body.night .tag-btn.sel{
+  background:var(--rojo);color:var(--amarillo);
+  box-shadow:1px 1px 0 #000;
+}
+
+/* Carpool */
+body.night .car-item{
+  background:var(--bg-card);border-color:var(--border);
+  border-left-color:var(--verde);
+}
+body.night .car-item.pending{border-left-color:var(--border)}
+body.night .car-from{color:var(--text)}
+body.night .car-contact{color:var(--text-dim)}
+body.night .car-seats{background:var(--bg);color:var(--amarillo);border-color:var(--border)}
+body.night .cp-form{background:rgba(91,184,245,.03);border-color:var(--border)}
+body.night .cp-inp{background:var(--bg-input);border-color:var(--border);color:var(--text)}
+body.night .cp-inp::placeholder{color:#555}
+body.night .cp-sel{background:var(--bg-input);border-color:var(--border);color:var(--text)}
+body.night .cp-label{color:var(--text-dim)}
+body.night .car-legend{color:var(--text-dim)}
+body.night .offer-btn{box-shadow:4px 4px 0 #000}
+
+/* Signal */
+body.night .sc-wrap{border-color:var(--border);box-shadow:5px 5px 0 #000}
+body.night .sc-links{background:var(--bg-card);border-top-color:var(--border)}
+body.night .sc-links a{color:var(--text);border-bottom-color:var(--rojo)}
+
+/* Info */
+body.night .info-item{color:var(--text);border-bottom-color:var(--border)}
+body.night .info-placeholder{color:var(--text-dim);border-color:var(--border)}
+
+/* Board header */
+body.night .board-title{color:var(--text-dim)}
+body.night .empty-msg{color:var(--text-dim)}
+
+/* Toast night */
+body.night .toast{
+  background:var(--bg-card);border-color:var(--amarillo);
+  box-shadow:4px 4px 0 #000,0 0 15px var(--glow-amarillo);
+}
+
+/* Copy btn night */
+body.night .copy-btn{color:var(--verde);border-color:var(--verde)}
+body.night .copy-btn:hover{background:var(--verde);color:#fff}
+
+/* Admin night */
+body.night .admin-hdr{border-bottom-color:var(--border)}
+body.night .admin-title{text-shadow:0 0 15px var(--glow-rojo)}
+body.night .admin-sub{color:var(--text-dim)}
+body.night .admin-sec-title{color:var(--text-dim);border-bottom-color:var(--border)}
+body.night .admin-item{background:var(--bg-card);border-color:var(--border)}
+body.night .admin-item-name{color:var(--text)}
+body.night .admin-item-meta{color:var(--text-dim)}
+body.night .admin-back{border-color:var(--border);color:var(--text);box-shadow:3px 3px 0 #000}
+
+/* ── CRT SCANLINES (night only) ── */
+body.night::after{
+  content:'';position:fixed;top:0;left:0;right:0;bottom:0;
+  pointer-events:none;z-index:9998;
+  background:repeating-linear-gradient(
+    0deg,
+    transparent 0,transparent 2px,
+    rgba(0,0,0,.06) 2px,rgba(0,0,0,.06) 3px
+  );
+}
+
+/* ── NIGHT MODE TOGGLE ── */
+/* Ocultar en pantalla auth */
+#screen-auth.active ~ .night-toggle{display:none}
+
+.night-toggle{
+  position:fixed;top:12px;right:12px;z-index:9999;
+  background:var(--negro);color:var(--amarillo);
+  border:2px solid var(--amarillo);
+  font-family:'EB Garamond',serif;font-weight:700;
+  font-size:18px;
+  width:38px;height:38px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;box-shadow:3px 3px 0 #000;
+  transition:.15s;
+}
+body.night .night-toggle{
+  background:var(--amarillo);color:var(--negro);
+  border-color:var(--negro);
+  box-shadow:3px 3px 0 rgba(247,226,0,.3);
+}
+.night-toggle:hover{transform:translate(1px,1px);box-shadow:2px 2px 0 #000}
 </style>
 </head>
 <body>
 
 <!-- ══ AUTH ══ -->
 <div id="screen-auth" class="screen active">
-  <div class="auth-img"></div>
-  <div class="auth-form">
-    <div class="auth-eyebrow">Zona privada · Edición XI</div>
-    <div class="auth-title">SAN SONORÍN</div>
-    <div class="auth-xi">XI</div>
-    <hr class="auth-rule"/>
-    <span class="auth-label">Contraseña de acceso</span>
-    <input class="auth-inp" id="inp-pwd" type="password" placeholder="··········"/>
-    <button class="auth-btn" id="btn-login">Entrar</button>
-    <div class="auth-err" id="auth-err"></div>
-    <div class="auth-info">Solo pueden acceder personas invitadas.<br>Si no tienes la contraseña, contacta con el Ayuntamiento.</div>
+  <div class="auth-bg">
+    <div class="auth-tap" id="auth-tap">espera...</div>
+    <div class="auth-form" id="auth-form">
+      <div class="auth-eyebrow">Zona privada · Edición XI</div>
+      <span class="auth-label">Contraseña de acceso</span>
+      <input class="auth-inp" id="inp-pwd" type="password" placeholder="··········"/>
+      <button class="auth-btn" id="btn-login">Entrar</button>
+      <div class="auth-err" id="auth-err"></div>
+      <div class="auth-info">Solo pueden acceder personas invitadas.<br>Si no tienes la contraseña, contacta con el Ayuntamiento.</div>
+    </div>
   </div>
 </div>
 
@@ -480,147 +967,150 @@ body{
     <div class="hdr-sub">★ Ubicación por desclasificar ★</div>
   </div>
 
-  <div class="tabs">
-    <button class="tb on" id="tab-cd">Cuenta</button>
-    <button class="tb" id="tab-brd">Tablón</button>
-    <button class="tb" id="tab-cp">Caravana</button>
-    <button class="tb" id="tab-sc">Señal</button>
-    <button class="tb" id="tab-info">Info</button>
-  </div>
-
   <!-- CUENTA ATRÁS -->
-  <div id="tc-cd" class="tc on">
-    <div class="card">
-      <div class="card-stripe"></div>
-      <div class="card-body">
-        <div class="card-title">Cuenta atrás para pregón</div>
-        <div class="cd-grid">
-          <div class="cd-unit"><span class="cd-num" id="dd">00</span><div class="cd-name">días</div></div>
-          <div class="cd-sep">:</div>
-          <div class="cd-unit"><span class="cd-num" id="hh">00</span><div class="cd-name">horas</div></div>
-          <div class="cd-sep">:</div>
-          <div class="cd-unit"><span class="cd-num" id="mm">00</span><div class="cd-name">min</div></div>
-          <div class="cd-sep">:</div>
-          <div class="cd-unit"><span class="cd-num" id="ss">00</span><div class="cd-name">seg</div></div>
+  <div class="card" style="margin-top:20px">
+    <div class="card-stripe"></div>
+    <div class="card-body">
+      <div class="card-title">Cuenta atrás para el pregón</div>
+      <div class="cd-grid">
+        <div class="cd-unit"><span class="cd-num" id="dd">00</span><div class="cd-name">días</div></div>
+        <div class="cd-sep">:</div>
+        <div class="cd-unit"><span class="cd-num" id="hh">00</span><div class="cd-name">horas</div></div>
+        <div class="cd-sep">:</div>
+        <div class="cd-unit"><span class="cd-num" id="mm">00</span><div class="cd-name">min</div></div>
+        <div class="cd-sep">:</div>
+        <div class="cd-unit"><span class="cd-num" id="ss">00</span><div class="cd-name">seg</div></div>
+      </div>
+      <div class="xp-wrap">
+        <div class="xp-hdr">
+          <span class="xp-level" id="xp-level"></span>
+          <span class="xp-pct" id="pct"></span>
         </div>
-        <div class="prog-wrap">
-          <div class="prog-label"><span>Progreso hacia el evento</span><span id="pct">0%</span></div>
-          <div class="prog-bar"><div class="prog-fill" id="pfill" style="width:0%"></div></div>
-        </div>
-        <!-- ELIMINA ESTOS DOS BOTONES ANTES DEL EVENTO -->
-        <button class="demo-btn" id="btn-demo">[ simular desbloqueo ]</button>
-        <button class="demo-btn" id="btn-fake-loc" style="margin-top:4px">[ simular ubicación ]</button>
-        <div id="fake-loc-box" style="display:none">
-          <div style="font-family:'EB Garamond',serif;font-style:italic;font-size:12px;color:#aaa;margin-bottom:8px;letter-spacing:2px">elige una ubicación de prueba:</div>
-          <div id="fake-loc-list"></div>
-        </div>
-        <div class="locked" id="locked-box">
-          <div class="lock-txt">Ubicación cifrada · Espera la señal</div>
-          <div class="lock-squiggles">~ ? ~ ? ~ ? ~</div>
-        </div>
-        <div class="unlocked" id="unlocked-box">
-          <div style="font-family:'EB Garamond',serif;font-style:italic;font-size:12px;color:#888;letter-spacing:3px;margin-bottom:10px">Señal recibida</div>
-          <div class="addr-big" id="addr-type"></div>
-          <div class="addr-sub" id="addr-detail"></div>
-          <a class="map-btn" id="map-link" href="#" target="_blank">→ Abrir mapa</a>
-        </div>
+        <div class="xp-bar"><div class="xp-fill" id="pfill" style="width:0%"></div></div>
+        <div class="xp-rank" id="xp-next"></div>
+      </div>
+      <!-- ELIMINA ESTE BOTÓN ANTES DEL EVENTO -->
+      <button class="demo-btn" id="btn-demo">[ simular desbloqueo ]</button>
+      <div class="locked" id="locked-box">
+        <div class="lock-txt">UBICACIÓN CIFRADA</div>
+        <div class="lock-squiggles">? ~ ? ~ ? ~ ?</div>
+      </div>
+      <div class="unlocked" id="unlocked-box">
+        <div style="font-family:'EB Garamond',serif;font-weight:800;font-size:12px;color:var(--verde);letter-spacing:3px;margin-bottom:10px">★ UBICACIÓN DESBLOQUEADA ★</div>
+        <div class="addr-big" id="addr-type"></div>
+        <div class="addr-sub" id="addr-detail"></div>
+        <a class="map-btn" id="map-link" href="#" target="_blank">→ Abrir mapa</a>
+        <button class="copy-btn" id="btn-copy">Copiar dirección</button>
       </div>
     </div>
   </div>
 
   <!-- TABLÓN -->
-  <div id="tc-brd" class="tc">
-    <div class="card">
-      <div class="card-stripe"></div>
-      <div class="card-body">
-        <div class="card-title">Tablón municipal</div>
-        <div class="sec-desc">Deja avisos para el resto del vecindario. Selecciona una categoría y escribe. El Consejo del Festejo puede verificar o tachar mensajes.</div>
-        <div class="board-hdr">
-          <div class="board-title">Canal en vivo</div>
-          <div class="live-dot">● en directo</div>
-        </div>
-        <div class="tags-row">
-          <button class="tag-btn" data-id="ice" data-label="[Hielo]">Hielo</button>
-          <button class="tag-btn" data-id="beer" data-label="[Birras]">Birras</button>
-          <button class="tag-btn" data-id="gf" data-label="[Sin gluten]">s/Gluten</button>
-          <button class="tag-btn" data-id="allergy" data-label="[Alérgenos]">Alérgenos</button>
-          <button class="tag-btn" data-id="food" data-label="[Comida]">Comida</button>
-          <button class="tag-btn sel" data-id="other" data-label="[Otros]">Otros</button>
-        </div>
-        <div class="inp-row">
-          <input class="msg-inp" id="minp" placeholder="Escribe tu aviso..." maxlength="140"/>
-          <button class="send-btn" id="btn-send">→</button>
-        </div>
-        <div class="msgs" id="mlist"></div>
+  <div class="card" style="margin-top:16px">
+    <div class="card-stripe"></div>
+    <div class="card-body">
+      <div class="card-title">Tablón Municipal</div>
+      <div class="sec-desc">Deja avisos para el vecindario. El Consejo del Festejo modera los mensajes.</div>
+      <div class="tags-row">
+        <button class="tag-btn" data-id="ice" data-label="[Hielo]">Hielo</button>
+        <button class="tag-btn" data-id="beer" data-label="[Birras]">Birras</button>
+        <button class="tag-btn" data-id="gf" data-label="[Sin gluten]">s/Gluten</button>
+        <button class="tag-btn" data-id="allergy" data-label="[Alérgenos]">Alérgenos</button>
+        <button class="tag-btn" data-id="food" data-label="[Comida]">Comida</button>
+        <button class="tag-btn sel" data-id="other" data-label="[Otros]">Otros</button>
       </div>
+      <input class="msg-inp" id="minp-name" placeholder="Tu nombre o aka" maxlength="30" style="width:100%;margin-bottom:6px;font-size:14px;padding:8px"/>
+      <div class="inp-row">
+        <input class="msg-inp" id="minp" placeholder="Escribe tu aviso..." maxlength="140"/>
+        <button class="send-btn" id="btn-send">→</button>
+      </div>
+      <div class="msgs" id="mlist"></div>
     </div>
   </div>
 
   <!-- CARAVANA -->
-  <div id="tc-cp" class="tc">
-    <div class="card">
-      <div class="card-stripe"></div>
-      <div class="card-body">
-        <div class="card-title">carpool</div>
-        <div class="sec-desc">Organízate para los viajes. Si ofreces plaza deja tu contacto. Tu entrada aparece una vez validada por el Consejo del Festejo. Conduce con cuidado.</div>
-        <div class="cp-form">
-          <span class="cp-label">Registrar plaza disponible</span>
-          <div class="cp-row">
-            <input class="cp-inp" id="cpfrom" placeholder="Salgo desde..."/>
-            <select class="cp-sel" id="cpseats">
-              <option>1</option><option>2</option><option selected>3</option><option>4</option>
-            </select>
-          </div>
-          <input class="cp-inp" id="cpcont" placeholder="@telegram o WhatsApp" style="width:100%;margin-bottom:10px"/>
-          <button class="offer-btn" id="btn-car">★ Publicar plaza ★</button>
+  <div class="card" style="margin-top:16px">
+    <div class="card-stripe"></div>
+    <div class="card-body">
+      <div class="card-title">Caravana · Carpool</div>
+      <div class="sec-desc">Organízate para los viajes. Conduce con cuidado, festero.</div>
+      <div class="cp-form">
+        <span class="cp-label">Registrar plaza disponible</span>
+        <div class="cp-row">
+          <input class="cp-inp" id="cpfrom" placeholder="Salgo desde..."/>
+          <select class="cp-sel" id="cpseats">
+            <option>1</option><option>2</option><option selected>3</option><option>4</option>
+          </select>
         </div>
-        <div class="car-legend">✓ validado · ○ pendiente · ✗ completo</div>
-        <div class="car-list" id="carlist"></div>
+        <input class="cp-inp" id="cpcont" placeholder="@telegram o WhatsApp" style="width:100%;margin-bottom:10px"/>
+        <button class="offer-btn" id="btn-car">★ Publicar plaza ★</button>
       </div>
+      <div class="car-legend">✓ validado · ○ pendiente · ✗ completo</div>
+      <div class="car-list" id="carlist"></div>
     </div>
   </div>
 
-  <!-- RADIOPATIO -->
-  <div id="tc-sc" class="tc">
-    <div class="card">
-      <div class="card-stripe"></div>
-      <div class="card-body">
-        <div class="card-title">Sintoniza</div>
-        <div class="sec-desc">Música para el camino y el evento. Rota entre artistas. Pulsa siguiente para cambiar.</div>
-        <div class="sc-wrap">
-          <div class="sc-hdr">
-            <div class="sc-dot"></div>
-            <div class="sc-name" id="sc-artist-name">Cargando señal...</div>
-            <button class="sc-next" id="btn-next">Siguiente ›</button>
-          </div>
-          <iframe class="sc-frame" id="sc-frame" height="280" scrolling="no" allow="autoplay" src="about:blank"></iframe>
-          <div class="sc-links">
-            <a id="sc-link-sc" href="https://soundcloud.com" target="_blank">soundcloud</a>
-            <a id="sc-link-ig" href="https://instagram.com" target="_blank">instagram</a>
-          </div>
+  <!-- SINTONIZA -->
+  <div class="card" style="margin-top:16px">
+    <div class="card-stripe"></div>
+    <div class="card-body">
+      <div class="card-title">Sintoniza</div>
+      <div class="sc-wrap">
+        <div class="sc-hdr">
+          <div class="sc-dot"></div>
+          <div class="sc-name" id="sc-artist-name">Cargando señal...</div>
+          <button class="sc-next" id="btn-next">Siguiente ›</button>
+        </div>
+        <div class="sc-artist-desc" id="sc-artist-desc"></div>
+        <iframe class="sc-frame" id="sc-frame" height="166" scrolling="no" frameborder="no" allow="autoplay" src="about:blank"></iframe>
+        <div class="sc-links">
+          <a id="sc-link-sc" href="https://soundcloud.com" target="_blank">soundcloud</a>
+          <a id="sc-link-ig" href="https://instagram.com" target="_blank">instagram</a>
         </div>
       </div>
     </div>
   </div>
 
   <!-- INFO -->
-  <div id="tc-info" class="tc">
-    <div class="card">
-      <div class="card-stripe"></div>
-      <div class="card-body">
-        <div class="card-title">Información útil</div>
-        <div class="sec-desc">Todo lo que necesitas saber. Se irá actualizando antes del evento.</div>
-        <div class="info-item"><div class="info-dot"></div>Normas del espacio</div>
-        <div class="info-item"><div class="info-dot" style="background:var(--azul-dark)"></div>Transporte público</div>
-        <div class="info-item"><div class="info-dot" style="background:var(--verde)"></div>Qué llevar / Qué no llevar</div>
-        <div class="info-item"><div class="info-dot" style="background:var(--amarillo);border:1px solid #ccc"></div>Contacto de emergencia</div>
-        <div class="info-item"><div class="info-dot" style="background:#8833cc"></div>Horarios aproximados</div>
-        <div class="info-placeholder">Contenido próximamente...</div>
+  <div class="card" style="margin-top:16px">
+    <div class="card-stripe"></div>
+    <div class="card-body">
+      <div class="card-title">Información útil</div>
+      <div id="info-list">
+        <div class="info-placeholder">Cargando información...</div>
       </div>
     </div>
   </div>
 
+  <!-- EDICIONES ASISTIDAS -->
+  <div class="card" style="margin-top:16px">
+    <div class="card-stripe"></div>
+    <div class="card-body">
+      <div class="card-title">Tu historial médico</div>
+      <div class="ed-role" id="ed-role"></div>
+      <div class="ed-grid" id="ed-grid"></div>
+    </div>
+  </div>
+
+  <!-- Admin access -->
+  <div style="text-align:center;margin-top:30px;padding-bottom:20px">
+    <button class="admin-link" id="btn-admin">Consejo del Festejo</button>
+  </div>
+
 </div>
+</div>
+
+<!-- ══ ADMIN LOGIN MODAL ══ -->
+<div class="admin-modal" id="admin-modal" style="display:none">
+  <div class="admin-modal-box">
+    <div style="font-family:'EB Garamond',serif;font-weight:800;font-size:20px;letter-spacing:3px;color:var(--rojo);margin-bottom:12px">ACCESO ADMIN</div>
+    <input class="auth-inp" id="inp-admin-pwd" type="password" placeholder="Contraseña admin" style="margin-bottom:10px"/>
+    <div style="display:flex;gap:8px">
+      <button class="auth-btn" id="btn-admin-login" style="flex:1;font-size:16px;padding:10px">Entrar</button>
+      <button class="admin-back" id="btn-admin-cancel" style="flex:1;padding:10px;font-size:14px">Cancelar</button>
+    </div>
+    <div class="auth-err" id="admin-err"></div>
+  </div>
 </div>
 
 <!-- ══ ADMIN ══ -->
@@ -630,6 +1120,35 @@ body{
     <div class="admin-title">★ Admin ★</div>
     <div class="admin-sub">SAN SONORÍN · panel de control</div>
   </div>
+
+  <!-- Info editable -->
+  <div class="admin-section">
+    <div class="admin-sec-title">Información del evento</div>
+    <div class="admin-info-form">
+      <div class="admin-field">
+        <label class="admin-field-label">Normas del espacio</label>
+        <textarea class="admin-textarea" id="adm-normas" rows="3" placeholder="Escribe las normas..."></textarea>
+      </div>
+      <div class="admin-field">
+        <label class="admin-field-label">Transporte</label>
+        <textarea class="admin-textarea" id="adm-transporte" rows="3" placeholder="Info de transporte público..."></textarea>
+      </div>
+      <div class="admin-field">
+        <label class="admin-field-label">Qué llevar / Qué no llevar</label>
+        <textarea class="admin-textarea" id="adm-llevar" rows="3" placeholder="Lista de cosas..."></textarea>
+      </div>
+      <div class="admin-field">
+        <label class="admin-field-label">Contacto de emergencia</label>
+        <textarea class="admin-textarea" id="adm-emergencia" rows="2" placeholder="Teléfono, persona..."></textarea>
+      </div>
+      <div class="admin-field">
+        <label class="admin-field-label">Horarios</label>
+        <textarea class="admin-textarea" id="adm-horarios" rows="3" placeholder="Horarios aproximados..."></textarea>
+      </div>
+      <button class="offer-btn" id="btn-save-info" style="margin-top:8px">Guardar información</button>
+    </div>
+  </div>
+
   <div class="admin-section">
     <div class="admin-sec-title">plazas carpool pendientes</div>
     <div id="admin-cars"></div>
@@ -642,16 +1161,19 @@ body{
 </div>
 </div>
 
+<button class="night-toggle" id="night-toggle" title="Modo noche">☽</button>
+<div class="toast" id="toast"></div>
+
 <script type="module">
 import { initializeApp }   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc, query, orderBy }
+import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc, query, orderBy, setDoc }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 // ══════════════════════════════════════
 //  ★ CONFIGURACIÓN — edita aquí
 // ══════════════════════════════════════
 const ACCESS_PASSWORD = "sonora2026";
-const ADMIN_PASSWORD  = "sonora2026admin";
+const ADMIN_PASSWORD  = "orgiasonora";
 const ADDRESS_TEXT    = "PASACALLES ACID";
 const ADDRESS_DETAIL  = "Aquí la dirección completa · Valencia";
 const MAP_LINK        = "https://maps.google.com/?q=TU+UBICACION";
@@ -659,18 +1181,17 @@ const TARGET = new Date('2026-05-29T22:00:00');
 const START  = new Date('2026-01-01T00:00:00');
 
 const SC_ARTISTS = [
-  { name:"Francis Espinaco", url:"https://soundcloud.com/user-845235880",              sc:"https://soundcloud.com/user-845235880",              ig:"https://instagram.com/motelxamar" },
-  { name:"Senmeri",          url:"https://soundcloud.com/senmeri/tracks",               sc:"https://soundcloud.com/senmeri",                    ig:"https://instagram.com/senmeri" },
-  { name:"Mireia Cj",  url:"https://soundcloud.com/mireia-camarena/tracks",       sc:"https://soundcloud.com/mireia-camarena",             ig:"https://instagram.com/mireiacj2" },
-  { name:"Apparatchik",    url:"https://soundcloud.com/user901179098/tracks",         sc:"https://soundcloud.com/user901179098",               ig:"https://instagram.com/itsapparatchik" },
-  { name:"Cizette",   url:"https://soundcloud.com/clara-zaragoza-175684940/tracks", sc:"https://soundcloud.com/clara-zaragoza-175684940",ig:"https://instagram.com/cizette.music" },
-  { name:"Toretto",   url:"https://soundcloud.com/toretto-sounds/tracks",       sc:"https://soundcloud.com/toretto-sounds",              ig:"https://instagram.com/torettosounds" },
-  { name:"Deejeya",          url:"https://soundcloud.com/deejeya/tracks",              sc:"https://soundcloud.com/deejeya",                    ig:"https://instagram.com/deejeya" },
-  { name:"Astora",     url:"https://soundcloud.com/juan-carmona-513512584/tracks",sc:"https://soundcloud.com/juan-carmona-513512584",     ig:"https://instagram.com/astoramusic" },
-    { name:"K.I.R.",     url:"https://soundcloud.com/cristian-marcos-288862063/tracks",sc:"https://soundcloud.com/cristian-marcos-288862063",     ig:"https://instagram.com/k.i.rdj" },
-    { name:"KØRE.TEK",     url:"https://soundcloud.com/kore-909668299/tracks",sc:"https://soundcloud.com/kore-909668299",     ig:"https://instagram.com/kore.tek_" },
-    { name:"Cabani",     url:"https://soundcloud.com/cabani-music/tracks",sc:"https://soundcloud.com/cabani-music",     ig:"https://instagram.com/cabani.dj" },
-    
+  { name:"Francis Espinaco", desc:"Acid house y psicodelia mediterránea", url:"https://soundcloud.com/user-845235880", sc:"https://soundcloud.com/user-845235880", ig:"https://instagram.com/motelxamar" },
+  { name:"Senmeri", desc:"Electrónica orgánica y texturas envolventes", url:"https://soundcloud.com/senmeri/tracks", sc:"https://soundcloud.com/senmeri", ig:"https://instagram.com/senmeri" },
+  { name:"Mireia Cj", desc:"Techno melódico desde Valencia", url:"https://soundcloud.com/mireia-camarena/tracks", sc:"https://soundcloud.com/mireia-camarena", ig:"https://instagram.com/mireiacj2" },
+  { name:"Apparatchik", desc:"Industrial y EBM sin concesiones", url:"https://soundcloud.com/user901179098/tracks", sc:"https://soundcloud.com/user901179098", ig:"https://instagram.com/itsapparatchik" },
+  { name:"Cizette", desc:"Breaks y electro con alma de vinilo", url:"https://soundcloud.com/clara-zaragoza-175684940/tracks", sc:"https://soundcloud.com/clara-zaragoza-175684940", ig:"https://instagram.com/cizette.music" },
+  { name:"Toretto", desc:"Hard groove y sesiones de madrugada", url:"https://soundcloud.com/toretto-sounds/tracks", sc:"https://soundcloud.com/toretto-sounds", ig:"https://instagram.com/torettosounds" },
+  { name:"Deejeya", desc:"House con raíces en el funk y el soul", url:"https://soundcloud.com/deejeya/tracks", sc:"https://soundcloud.com/deejeya", ig:"https://instagram.com/deejeya" },
+  { name:"Astora", desc:"Trance progresivo y viajes sonoros", url:"https://soundcloud.com/juan-carmona-513512584/tracks", sc:"https://soundcloud.com/juan-carmona-513512584", ig:"https://instagram.com/astoramusic" },
+  { name:"K.I.R.", desc:"Techno duro y contundente", url:"https://soundcloud.com/cristian-marcos-288862063/tracks", sc:"https://soundcloud.com/cristian-marcos-288862063", ig:"https://instagram.com/k.i.rdj" },
+  { name:"KØRE.TEK", desc:"Sonido 909 y raves de pueblo", url:"https://soundcloud.com/kore-909668299/tracks", sc:"https://soundcloud.com/kore-909668299", ig:"https://instagram.com/kore.tek_" },
+  { name:"Cabani", desc:"Minimal y micro house nocturno", url:"https://soundcloud.com/cabani-music/tracks", sc:"https://soundcloud.com/cabani-music", ig:"https://instagram.com/cabani.dj" },
 ];
 
 const FAKE_LOCS = [
@@ -694,6 +1215,58 @@ const firebaseConfig = {
 const fbApp = initializeApp(firebaseConfig);
 const db    = getFirestore(fbApp);
 
+// ── DEV MODE (?dev=1 en la URL) ──
+if (new URLSearchParams(location.search).get('dev') === '1') {
+  document.body.classList.add('dev-mode');
+}
+
+// ── DARK MODE (auto nocturno + toggle manual) ──
+const NIGHT_KEY = 'sonora_xi_night';
+function applyNight(on){
+  document.body.classList.toggle('night', on);
+  document.getElementById('night-toggle').textContent = on ? '☀' : '☽';
+  document.querySelector('meta[name="theme-color"]').content = on ? '#0a0e1a' : '#5bb8f5';
+}
+function isNightHour(){
+  const h = new Date().getHours();
+  return h >= 21 || h < 7;
+}
+// Init: manual override > auto
+const savedNight = localStorage.getItem(NIGHT_KEY);
+if (savedNight !== null) applyNight(savedNight === '1');
+else applyNight(isNightHour());
+// Toggle
+document.getElementById('night-toggle').addEventListener('click', () => {
+  const on = !document.body.classList.contains('night');
+  applyNight(on);
+  localStorage.setItem(NIGHT_KEY, on ? '1' : '0');
+});
+
+// ── TOAST ──
+let toastTimer;
+function toast(msg){
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2500);
+}
+
+// ── RPG LEVEL SYSTEM (linked to editions) ──
+function getEdCount(){
+  const saved = JSON.parse(localStorage.getItem('sonora_xi_editions') || '[]');
+  return saved.filter(c => c !== '0').length;
+}
+function updateRank(){
+  const count = getEdCount();
+  const role = getEdRole(count);
+  const pct = Math.round((count / 10) * 100);
+  document.getElementById('xp-level').textContent = `${count}/10 EDICIONES`;
+  document.getElementById('pfill').style.width = pct + '%';
+  document.getElementById('pct').textContent = role;
+  document.getElementById('xp-next').textContent = '';
+}
+
 // ── PANTALLAS ──
 function showScreen(n){
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -716,24 +1289,44 @@ function doLogin(){
 }
 document.getElementById('btn-login').addEventListener('click', doLogin);
 document.getElementById('inp-pwd').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
-document.getElementById('btn-back').addEventListener('click', () => showScreen('app'));
+document.getElementById('btn-back').addEventListener('click', () => { showScreen('app'); initApp(); });
 if (sessionStorage.getItem(SK) === 'ok'){ showScreen('app'); initApp(); }
 
-// ── TABS ──
-function sw(id){
-  document.querySelectorAll('.tc').forEach(t => t.classList.remove('on'));
-  document.querySelectorAll('.tb').forEach(b => b.classList.remove('on'));
-  document.getElementById('tc-' + id).classList.add('on');
-  document.getElementById('tab-' + id).classList.add('on');
+// ── ADMIN MODAL ──
+document.getElementById('btn-admin').addEventListener('click', () => {
+  document.getElementById('admin-modal').style.display = 'flex';
+  document.getElementById('inp-admin-pwd').value = '';
+  document.getElementById('admin-err').textContent = '';
+  setTimeout(() => document.getElementById('inp-admin-pwd').focus(), 100);
+});
+document.getElementById('btn-admin-cancel').addEventListener('click', () => {
+  document.getElementById('admin-modal').style.display = 'none';
+});
+function doAdminLogin(){
+  const val = document.getElementById('inp-admin-pwd').value;
+  if (val === ADMIN_PASSWORD){
+    document.getElementById('admin-modal').style.display = 'none';
+    showScreen('admin'); initAdmin();
+  } else {
+    document.getElementById('admin-err').textContent = 'contraseña incorrecta';
+    document.getElementById('inp-admin-pwd').value = '';
+    setTimeout(() => document.getElementById('admin-err').textContent = '', 3000);
+  }
 }
-document.getElementById('tab-cd').addEventListener('click',   () => sw('cd'));
-document.getElementById('tab-brd').addEventListener('click',  () => sw('brd'));
-document.getElementById('tab-cp').addEventListener('click',   () => sw('cp'));
-document.getElementById('tab-sc').addEventListener('click',   () => { sw('sc'); loadSC(scIdx); });
-document.getElementById('tab-info').addEventListener('click', () => sw('info'));
+document.getElementById('btn-admin-login').addEventListener('click', doAdminLogin);
+document.getElementById('inp-admin-pwd').addEventListener('keydown', e => { if (e.key === 'Enter') doAdminLogin(); });
+
+// Mostrar form tras 2s contemplando la ilustración
+setTimeout(() => {
+  const f = document.getElementById('auth-form');
+  if (f) { f.classList.add('visible'); f.querySelector('.auth-inp').focus(); }
+}, 2000);
+
+// (tabs removed — all sections visible)
 
 // ── CUENTA ATRÁS ──
 let unlocked = false;
+let lastRank = '';
 function updateCD(){
   const now = new Date(), diff = Math.max(0, TARGET - now);
   if (diff === 0 && !unlocked) triggerUnlock();
@@ -745,9 +1338,8 @@ function updateCD(){
   document.getElementById('hh').textContent = String(h).padStart(2,'0');
   document.getElementById('mm').textContent = String(m).padStart(2,'0');
   document.getElementById('ss').textContent = String(s).padStart(2,'0');
-  const pct = Math.min(100, Math.max(0, Math.round(((now-START)/(TARGET-START))*100)));
-  document.getElementById('pct').textContent = pct + '%';
-  document.getElementById('pfill').style.width = pct + '%';
+  // Update rank from editions
+  updateRank();
 }
 
 function typeAddr(txt, el, i=0){
@@ -764,35 +1356,31 @@ function triggerUnlock(){
   document.getElementById('addr-detail').textContent   = ADDRESS_DETAIL;
   document.getElementById('map-link').href             = MAP_LINK;
   typeAddr(ADDRESS_TEXT, document.getElementById('addr-type'));
+  // Vibración para que lo sientan
+  if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200]);
+  toast('★ BOSS DESBLOQUEADO · UBICACIÓN REVELADA');
 }
 
+let demoLocIdx = -1;
 document.getElementById('btn-demo').addEventListener('click', () => {
-  if (unlocked){
-    unlocked = false;
-    document.getElementById('locked-box').style.display = 'block';
-    document.getElementById('unlocked-box').classList.remove('show');
-    document.getElementById('addr-type').textContent = '';
-  } else triggerUnlock();
-});
-
-// Fake locs
-const fakeBox  = document.getElementById('fake-loc-box');
-const fakeList = document.getElementById('fake-loc-list');
-FAKE_LOCS.forEach(loc => {
-  const btn = document.createElement('button');
-  btn.className = 'fake-loc-btn';
-  btn.textContent = '→ ' + loc.name;
-  btn.addEventListener('click', () => {
-    document.getElementById('addr-type').textContent   = loc.name;
-    document.getElementById('addr-detail').textContent = loc.detail;
-    document.getElementById('locked-box').style.display = 'none';
-    document.getElementById('unlocked-box').classList.add('show');
-    fakeBox.style.display = 'none';
-  });
-  fakeList.appendChild(btn);
-});
-document.getElementById('btn-fake-loc').addEventListener('click', () => {
-  fakeBox.style.display = fakeBox.style.display === 'none' ? 'block' : 'none';
+  // Always reset first, then show a new random location
+  unlocked = false;
+  document.getElementById('locked-box').style.display = 'none';
+  document.getElementById('unlocked-box').classList.remove('show');
+  document.getElementById('addr-type').textContent = '';
+  // Pick a different random loc each time
+  let newIdx;
+  do { newIdx = Math.floor(Math.random() * FAKE_LOCS.length); } while (newIdx === demoLocIdx && FAKE_LOCS.length > 1);
+  demoLocIdx = newIdx;
+  const loc = FAKE_LOCS[demoLocIdx];
+  unlocked = true;
+  document.getElementById('locked-box').style.display = 'none';
+  document.getElementById('unlocked-box').classList.add('show');
+  document.getElementById('addr-detail').textContent = loc.detail;
+  document.getElementById('map-link').href = '#';
+  typeAddr(loc.name, document.getElementById('addr-type'));
+  if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200]);
+  toast('★ UBICACIÓN REVELADA');
 });
 
 // ── TABLÓN ──
@@ -819,17 +1407,31 @@ function initMsgs(){
       const bc  = TAG_BC[m.tagId] || 'b-other';
       const ver = m.verified ? '<span class="mverified">✓ verificado</span>' : '<span class="munverified">○ sin verificar</span>';
       const st  = m.struck ? 'text-decoration:line-through;opacity:.4' : '';
-      d.innerHTML = `<span class="mbadge ${bc}">${m.tag}</span><span class="mtxt" style="${st}">${esc(m.txt)}${ver}</span><span class="mtime">${m.time}</span>`;
+      const reply = m.reply ? `<div class="msg-reply">★ Consejo: ${esc(m.reply)}</div>` : '';
+      const authorHtml = m.author ? `<span class="mauthor">${esc(m.author)}</span>` : '';
+      d.innerHTML = `<span class="mbadge ${bc}">${m.tag}</span><span class="mtxt" style="${st}">${authorHtml}${esc(m.txt)}${ver}${reply}</span><span class="mtime">${m.time}</span>`;
       list.appendChild(d);
     });
-  });
+  }, err => { console.warn('Messages listener error:', err); });
 }
 
+let msgCooldown = false;
 async function sendMsg(){
   const inp = document.getElementById('minp'), txt = inp.value.trim(); if (!txt) return;
-  const now  = new Date(), time = now.getHours() + ':' + String(now.getMinutes()).padStart(2,'0');
-  await addDoc(collection(db,'messages'), { tagId:curTagId, tag:curTagLabel, txt, time, ts:now.getTime(), verified:false, struck:false });
+  const nameInp = document.getElementById('minp-name'), author = nameInp.value.trim();
+  if (!author) { toast('Pon tu nombre o aka'); nameInp.focus(); return; }
+  if (msgCooldown) { toast('Espera unos segundos...'); return; }
+  const btn = document.getElementById('btn-send');
+  btn.disabled = true; msgCooldown = true;
+  const now = new Date();
+  const day = now.getDate() + '/' + (now.getMonth()+1);
+  const time = day + ' ' + now.getHours() + ':' + String(now.getMinutes()).padStart(2,'0');
+  await addDoc(collection(db,'messages'), { tagId:curTagId, tag:curTagLabel, txt, time, ts:now.getTime(), verified:false, struck:false, reply:'', author });
   inp.value = '';
+  // Guardar nombre para próximos mensajes
+  localStorage.setItem('sonora_xi_name', author);
+  toast('★ +1 TRANSMISIÓN ENVIADA');
+  setTimeout(() => { btn.disabled = false; msgCooldown = false; }, 15000);
 }
 document.getElementById('btn-send').addEventListener('click', sendMsg);
 document.getElementById('minp').addEventListener('keydown', e => { if (e.key === 'Enter') sendMsg(); });
@@ -839,7 +1441,7 @@ function initCars(){
   onSnapshot(query(collection(db,'carpool'), orderBy('ts','desc')), snap => {
     const list = document.getElementById('carlist');
     list.innerHTML = '';
-    if (snap.empty){ list.innerHTML = '<div class="empty-msg">Sin plazas todavía...</div>'; return; }
+    if (snap.empty) return;
     snap.forEach(ds => {
       const c = { id:ds.id, ...ds.data() }, d = document.createElement('div');
       d.className = 'car-item' + (c.approved ? '' : ' pending');
@@ -851,17 +1453,22 @@ function initCars(){
       d.innerHTML = `<div><div class="car-from">${esc(c.from)}</div><div class="car-contact">${esc(c.contact||'—')}</div>${st}</div><div class="car-seats">${c.seats}p</div>`;
       list.appendChild(d);
     });
-  });
+  }, err => { console.warn('Carpool listener error:', err); });
 }
 
 document.getElementById('btn-car').addEventListener('click', async () => {
   const from    = document.getElementById('cpfrom').value.trim();
   const contact = document.getElementById('cpcont').value.trim();
   const seats   = parseInt(document.getElementById('cpseats').value);
-  if (!from) return;
+  if (!from) { toast('Pon desde dónde sales'); return; }
+  if (!contact) { toast('Pon tu contacto'); return; }
+  const btn = document.getElementById('btn-car');
+  btn.disabled = true;
   await addDoc(collection(db,'carpool'), { from, contact, seats, ts:Date.now(), approved:false, full:false });
   document.getElementById('cpfrom').value = '';
   document.getElementById('cpcont').value = '';
+  toast('★ +1 MIEMBRO · PENDIENTE DE VALIDACIÓN');
+  setTimeout(() => { btn.disabled = false; }, 30000);
 });
 
 // ── SOUNDCLOUD ──
@@ -869,64 +1476,220 @@ let scIdx = Math.floor(Math.random() * SC_ARTISTS.length);
 function loadSC(idx){
   const a   = SC_ARTISTS[idx];
   const enc = encodeURIComponent(a.url);
-  const rand = Math.floor(Math.random() * 50);
-  document.getElementById('sc-frame').src            = `https://w.soundcloud.com/player/?url=${enc}&color=%23e8001a&auto_play=true&hide_related=false&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=true&start_track=${rand}`;
-  document.getElementById('sc-link-sc').href         = a.sc;
-  document.getElementById('sc-link-ig').href         = a.ig;
+  document.getElementById('sc-frame').src = `https://w.soundcloud.com/player/?url=${enc}&color=%23e8001a&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=false`;
+  document.getElementById('sc-link-sc').href = a.sc;
+  document.getElementById('sc-link-ig').href = a.ig;
   document.getElementById('sc-artist-name').textContent = a.name;
+  document.getElementById('sc-artist-desc').textContent = a.desc || '';
 }
 document.getElementById('btn-next').addEventListener('click', () => { scIdx = (scIdx+1) % SC_ARTISTS.length; loadSC(scIdx); });
 
+// ── COPIAR DIRECCIÓN ──
+document.getElementById('btn-copy').addEventListener('click', () => {
+  const addr = document.getElementById('addr-type').textContent;
+  const detail = document.getElementById('addr-detail').textContent;
+  navigator.clipboard.writeText(addr + ' — ' + detail).then(() => toast('Dirección copiada'));
+});
+
 // ── ADMIN ──
 function initAdmin(){
+  // Load info fields
+  onSnapshot(doc(db,'config','info'), snap => {
+    const data = snap.exists() ? snap.data() : {};
+    INFO_FIELDS.forEach(f => {
+      const el = document.getElementById('adm-' + f.key);
+      if (el && !el._userEditing) el.value = data[f.key] || '';
+    });
+  });
+  // Mark textareas as user-editing while focused
+  INFO_FIELDS.forEach(f => {
+    const el = document.getElementById('adm-' + f.key);
+    if (el) {
+      el.addEventListener('focus', () => el._userEditing = true);
+      el.addEventListener('blur',  () => el._userEditing = false);
+    }
+  });
+
   onSnapshot(query(collection(db,'carpool'), orderBy('ts','asc')), snap => {
     const el = document.getElementById('admin-cars'); el.innerHTML = ''; let n = 0;
     snap.forEach(ds => {
-      const c = { id:ds.id, ...ds.data() }; if (c.approved) return; n++;
+      const c = { id:ds.id, ...ds.data() }; n++;
       const d = document.createElement('div'); d.className = 'admin-item';
-      const bOk   = document.createElement('button'); bOk.className='btn-ok';     bOk.textContent='✓ ok';
-      const bFull = document.createElement('button'); bFull.className='btn-strike';bFull.textContent='lleno';
+      if (c.full) d.style.opacity = '.5';
+      const statusTxt = c.full ? '✗ completo' : c.approved ? '✓ validado' : '○ pendiente';
+      const bOk   = document.createElement('button'); bOk.className='btn-ok';     bOk.textContent = c.approved ? '✓' : '○ validar';
+      const bFull = document.createElement('button'); bFull.className='btn-strike'; bFull.textContent = c.full ? 'abrir' : 'lleno';
       const bKo   = document.createElement('button'); bKo.className='btn-ko';     bKo.textContent='✗';
-      bOk.addEventListener('click',   async () => await updateDoc(doc(db,'carpool',c.id), {approved:true}));
-      bFull.addEventListener('click', async () => await updateDoc(doc(db,'carpool',c.id), {full:true, approved:true}));
+      bOk.addEventListener('click',   async () => await updateDoc(doc(db,'carpool',c.id), {approved:!c.approved}));
+      bFull.addEventListener('click', async () => await updateDoc(doc(db,'carpool',c.id), {full:!c.full, approved:true}));
       bKo.addEventListener('click',   async () => await deleteDoc(doc(db,'carpool',c.id)));
-      d.innerHTML = `<div class="admin-item-info"><div class="admin-item-name">${esc(c.from)} · ${c.seats}p</div><div class="admin-item-meta">${esc(c.contact||'—')}</div></div>`;
+      d.innerHTML = `<div class="admin-item-info"><div class="admin-item-name">${esc(c.from)} · ${c.seats}p</div><div class="admin-item-meta">${esc(c.contact||'—')} · ${statusTxt}</div></div>`;
       const a = document.createElement('div'); a.className = 'admin-actions';
       a.appendChild(bOk); a.appendChild(bFull); a.appendChild(bKo);
       d.appendChild(a); el.appendChild(d);
     });
-    if (!n) el.innerHTML = '<div class="empty-msg">todo validado ✓</div>';
+    if (!n) el.innerHTML = '<div class="empty-msg">sin plazas registradas</div>';
   });
 
   onSnapshot(query(collection(db,'messages'), orderBy('ts','asc')), snap => {
     const el = document.getElementById('admin-msgs'); el.innerHTML = ''; let n = 0;
     snap.forEach(ds => {
-      const m = { id:ds.id, ...ds.data() }; if (m.verified) return; n++;
+      const m = { id:ds.id, ...ds.data() }; n++;
       const d = document.createElement('div'); d.className = 'admin-item';
-      const bOk     = document.createElement('button'); bOk.className='btn-ok';     bOk.textContent='✓ verificar';
-      const bStrike = document.createElement('button'); bStrike.className='btn-strike';bStrike.textContent='~ tachar';
+      if (m.struck) d.style.opacity = '.5';
+      const bOk     = document.createElement('button'); bOk.className='btn-ok';     bOk.textContent = m.verified ? '✓' : '○ verificar';
+      const bStrike = document.createElement('button'); bStrike.className='btn-strike'; bStrike.textContent = m.struck ? '✓ tachado' : '~ tachar';
       const bKo     = document.createElement('button'); bKo.className='btn-ko';     bKo.textContent='✗';
-      bOk.addEventListener('click',     async () => await updateDoc(doc(db,'messages',m.id), {verified:true}));
-      bStrike.addEventListener('click', async () => await updateDoc(doc(db,'messages',m.id), {struck:true}));
+      bOk.addEventListener('click',     async () => await updateDoc(doc(db,'messages',m.id), {verified:!m.verified}));
+      bStrike.addEventListener('click', async () => await updateDoc(doc(db,'messages',m.id), {struck:!m.struck}));
       bKo.addEventListener('click',     async () => await deleteDoc(doc(db,'messages',m.id)));
-      d.innerHTML = `<div class="admin-item-info"><div class="admin-item-name">${m.tag} ${esc(m.txt)}</div><div class="admin-item-meta">${m.time}</div></div>`;
+      const stStyle = m.struck ? 'text-decoration:line-through' : '';
+      d.innerHTML = `<div class="admin-item-info"><div class="admin-item-name" style="${stStyle}">${m.tag} ${esc(m.txt)}</div><div class="admin-item-meta">${m.time}${m.verified ? ' · ✓' : ''}${m.struck ? ' · tachado' : ''}${m.reply ? ' · resp: '+esc(m.reply) : ''}</div></div>`;
+      // Reply input
+      const replyRow = document.createElement('div'); replyRow.style.cssText = 'display:flex;gap:4px;margin-top:6px;width:100%';
+      const replyInp = document.createElement('input'); replyInp.className = 'cp-inp'; replyInp.placeholder = 'Responder...'; replyInp.value = m.reply || ''; replyInp.style.cssText = 'flex:1;font-size:13px;padding:6px';
+      const replyBtn = document.createElement('button'); replyBtn.className = 'btn-ok'; replyBtn.textContent = '↩';
+      replyBtn.addEventListener('click', async () => await updateDoc(doc(db,'messages',m.id), {reply:replyInp.value.trim()}));
+      replyRow.appendChild(replyInp); replyRow.appendChild(replyBtn);
       const a = document.createElement('div'); a.className = 'admin-actions';
       a.appendChild(bOk); a.appendChild(bStrike); a.appendChild(bKo);
-      d.appendChild(a); el.appendChild(d);
+      d.appendChild(a); d.appendChild(replyRow); el.appendChild(d);
     });
-    if (!n) el.innerHTML = '<div class="empty-msg">sin mensajes pendientes ✓</div>';
+    if (!n) el.innerHTML = '<div class="empty-msg">sin mensajes ✓</div>';
   });
 }
+
+// ── EDICIONES ASISTIDAS ──
+const ED_KEY = 'sonora_xi_editions';
+const EDITIONS = [
+  { id:'0',    name:'Es mi primer Sonora', sub:'Ojalá ser tú ahora mismo', date:'', first:true },
+  { id:'I',    name:'Bicorp',         sub:'El pleistoceno',           date:'Noviembre 2022' },
+  { id:'II',   name:'Casinos',       sub:'Unos guiris lo cambian todo', date:'Febrero 2023' },
+  { id:'III',  name:'Aliens',        sub:'El primer verano del amor', date:'Junio 2023' },
+  { id:'IV',   name:'Mazmorras',     sub:'Crackhouse y nos cortan el agua', date:'Noviembre 2023' },
+  { id:'V',    name:'Agua',          sub:'El porche de Don Bosco no verá noches mejores', date:'Junio 2024' },
+  { id:'VI',   name:'Jungla',        sub:'Infierno improvisado bajo la piscina', date:'Septiembre 2024' },
+  { id:'VII',  name:'West',          sub:'Espectáculo con fuego y una ceja menos', date:'Febrero 2025' },
+  { id:'VIII', name:'Machine',       sub:'Un camión cisterna abre el submundo y refugio en el rocódromo', date:'Junio 2025' },
+  { id:'IX',   name:'Age of Empires',sub:'Superamos los 100, ya no es un cumpleaños', date:'Septiembre 2025' },
+  { id:'X',    name:'Noxevieja',     sub:'10 fiestas, 4 días de locura y musicón', date:'Año nuevo 2026' },
+  { id:'XI',   name:'???',           sub:'San Sonorín te espera', date:'Mayo 2026', locked:true },
+];
+const ED_ROLES = [
+  { min:0,  name:'Marca cada edición a la que has asistido' },
+  { min:1,  name:'Te quedan cosas espectaculares por descubrir' },
+  { min:2,  name:'Proyecto de duende' },
+  { min:3,  name:'Animal de bafle' },
+  { min:4,  name:'Ya estás preparando el disfraz' },
+  { min:5,  name:'Has pedido días en el curro' },
+  { min:6,  name:'No vas a bodas' },
+  { min:7,  name:'Estás entrenando para los juegos sonoros' },
+  { min:8,  name:'A ver a qué huele eso' },
+  { min:9,  name:'Pum pum pum' },
+  { min:10, name:'Te llamas María' },
+];
+function getEdRole(count){
+  let role = ED_ROLES[0];
+  for (let i = ED_ROLES.length - 1; i >= 0; i--){
+    if (count >= ED_ROLES[i].min){ role = ED_ROLES[i]; break; }
+  }
+  return role.name;
+}
+function initEditions(){
+  const saved = JSON.parse(localStorage.getItem(ED_KEY) || '[]');
+  const grid = document.getElementById('ed-grid');
+  grid.innerHTML = '';
+  EDITIONS.forEach(ed => {
+    const chip = document.createElement('button');
+    chip.className = 'ed-chip' + (saved.includes(ed.id) ? ' on' : '') + (ed.locked ? ' locked-ed' : '');
+    chip.innerHTML = `<span class="ed-num">${ed.id}</span><span class="ed-name">${ed.name}</span><span class="ed-sub">${ed.sub}</span><span class="ed-date">${ed.date}</span>`;
+    if (!ed.locked) {
+      chip.addEventListener('click', () => {
+        if (ed.first) {
+          // "Es mi primer Sonora" — desmarca todas las demás
+          const wasOn = chip.classList.contains('on');
+          grid.querySelectorAll('.ed-chip').forEach(c => c.classList.remove('on'));
+          if (!wasOn) chip.classList.add('on');
+        } else {
+          // Edición normal — desmarca la 0 si estaba marcada
+          const zeroChip = grid.querySelector('.ed-chip:first-child');
+          if (zeroChip) zeroChip.classList.remove('on');
+          chip.classList.toggle('on');
+        }
+        const checked = [...grid.querySelectorAll('.ed-chip.on .ed-num')].map(c => c.textContent);
+        localStorage.setItem(ED_KEY, JSON.stringify(checked));
+        const count = checked.filter(c => c !== '0').length;
+        document.getElementById('ed-role').textContent = getEdRole(count);
+        updateRank();
+      });
+    }
+    grid.appendChild(chip);
+  });
+  const count = saved.filter(c => c !== '0').length;
+  document.getElementById('ed-role').textContent = getEdRole(count);
+}
+
+// ── INFO DINÁMICA ──
+const INFO_FIELDS = [
+  { key:'normas',      label:'Normas del espacio',         color:'var(--rojo)' },
+  { key:'transporte',  label:'Transporte',                 color:'var(--azul-dark)' },
+  { key:'llevar',      label:'Qué llevar / Qué no llevar', color:'var(--verde)' },
+  { key:'emergencia',  label:'Contacto de emergencia',     color:'var(--amarillo)' },
+  { key:'horarios',    label:'Horarios',                   color:'#8833cc' },
+];
+function initInfo(){
+  onSnapshot(doc(db,'config','info'), snap => {
+    const data = snap.exists() ? snap.data() : {};
+    const el = document.getElementById('info-list');
+    el.innerHTML = '';
+    INFO_FIELDS.forEach(f => {
+      const sec = document.createElement('div');
+      sec.className = 'info-section';
+      const content = data[f.key] || '';
+      sec.innerHTML = `<div class="info-section-title"><div class="info-dot" style="background:${f.color}"></div>${f.label}</div><div class="info-section-content">${content ? esc(content) : ''}</div>`;
+      el.appendChild(sec);
+    });
+  }, err => {
+    console.warn('Info listener error:', err);
+    const el = document.getElementById('info-list');
+    el.innerHTML = '<div class="info-placeholder">Información no disponible todavía</div>';
+  });
+}
+
+// ── ADMIN INFO SAVE ──
+document.getElementById('btn-save-info').addEventListener('click', async () => {
+  const data = {};
+  INFO_FIELDS.forEach(f => {
+    data[f.key] = document.getElementById('adm-' + f.key).value;
+  });
+  await setDoc(doc(db,'config','info'), data);
+  toast('Información guardada');
+});
 
 // ── APP INIT ──
 let appInited = false;
 function initApp(){
   if (appInited) return; appInited = true;
+  // Restaurar nombre guardado
+  const savedName = localStorage.getItem('sonora_xi_name');
+  if (savedName) document.getElementById('minp-name').value = savedName;
+  // Local first (no Firestore)
+  initEditions();
+  updateRank();
   setInterval(updateCD, 1000); updateCD();
-  initMsgs(); initCars(); loadSC(scIdx);
+  loadSC(scIdx);
+  // Firestore (may fail on permissions)
+  try { initMsgs(); } catch(e) { console.warn('initMsgs:', e); }
+  try { initCars(); } catch(e) { console.warn('initCars:', e); }
+  try { initInfo(); } catch(e) { console.warn('initInfo:', e); }
 }
 
 function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// ── SERVICE WORKER ──
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js').catch(() => {});
+}
 </script>
 </body>
 </html>
