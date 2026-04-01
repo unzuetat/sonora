@@ -947,6 +947,44 @@ body.night .night-toggle{
   box-shadow:3px 3px 0 rgba(247,226,0,.3);
 }
 .night-toggle:hover{transform:translate(1px,1px);box-shadow:2px 2px 0 #000}
+
+/* ── MOBILE RESPONSIVE ── */
+@media(max-width:480px){
+  #screen-app{padding:0 10px 60px}
+  .card{box-shadow:4px 4px 0 var(--negro)}
+  .card-body{padding:14px}
+  .cd-num{
+    font-size:clamp(36px,10vw,52px);
+    min-width:56px;padding:2px 8px;
+    box-shadow:3px 3px 0 var(--negro);
+  }
+  .cd-sep{font-size:32px;margin-top:-8px}
+  .cd-grid{gap:4px}
+  .hdr-title{-webkit-text-stroke:3px var(--negro)}
+  .hdr-xi{-webkit-text-stroke:2px var(--negro)}
+  .hdr-date{font-size:13px;padding:5px 14px;box-shadow:3px 3px 0 var(--negro)}
+  .tabs{flex-wrap:nowrap}
+  .tb{font-size:11px;padding:9px 2px;letter-spacing:0}
+  .ed-chip{padding:8px 10px;gap:6px}
+  .ed-num{font-size:13px;min-width:28px}
+  .ed-name{font-size:13px}
+  .ed-sub{font-size:12px}
+  .ed-date{font-size:10px}
+  .ed-role{font-size:16px}
+  .msg{padding:8px 10px;gap:6px}
+  .mbadge{font-size:9px;padding:2px 5px}
+  .mtxt{font-size:13px}
+  .car-from{font-size:15px}
+  .car-seats{font-size:14px;padding:3px 8px}
+  .sc-wrap{box-shadow:3px 3px 0 var(--negro)}
+  .xp-bar{height:14px}
+  .locked{padding:20px 14px}
+  .lock-txt{font-size:14px;letter-spacing:1px}
+  .map-btn{padding:8px 20px;font-size:14px}
+  .addr-big{font-size:22px}
+  .admin-title{font-size:36px}
+  .admin-modal-box{padding:20px}
+}
 </style>
 </head>
 <body>
