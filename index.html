@@ -967,134 +967,203 @@ body.night .night-toggle{
     <div class="hdr-sub">★ Ubicación por desclasificar ★</div>
   </div>
 
-  <!-- CUENTA ATRÁS -->
-  <div class="card" style="margin-top:20px">
-    <div class="card-stripe"></div>
-    <div class="card-body">
-      <div class="card-title">Cuenta atrás para el pregón</div>
-      <div class="cd-grid">
-        <div class="cd-unit"><span class="cd-num" id="dd">00</span><div class="cd-name">días</div></div>
-        <div class="cd-sep">:</div>
-        <div class="cd-unit"><span class="cd-num" id="hh">00</span><div class="cd-name">horas</div></div>
-        <div class="cd-sep">:</div>
-        <div class="cd-unit"><span class="cd-num" id="mm">00</span><div class="cd-name">min</div></div>
-        <div class="cd-sep">:</div>
-        <div class="cd-unit"><span class="cd-num" id="ss">00</span><div class="cd-name">seg</div></div>
-      </div>
-      <div class="xp-wrap">
-        <div class="xp-hdr">
-          <span class="xp-level" id="xp-level"></span>
-          <span class="xp-pct" id="pct"></span>
-        </div>
-        <div class="xp-bar"><div class="xp-fill" id="pfill" style="width:0%"></div></div>
-        <div class="xp-rank" id="xp-next"></div>
-      </div>
-      <!-- ELIMINA ESTE BOTÓN ANTES DEL EVENTO -->
-      <button class="demo-btn" id="btn-demo">[ simular desbloqueo ]</button>
-      <div class="locked" id="locked-box">
-        <div class="lock-txt">UBICACIÓN CIFRADA</div>
-        <div class="lock-squiggles">? ~ ? ~ ? ~ ?</div>
-      </div>
-      <div class="unlocked" id="unlocked-box">
-        <div style="font-family:'EB Garamond',serif;font-weight:800;font-size:12px;color:var(--verde);letter-spacing:3px;margin-bottom:10px">★ UBICACIÓN DESBLOQUEADA ★</div>
-        <div class="addr-big" id="addr-type"></div>
-        <div class="addr-sub" id="addr-detail"></div>
-        <a class="map-btn" id="map-link" href="#" target="_blank">→ Abrir mapa</a>
-        <button class="copy-btn" id="btn-copy">Copiar dirección</button>
-      </div>
-    </div>
+  <div class="tabs">
+    <button class="tb on" id="tab-main">Inicio</button>
+    <button class="tb" id="tab-brd">Tablón</button>
+    <button class="tb" id="tab-cp">Caravana</button>
+    <button class="tb" id="tab-sc">Señal</button>
+    <button class="tb" id="tab-info">Info</button>
   </div>
 
-  <!-- TABLÓN -->
-  <div class="card" style="margin-top:16px">
-    <div class="card-stripe"></div>
-    <div class="card-body">
-      <div class="card-title">Tablón Municipal</div>
-      <div class="sec-desc">Deja avisos para el vecindario. El Consejo del Festejo modera los mensajes.</div>
-      <div class="tags-row">
-        <button class="tag-btn" data-id="ice" data-label="[Hielo]">Hielo</button>
-        <button class="tag-btn" data-id="beer" data-label="[Birras]">Birras</button>
-        <button class="tag-btn" data-id="gf" data-label="[Sin gluten]">s/Gluten</button>
-        <button class="tag-btn" data-id="allergy" data-label="[Alérgenos]">Alérgenos</button>
-        <button class="tag-btn" data-id="food" data-label="[Comida]">Comida</button>
-        <button class="tag-btn sel" data-id="other" data-label="[Otros]">Otros</button>
-      </div>
-      <input class="msg-inp" id="minp-name" placeholder="Tu nombre o aka" maxlength="30" style="width:100%;margin-bottom:6px;font-size:14px;padding:8px"/>
-      <div class="inp-row">
-        <input class="msg-inp" id="minp" placeholder="Escribe tu aviso..." maxlength="140"/>
-        <button class="send-btn" id="btn-send">→</button>
-      </div>
-      <div class="msgs" id="mlist"></div>
-    </div>
-  </div>
+  <!-- ═══ INICIO (vista principal) ═══ -->
+  <div id="tc-main" class="tc on">
 
-  <!-- CARAVANA -->
-  <div class="card" style="margin-top:16px">
-    <div class="card-stripe"></div>
-    <div class="card-body">
-      <div class="card-title">Caravana · Carpool</div>
-      <div class="sec-desc">Organízate para los viajes. Conduce con cuidado, festero.</div>
-      <div class="cp-form">
-        <span class="cp-label">Registrar plaza disponible</span>
-        <div class="cp-row">
-          <input class="cp-inp" id="cpfrom" placeholder="Salgo desde..."/>
-          <select class="cp-sel" id="cpseats">
-            <option>1</option><option>2</option><option selected>3</option><option>4</option>
-          </select>
+    <!-- CUENTA ATRÁS -->
+    <div class="card">
+      <div class="card-stripe"></div>
+      <div class="card-body">
+        <div class="card-title">Cuenta atrás para el pregón</div>
+        <div class="cd-grid">
+          <div class="cd-unit"><span class="cd-num" id="dd">00</span><div class="cd-name">días</div></div>
+          <div class="cd-sep">:</div>
+          <div class="cd-unit"><span class="cd-num" id="hh">00</span><div class="cd-name">horas</div></div>
+          <div class="cd-sep">:</div>
+          <div class="cd-unit"><span class="cd-num" id="mm">00</span><div class="cd-name">min</div></div>
+          <div class="cd-sep">:</div>
+          <div class="cd-unit"><span class="cd-num" id="ss">00</span><div class="cd-name">seg</div></div>
         </div>
-        <input class="cp-inp" id="cpcont" placeholder="@telegram o WhatsApp" style="width:100%;margin-bottom:10px"/>
-        <button class="offer-btn" id="btn-car">★ Publicar plaza ★</button>
-      </div>
-      <div class="car-legend">✓ validado · ○ pendiente · ✗ completo</div>
-      <div class="car-list" id="carlist"></div>
-    </div>
-  </div>
-
-  <!-- SINTONIZA -->
-  <div class="card" style="margin-top:16px">
-    <div class="card-stripe"></div>
-    <div class="card-body">
-      <div class="card-title">Sintoniza</div>
-      <div class="sc-wrap">
-        <div class="sc-hdr">
-          <div class="sc-dot"></div>
-          <div class="sc-name" id="sc-artist-name">Cargando señal...</div>
-          <button class="sc-next" id="btn-next">Siguiente ›</button>
+        <div class="xp-wrap">
+          <div class="xp-hdr">
+            <span class="xp-level" id="xp-level"></span>
+            <span class="xp-pct" id="pct"></span>
+          </div>
+          <div class="xp-bar"><div class="xp-fill" id="pfill" style="width:0%"></div></div>
+          <div class="xp-rank" id="xp-next"></div>
         </div>
-        <div class="sc-artist-desc" id="sc-artist-desc"></div>
-        <iframe class="sc-frame" id="sc-frame" height="166" scrolling="no" frameborder="no" allow="autoplay" src="about:blank"></iframe>
-        <div class="sc-links">
-          <a id="sc-link-sc" href="https://soundcloud.com" target="_blank">soundcloud</a>
-          <a id="sc-link-ig" href="https://instagram.com" target="_blank">instagram</a>
+        <button class="demo-btn" id="btn-demo">[ simular desbloqueo ]</button>
+        <div class="locked" id="locked-box">
+          <div class="lock-txt">UBICACIÓN CIFRADA</div>
+          <div class="lock-squiggles">? ~ ? ~ ? ~ ?</div>
+        </div>
+        <div class="unlocked" id="unlocked-box">
+          <div style="font-family:'EB Garamond',serif;font-weight:800;font-size:12px;color:var(--verde);letter-spacing:3px;margin-bottom:10px">★ UBICACIÓN DESBLOQUEADA ★</div>
+          <div class="addr-big" id="addr-type"></div>
+          <div class="addr-sub" id="addr-detail"></div>
+          <a class="map-btn" id="map-link" href="#" target="_blank">→ Abrir mapa</a>
+          <button class="copy-btn" id="btn-copy">Copiar dirección</button>
         </div>
       </div>
     </div>
+
+    <!-- HISTORIAL MÉDICO -->
+    <div class="card" style="margin-top:16px">
+      <div class="card-stripe"></div>
+      <div class="card-body">
+        <div class="card-title">Tu historial médico</div>
+        <div class="ed-role" id="ed-role"></div>
+        <div class="ed-grid" id="ed-grid"></div>
+      </div>
+    </div>
+
+    <!-- INFO -->
+    <div class="card" style="margin-top:16px">
+      <div class="card-stripe"></div>
+      <div class="card-body">
+        <div class="card-title">Información útil</div>
+        <div id="info-list">
+          <div class="info-placeholder">Cargando información...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TABLÓN PREVIEW (read-only) -->
+    <div class="card" style="margin-top:16px">
+      <div class="card-stripe"></div>
+      <div class="card-body">
+        <div class="card-title">Tablón Municipal</div>
+        <div class="sec-desc">Deja avisos para el resto del vecindario. El Consejo del Festejo puede verificar o tachar mensajes.</div>
+        <div class="msgs" id="mlist-preview"></div>
+      </div>
+    </div>
+
+    <!-- CARPOOL PREVIEW (read-only) -->
+    <div class="card" style="margin-top:16px">
+      <div class="card-stripe"></div>
+      <div class="card-body">
+        <div class="card-title">Caravana · Carpool</div>
+        <div class="sec-desc">Organízate para los viajes. Conduce con cuidado, festero.</div>
+        <div class="car-list" id="carlist-preview"></div>
+      </div>
+    </div>
+
+    <!-- SINTONIZA -->
+    <div class="card" style="margin-top:16px">
+      <div class="card-stripe"></div>
+      <div class="card-body">
+        <div class="card-title">Sintoniza</div>
+        <div class="sc-wrap">
+          <div class="sc-hdr">
+            <div class="sc-dot"></div>
+            <div class="sc-name" id="sc-artist-name">Cargando señal...</div>
+            <button class="sc-next" id="btn-next">Siguiente ›</button>
+          </div>
+          <div class="sc-artist-desc" id="sc-artist-desc"></div>
+          <iframe class="sc-frame" id="sc-frame" height="166" scrolling="no" frameborder="no" allow="autoplay" src="about:blank"></iframe>
+          <div class="sc-links">
+            <a id="sc-link-sc" href="https://soundcloud.com" target="_blank">soundcloud</a>
+            <a id="sc-link-ig" href="https://instagram.com" target="_blank">instagram</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Admin access -->
+    <div style="text-align:center;margin-top:30px;padding-bottom:20px">
+      <button class="admin-link" id="btn-admin">Consejo del Festejo</button>
+    </div>
   </div>
 
-  <!-- INFO -->
-  <div class="card" style="margin-top:16px">
-    <div class="card-stripe"></div>
-    <div class="card-body">
-      <div class="card-title">Información útil</div>
-      <div id="info-list">
-        <div class="info-placeholder">Cargando información...</div>
+  <!-- ═══ TAB: TABLÓN (con formulario) ═══ -->
+  <div id="tc-brd" class="tc">
+    <div class="card">
+      <div class="card-stripe"></div>
+      <div class="card-body">
+        <div class="card-title">Tablón Municipal</div>
+        <div class="sec-desc">Selecciona una categoría, pon tu nombre y escribe tu aviso.</div>
+        <div class="tags-row">
+          <button class="tag-btn" data-id="ice" data-label="[Hielo]">Hielo</button>
+          <button class="tag-btn" data-id="beer" data-label="[Birras]">Birras</button>
+          <button class="tag-btn" data-id="gf" data-label="[Sin gluten]">s/Gluten</button>
+          <button class="tag-btn" data-id="allergy" data-label="[Alérgenos]">Alérgenos</button>
+          <button class="tag-btn" data-id="food" data-label="[Comida]">Comida</button>
+          <button class="tag-btn sel" data-id="other" data-label="[Otros]">Otros</button>
+        </div>
+        <input class="msg-inp" id="minp-name" placeholder="Tu nombre o aka" maxlength="30" style="width:100%;margin-bottom:6px;font-size:14px;padding:8px"/>
+        <div class="inp-row">
+          <input class="msg-inp" id="minp" placeholder="Escribe tu aviso..." maxlength="140"/>
+          <button class="send-btn" id="btn-send">→</button>
+        </div>
+        <div class="msgs" id="mlist"></div>
       </div>
     </div>
   </div>
 
-  <!-- EDICIONES ASISTIDAS -->
-  <div class="card" style="margin-top:16px">
-    <div class="card-stripe"></div>
-    <div class="card-body">
-      <div class="card-title">Tu historial médico</div>
-      <div class="ed-role" id="ed-role"></div>
-      <div class="ed-grid" id="ed-grid"></div>
+  <!-- ═══ TAB: CARAVANA (con formulario) ═══ -->
+  <div id="tc-cp" class="tc">
+    <div class="card">
+      <div class="card-stripe"></div>
+      <div class="card-body">
+        <div class="card-title">Caravana · Carpool</div>
+        <div class="sec-desc">Si ofreces plaza deja tu contacto. Tu entrada aparece una vez validada por el Consejo del Festejo.</div>
+        <div class="cp-form">
+          <span class="cp-label">Registrar plaza disponible</span>
+          <div class="cp-row">
+            <input class="cp-inp" id="cpfrom" placeholder="Salgo desde..."/>
+            <select class="cp-sel" id="cpseats">
+              <option>1</option><option>2</option><option selected>3</option><option>4</option>
+            </select>
+          </div>
+          <input class="cp-inp" id="cpcont" placeholder="@telegram o WhatsApp" style="width:100%;margin-bottom:10px"/>
+          <button class="offer-btn" id="btn-car">★ Publicar plaza ★</button>
+        </div>
+        <div class="car-legend">✓ validado · ○ pendiente · ✗ completo</div>
+        <div class="car-list" id="carlist"></div>
+      </div>
     </div>
   </div>
 
-  <!-- Admin access -->
-  <div style="text-align:center;margin-top:30px;padding-bottom:20px">
-    <button class="admin-link" id="btn-admin">Consejo del Festejo</button>
+  <!-- ═══ TAB: SEÑAL ═══ -->
+  <div id="tc-sc" class="tc">
+    <div class="card">
+      <div class="card-stripe"></div>
+      <div class="card-body">
+        <div class="card-title">Sintoniza</div>
+        <div class="sc-wrap">
+          <div class="sc-hdr">
+            <div class="sc-dot"></div>
+            <div class="sc-name" id="sc-artist-name2">Cargando señal...</div>
+            <button class="sc-next" id="btn-next2">Siguiente ›</button>
+          </div>
+          <div class="sc-artist-desc" id="sc-artist-desc2"></div>
+          <iframe class="sc-frame" id="sc-frame2" height="166" scrolling="no" frameborder="no" allow="autoplay" src="about:blank"></iframe>
+          <div class="sc-links">
+            <a id="sc-link-sc2" href="https://soundcloud.com" target="_blank">soundcloud</a>
+            <a id="sc-link-ig2" href="https://instagram.com" target="_blank">instagram</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ TAB: INFO ═══ -->
+  <div id="tc-info" class="tc">
+    <div class="card">
+      <div class="card-stripe"></div>
+      <div class="card-body">
+        <div class="card-title">Información útil</div>
+        <div id="info-list2"></div>
+      </div>
+    </div>
   </div>
 
 </div>
@@ -1150,7 +1219,13 @@ body.night .night-toggle{
   </div>
 
   <div class="admin-section">
-    <div class="admin-sec-title">plazas carpool pendientes</div>
+    <div class="admin-sec-title">Descripciones de artistas</div>
+    <div id="admin-artists"></div>
+    <button class="offer-btn" id="btn-save-artists" style="margin-top:8px">Guardar descripciones</button>
+  </div>
+
+  <div class="admin-section">
+    <div class="admin-sec-title">plazas carpool</div>
     <div id="admin-cars"></div>
   </div>
   <div class="admin-section">
@@ -1322,7 +1397,20 @@ setTimeout(() => {
   if (f) { f.classList.add('visible'); f.querySelector('.auth-inp').focus(); }
 }, 2000);
 
-// (tabs removed — all sections visible)
+// ── TABS ──
+const TAB_KEY = 'sonora_xi_tab';
+function sw(id){
+  document.querySelectorAll('.tc').forEach(t => t.classList.remove('on'));
+  document.querySelectorAll('.tb').forEach(b => b.classList.remove('on'));
+  document.getElementById('tc-' + id).classList.add('on');
+  document.getElementById('tab-' + id).classList.add('on');
+  if (id !== 'main') localStorage.setItem(TAB_KEY, id);
+}
+document.getElementById('tab-main').addEventListener('click', () => sw('main'));
+document.getElementById('tab-brd').addEventListener('click',  () => sw('brd'));
+document.getElementById('tab-cp').addEventListener('click',   () => sw('cp'));
+document.getElementById('tab-sc').addEventListener('click',   () => { sw('sc'); loadSC2(scIdx); });
+document.getElementById('tab-info').addEventListener('click', () => sw('info'));
 
 // ── CUENTA ATRÁS ──
 let unlocked = false;
@@ -1396,21 +1484,27 @@ document.querySelectorAll('.tag-btn').forEach(btn => {
   });
 });
 
+function renderMsg(m){
+  const bc  = TAG_BC[m.tagId] || 'b-other';
+  const ver = m.verified ? '<span class="mverified">✓</span>' : '';
+  const st  = m.struck ? 'text-decoration:line-through;opacity:.4' : '';
+  const reply = m.reply ? `<div class="msg-reply">★ Consejo: ${esc(m.reply)}</div>` : '';
+  const authorHtml = m.author ? `<span class="mauthor">${esc(m.author)}</span>` : '';
+  const d = document.createElement('div');
+  d.className = 'msg';
+  d.innerHTML = `<span class="mbadge ${bc}">${m.tag}</span><span class="mtxt" style="${st}">${authorHtml}${esc(m.txt)}${ver}${reply}</span><span class="mtime">${m.time}</span>`;
+  return d;
+}
 function initMsgs(){
   onSnapshot(query(collection(db,'messages'), orderBy('ts','desc')), snap => {
     const list = document.getElementById('mlist');
-    list.innerHTML = '';
-    if (snap.empty){ list.innerHTML = '<div class="empty-msg">Sin transmisiones todavía...</div>'; return; }
+    const preview = document.getElementById('mlist-preview');
+    list.innerHTML = ''; preview.innerHTML = '';
+    if (snap.empty) return;
     snap.forEach(ds => {
-      const m = ds.data(), d = document.createElement('div');
-      d.className = 'msg';
-      const bc  = TAG_BC[m.tagId] || 'b-other';
-      const ver = m.verified ? '<span class="mverified">✓ verificado</span>' : '<span class="munverified">○ sin verificar</span>';
-      const st  = m.struck ? 'text-decoration:line-through;opacity:.4' : '';
-      const reply = m.reply ? `<div class="msg-reply">★ Consejo: ${esc(m.reply)}</div>` : '';
-      const authorHtml = m.author ? `<span class="mauthor">${esc(m.author)}</span>` : '';
-      d.innerHTML = `<span class="mbadge ${bc}">${m.tag}</span><span class="mtxt" style="${st}">${authorHtml}${esc(m.txt)}${ver}${reply}</span><span class="mtime">${m.time}</span>`;
-      list.appendChild(d);
+      const m = ds.data();
+      list.appendChild(renderMsg(m));
+      preview.appendChild(renderMsg(m));
     });
   }, err => { console.warn('Messages listener error:', err); });
 }
@@ -1437,21 +1531,27 @@ document.getElementById('btn-send').addEventListener('click', sendMsg);
 document.getElementById('minp').addEventListener('keydown', e => { if (e.key === 'Enter') sendMsg(); });
 
 // ── CARAVANA ──
+function renderCar(c){
+  const d = document.createElement('div');
+  d.className = 'car-item' + (c.approved ? '' : ' pending');
+  const st = c.full
+    ? '<div class="car-status" style="color:var(--rojo)">✗ completo</div>'
+    : c.approved
+      ? '<div class="car-status ok">✓ validado</div>'
+      : '<div class="car-status wait">○ pendiente</div>';
+  d.innerHTML = `<div><div class="car-from">Desde ${esc(c.from)}</div><div class="car-contact">${esc(c.contact||'—')} · ${st.replace(/<[^>]+>/g,'').trim()}</div></div><div class="car-seats">${c.seats}p</div>`;
+  return d;
+}
 function initCars(){
   onSnapshot(query(collection(db,'carpool'), orderBy('ts','desc')), snap => {
     const list = document.getElementById('carlist');
-    list.innerHTML = '';
+    const preview = document.getElementById('carlist-preview');
+    list.innerHTML = ''; preview.innerHTML = '';
     if (snap.empty) return;
     snap.forEach(ds => {
-      const c = { id:ds.id, ...ds.data() }, d = document.createElement('div');
-      d.className = 'car-item' + (c.approved ? '' : ' pending');
-      const st = c.full
-        ? '<div class="car-status" style="color:var(--rojo)">✗ completo</div>'
-        : c.approved
-          ? '<div class="car-status ok">✓ validado</div>'
-          : '<div class="car-status wait">○ pendiente de validación</div>';
-      d.innerHTML = `<div><div class="car-from">${esc(c.from)}</div><div class="car-contact">${esc(c.contact||'—')}</div>${st}</div><div class="car-seats">${c.seats}p</div>`;
-      list.appendChild(d);
+      const c = { id:ds.id, ...ds.data() };
+      list.appendChild(renderCar(c));
+      preview.appendChild(renderCar(c));
     });
   }, err => { console.warn('Carpool listener error:', err); });
 }
@@ -1473,16 +1573,27 @@ document.getElementById('btn-car').addEventListener('click', async () => {
 
 // ── SOUNDCLOUD ──
 let scIdx = Math.floor(Math.random() * SC_ARTISTS.length);
+const scUrl = (url) => `https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}&color=%23e8001a&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=false`;
+
 function loadSC(idx){
-  const a   = SC_ARTISTS[idx];
-  const enc = encodeURIComponent(a.url);
-  document.getElementById('sc-frame').src = `https://w.soundcloud.com/player/?url=${enc}&color=%23e8001a&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=false`;
+  const a = SC_ARTISTS[idx];
+  document.getElementById('sc-frame').src = scUrl(a.url);
   document.getElementById('sc-link-sc').href = a.sc;
   document.getElementById('sc-link-ig').href = a.ig;
   document.getElementById('sc-artist-name').textContent = a.name;
-  document.getElementById('sc-artist-desc').textContent = a.desc || '';
+  document.getElementById('sc-artist-desc').textContent = a.customDesc || a.desc || '';
 }
-document.getElementById('btn-next').addEventListener('click', () => { scIdx = (scIdx+1) % SC_ARTISTS.length; loadSC(scIdx); });
+function loadSC2(idx){
+  const a = SC_ARTISTS[idx];
+  document.getElementById('sc-frame2').src = scUrl(a.url);
+  document.getElementById('sc-link-sc2').href = a.sc;
+  document.getElementById('sc-link-ig2').href = a.ig;
+  document.getElementById('sc-artist-name2').textContent = a.name;
+  document.getElementById('sc-artist-desc2').textContent = a.customDesc || a.desc || '';
+}
+function nextSC(){ scIdx = (scIdx+1) % SC_ARTISTS.length; loadSC(scIdx); loadSC2(scIdx); }
+document.getElementById('btn-next').addEventListener('click', nextSC);
+document.getElementById('btn-next2').addEventListener('click', nextSC);
 
 // ── COPIAR DIRECCIÓN ──
 document.getElementById('btn-copy').addEventListener('click', () => {
@@ -1493,6 +1604,7 @@ document.getElementById('btn-copy').addEventListener('click', () => {
 
 // ── ADMIN ──
 function initAdmin(){
+  initAdminArtists();
   // Load info fields
   onSnapshot(doc(db,'config','info'), snap => {
     const data = snap.exists() ? snap.data() : {};
@@ -1637,22 +1749,25 @@ const INFO_FIELDS = [
   { key:'emergencia',  label:'Contacto de emergencia',     color:'var(--amarillo)' },
   { key:'horarios',    label:'Horarios',                   color:'#8833cc' },
 ];
+function renderInfoTo(el, data){
+  el.innerHTML = '';
+  INFO_FIELDS.forEach(f => {
+    const sec = document.createElement('div');
+    sec.className = 'info-section';
+    const content = data[f.key] || '';
+    sec.innerHTML = `<div class="info-section-title"><div class="info-dot" style="background:${f.color}"></div>${f.label}</div><div class="info-section-content">${content ? esc(content) : ''}</div>`;
+    el.appendChild(sec);
+  });
+}
 function initInfo(){
   onSnapshot(doc(db,'config','info'), snap => {
     const data = snap.exists() ? snap.data() : {};
-    const el = document.getElementById('info-list');
-    el.innerHTML = '';
-    INFO_FIELDS.forEach(f => {
-      const sec = document.createElement('div');
-      sec.className = 'info-section';
-      const content = data[f.key] || '';
-      sec.innerHTML = `<div class="info-section-title"><div class="info-dot" style="background:${f.color}"></div>${f.label}</div><div class="info-section-content">${content ? esc(content) : ''}</div>`;
-      el.appendChild(sec);
-    });
+    renderInfoTo(document.getElementById('info-list'), data);
+    renderInfoTo(document.getElementById('info-list2'), data);
   }, err => {
     console.warn('Info listener error:', err);
-    const el = document.getElementById('info-list');
-    el.innerHTML = '<div class="info-placeholder">Información no disponible todavía</div>';
+    document.getElementById('info-list').innerHTML = '<div class="info-placeholder">Información no disponible todavía</div>';
+    document.getElementById('info-list2').innerHTML = '<div class="info-placeholder">Información no disponible todavía</div>';
   });
 }
 
@@ -1664,6 +1779,41 @@ document.getElementById('btn-save-info').addEventListener('click', async () => {
   });
   await setDoc(doc(db,'config','info'), data);
   toast('Información guardada');
+});
+
+// ── ADMIN ARTIST DESCRIPTIONS ──
+function initAdminArtists(){
+  const el = document.getElementById('admin-artists');
+  el.innerHTML = '';
+  SC_ARTISTS.forEach((a, i) => {
+    const field = document.createElement('div');
+    field.className = 'admin-field';
+    field.innerHTML = `<label class="admin-field-label">${a.name}</label><input class="cp-inp" id="adm-artist-${i}" value="${esc(a.customDesc || a.desc || '')}" placeholder="Descripción breve..." style="font-size:13px;padding:8px"/>`;
+    el.appendChild(field);
+  });
+  // Load saved from Firestore
+  onSnapshot(doc(db,'config','artists'), snap => {
+    if (!snap.exists()) return;
+    const data = snap.data();
+    SC_ARTISTS.forEach((a, i) => {
+      if (data[a.name]) {
+        a.customDesc = data[a.name];
+        const inp = document.getElementById('adm-artist-' + i);
+        if (inp && !inp._editing) inp.value = data[a.name];
+      }
+    });
+  }, err => console.warn('Artists config error:', err));
+}
+document.getElementById('btn-save-artists').addEventListener('click', async () => {
+  const data = {};
+  SC_ARTISTS.forEach((a, i) => {
+    const val = document.getElementById('adm-artist-' + i).value.trim();
+    if (val) { data[a.name] = val; a.customDesc = val; }
+  });
+  await setDoc(doc(db,'config','artists'), data);
+  // Update current player
+  loadSC(scIdx);
+  toast('Descripciones guardadas');
 });
 
 // ── APP INIT ──
@@ -1682,14 +1832,20 @@ function initApp(){
   try { initMsgs(); } catch(e) { console.warn('initMsgs:', e); }
   try { initCars(); } catch(e) { console.warn('initCars:', e); }
   try { initInfo(); } catch(e) { console.warn('initInfo:', e); }
+  // Load artist custom descriptions
+  try {
+    onSnapshot(doc(db,'config','artists'), snap => {
+      if (!snap.exists()) return;
+      const data = snap.data();
+      SC_ARTISTS.forEach(a => { if (data[a.name]) a.customDesc = data[a.name]; });
+      loadSC(scIdx);
+    }, err => console.warn('Artists config:', err));
+  } catch(e) {}
 }
 
 function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-// ── SERVICE WORKER ──
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js').catch(() => {});
-}
+// Service worker disabled
 </script>
 </body>
 </html>
