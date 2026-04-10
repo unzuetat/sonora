@@ -217,7 +217,8 @@ body{
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
 
 /* TABS */
-.tabs{display:flex;border-top:3px solid var(--negro);margin-top:20px}
+.tabs{display:flex;border-top:3px solid var(--negro);border-bottom:3px solid var(--negro);margin-top:20px;position:sticky;top:0;z-index:50;background:var(--crema)}
+body.night .tabs{background:var(--bg)}
 .tb{
   flex:1;padding:11px 3px;text-align:center;
   font-family:'EB Garamond',serif;font-style:italic;
@@ -1286,7 +1287,7 @@ body.night .night-toggle{
       <div class="card-stripe"></div>
       <div class="card-body">
         <div class="card-title">Menú Popular</div>
-        <div class="sec-desc">Los artistas que van a pinchar. Dale al play para escuchar.</div>
+        <div class="sec-desc" style="font-size:20px;font-weight:700;font-style:italic;color:var(--rojo);letter-spacing:1px">Café y postre incluidos</div>
         <div class="lineup-player" id="lineup-player">
           <div class="lineup-player-name" id="lineup-player-name"></div>
           <iframe class="sc-frame" id="lineup-frame" height="166" scrolling="no" frameborder="no" allow="autoplay" src="about:blank" style="width:100%;display:block"></iframe>
@@ -1336,7 +1337,7 @@ body.night .night-toggle{
 <div class="admin-modal" id="chef-modal" style="display:none">
   <div class="admin-modal-box" style="text-align:center;max-width:380px">
     <div style="font-family:'EB Garamond',serif;font-weight:800;font-size:18px;letter-spacing:2px;color:var(--rojo);margin-bottom:14px">★ COMANDA DEL CHEF ★</div>
-    <div style="font-family:'EB Garamond',serif;font-style:italic;font-size:16px;color:var(--negro);line-height:1.5;margin-bottom:18px">Por comanda del chef, este menú se degustará en directo.</div>
+    <div style="font-family:'EB Garamond',serif;font-style:italic;font-size:16px;color:var(--negro);line-height:1.5;margin-bottom:18px">Por comanda del chef, este plato se degustará en directo.</div>
     <button class="auth-btn" id="btn-chef-close" style="padding:10px 24px;font-size:14px">Cerrar</button>
   </div>
 </div>
@@ -1468,7 +1469,7 @@ const START  = new Date('2026-01-01T00:00:00');
 
 const SC_ARTISTS = [
   { name:"Francis Espinaco", url:"https://soundcloud.com/user-845235880/barman-pongame-un-dyc", sc:"https://soundcloud.com/user-845235880", ig:"https://instagram.com/motelxamar", img:"img/francis-espinaco.png" },
-  { name:"Senmeri", url:"https://soundcloud.com/senmeri", sc:"https://soundcloud.com/senmeri", ig:"https://instagram.com/senmeri", img:"https://i1.sndcdn.com/avatars-zhWKPep86RNQxU3a-PiBRFg-t500x500.jpg" },
+  { name:"Senmeri", url:"https://soundcloud.com/senmeri", sc:"https://soundcloud.com/senmeri", ig:"https://instagram.com/senmeri", img:"https://i1.sndcdn.com/avatars-zhWKPep86RNQxU3a-PiBRFg-t500x500.jpg", hidden:true },
   { name:"Mireia Cj", url:"https://soundcloud.com/mireia-camarena", sc:"https://soundcloud.com/mireia-camarena", ig:"https://instagram.com/mireiacj2", img:"img/mireia-cj.jpeg" },
   { name:"Apparatchik", url:"https://soundcloud.com/user901179098", sc:"https://soundcloud.com/user901179098", ig:"https://instagram.com/itsapparatchik", img:"https://i1.sndcdn.com/avatars-8yzKhifSN7MMxfyG-wHbkwQ-t500x500.jpg" },
   { name:"Cizette", url:"https://soundcloud.com/clara-zaragoza-175684940", sc:"https://soundcloud.com/clara-zaragoza-175684940", ig:"https://instagram.com/cizette.music", img:"https://i1.sndcdn.com/avatars-RqzQYCENWDtG00cy-RW1gEw-t500x500.jpg" },
@@ -1479,7 +1480,7 @@ const SC_ARTISTS = [
   { name:"KØRE.TEK", url:"https://soundcloud.com/kore-909668299", sc:"https://soundcloud.com/kore-909668299", ig:"https://instagram.com/kore.tek_", img:"img/kore.jpg" },
   { name:"Cabani", url:"https://soundcloud.com/cabani-music", sc:"https://soundcloud.com/cabani-music", ig:"https://instagram.com/cabani.dj", img:"https://i1.sndcdn.com/avatars-uKSNdI8DQ8gGIGzz-8FoDdA-t500x500.jpg" },
   { name:"Amphetamix" },
-  { name:"Lost Mery" },
+  { name:"Lost Mery", url:"https://soundcloud.com/maria-alfonso-moreno/tracks", sc:"https://soundcloud.com/maria-alfonso-moreno", img:"img/lost-mery.jpg" },
   { name:"Gurke" },
   { name:"BØHM" },
   { name:"Droglo" },
@@ -1828,7 +1829,7 @@ let playingIdx = -1;
 let appInited = false;
 let unlocked = false;
 let lastRank = '';
-const RND_POOL = SC_ARTISTS.map((a,i) => a.url ? i : -1).filter(i => i >= 0);
+const RND_POOL = SC_ARTISTS.map((a,i) => (a.url && !a.hidden) ? i : -1).filter(i => i >= 0);
 let rndPoolPos = Math.floor(Math.random() * RND_POOL.length);
 let rndIdx = RND_POOL[rndPoolPos] ?? 0;
 
@@ -1866,6 +1867,7 @@ function renderLineup(){
   list.innerHTML = '';
 
   SC_ARTISTS.forEach((a, i) => {
+    if (a.hidden) return;
     const hasUrl = !!a.url;
     list.appendChild(makeArtistItem(a, i, hasUrl, false));
   });
