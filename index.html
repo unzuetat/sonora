@@ -466,16 +466,6 @@ body.night .msg-reply{background:rgba(45,164,78,.1);color:#6ddb8a}
 .sc-next{background:var(--amarillo);border:2px solid var(--crema);color:var(--negro);font-family:'EB Garamond',serif;font-weight:700;font-size:12px;letter-spacing:1px;padding:4px 12px;cursor:pointer}
 .sc-frame{width:100%;display:none;border:none;background:#f2f2f2}
 .sc-frame.loaded{display:block}
-.sc-play-btn{
-  display:flex;align-items:center;justify-content:center;gap:8px;
-  width:100%;padding:20px;
-  background:var(--negro);color:var(--amarillo);
-  font-family:'EB Garamond',serif;font-weight:700;
-  font-size:16px;letter-spacing:2px;
-  border:none;cursor:pointer;transition:.15s;
-}
-.sc-play-btn:hover{background:#333}
-body.night .sc-play-btn{background:var(--bg);color:var(--amarillo)}
 .sc-artist-desc{
   font-family:'EB Garamond',serif;font-style:italic;
   font-size:13px;color:#888;letter-spacing:1px;
@@ -486,6 +476,101 @@ body.night .sc-artist-desc{background:var(--bg-card);color:var(--text-dim);borde
 .sc-links{display:flex;justify-content:center;gap:20px;padding:10px;border-top:2px solid var(--negro);background:var(--crema)}
 .sc-links a{font-family:'EB Garamond',serif;font-style:italic;font-size:13px;letter-spacing:2px;color:var(--negro);text-decoration:none;border-bottom:2px solid var(--rojo);padding-bottom:1px}
 .sc-links a:hover{color:var(--rojo)}
+
+/* SC COVER (player aleatorio en Inicio) */
+.sc-cover{
+  position:relative;width:100%;aspect-ratio:16/9;
+  background:var(--negro);overflow:hidden;cursor:pointer;
+}
+.sc-cover-img{
+  width:100%;height:100%;object-fit:cover;
+  display:block;opacity:.85;transition:opacity .3s;
+}
+.sc-cover:hover .sc-cover-img{opacity:.6}
+.sc-play-btn{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:14px 28px;
+  background:rgba(26,26,26,.8);color:var(--amarillo);
+  font-family:'EB Garamond',serif;font-weight:700;
+  font-size:16px;letter-spacing:2px;
+  border:3px solid var(--amarillo);
+  cursor:pointer;transition:.15s;
+  backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
+  box-shadow:0 4px 20px rgba(0,0,0,.4);
+}
+.sc-play-btn:hover{background:rgba(26,26,26,.95);transform:translate(-50%,-50%) scale(1.05)}
+body.night .sc-play-btn{background:rgba(10,14,26,.85);border-color:var(--amarillo)}
+
+/* LINEUP */
+.lineup-player{display:none;margin-bottom:16px}
+.lineup-player.active{display:block}
+.lineup-player-name{
+  font-family:'EB Garamond',serif;font-weight:800;font-style:italic;
+  font-size:13px;letter-spacing:2px;color:var(--rojo);
+  text-align:center;margin-bottom:8px;
+}
+.artist-item{
+  background:#fff;border:2px solid var(--negro);
+  border-left:6px solid var(--rojo);
+  padding:14px;margin-bottom:8px;
+  display:flex;align-items:center;gap:12px;
+  animation:fadeup .2s ease;
+}
+.artist-item.playing{
+  background:var(--rojo);border-left-color:var(--amarillo);
+}
+.artist-item.playing .artist-name{color:var(--amarillo)}
+.artist-item.playing .artist-desc{color:rgba(255,255,255,.7)}
+.artist-item.playing .artist-link{color:var(--amarillo);border-bottom-color:var(--amarillo)}
+.artist-img{
+  width:52px;height:52px;
+  border:2px solid var(--negro);
+  object-fit:cover;flex-shrink:0;
+}
+.artist-info{flex:1;min-width:0}
+.artist-name{
+  font-family:'EB Garamond',serif;font-weight:800;
+  font-size:16px;color:var(--negro);letter-spacing:1px;
+}
+.artist-desc{
+  font-family:'EB Garamond',serif;font-style:italic;
+  font-size:13px;color:#888;margin-top:2px;line-height:1.4;
+}
+.artist-links{display:flex;gap:12px;margin-top:6px}
+.artist-link{
+  font-family:'EB Garamond',serif;font-style:italic;
+  font-size:12px;letter-spacing:1px;
+  color:var(--negro);text-decoration:none;
+  border-bottom:2px solid var(--rojo);padding-bottom:1px;
+}
+.artist-link:hover{color:var(--rojo)}
+.artist-play{
+  width:44px;height:44px;flex-shrink:0;
+  background:var(--rojo);color:var(--amarillo);
+  border:3px solid var(--negro);
+  font-family:'EB Garamond',serif;font-weight:800;
+  font-size:18px;cursor:pointer;
+  box-shadow:3px 3px 0 var(--negro);transition:.15s;
+  display:flex;align-items:center;justify-content:center;
+}
+.artist-play:hover{transform:translate(1px,1px);box-shadow:2px 2px 0 var(--negro)}
+.artist-play.disabled{
+  background:#ccc;color:#999;border-color:#aaa;
+  box-shadow:2px 2px 0 #aaa;cursor:default;
+}
+.artist-play.disabled:hover{transform:none;box-shadow:2px 2px 0 #aaa}
+
+/* Night lineup */
+body.night .artist-item{background:var(--bg-card);border-color:var(--border);border-left-color:var(--rojo)}
+body.night .artist-item.playing{background:var(--rojo)}
+body.night .artist-name{color:var(--text)}
+body.night .artist-desc{color:var(--text-dim)}
+body.night .artist-link{color:var(--text);border-bottom-color:var(--rojo)}
+body.night .artist-img{border-color:var(--border)}
+body.night .artist-play{box-shadow:3px 3px 0 #000}
+body.night .lineup-player-name{color:var(--amarillo)}
 
 /* INFO */
 .info-item{padding:10px 4px;border-bottom:1px solid #e0d8c8;font-family:'EB Garamond',serif;font-size:15px;color:var(--negro);display:flex;align-items:center;gap:10px}
@@ -662,6 +747,22 @@ body.dev-mode .demo-btn{display:block!important;margin:0 auto 12px;background:no
 
 /* SEND BTN COOLDOWN */
 .send-btn:disabled,.offer-btn:disabled{opacity:.4;cursor:not-allowed}
+.send-btn.sending,.offer-btn.sending{
+  opacity:1;cursor:wait;
+  background:var(--negro);color:var(--amarillo);
+  position:relative;overflow:hidden;
+}
+.send-btn.sending::after,.offer-btn.sending::after{
+  content:'';position:absolute;top:0;left:-100%;
+  width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);
+  animation:btnShimmer .8s ease infinite;
+}
+@keyframes btnShimmer{to{left:100%}}
+.send-btn.done,.offer-btn.done{
+  background:var(--verde)!important;color:#fff!important;
+  transition:background .3s;
+}
 
 /* ══════════════════════════════════
    RPG LAYER
@@ -731,24 +832,6 @@ body.dev-mode .demo-btn{display:block!important;margin:0 auto 12px;background:no
   pointer-events:none;
 }
 
-/* QUEST BADGE on card titles */
-.quest-badge{
-  display:inline-block;
-  background:var(--amarillo);color:var(--negro);
-  font-family:'EB Garamond',serif;font-weight:800;
-  font-size:9px;letter-spacing:2px;
-  padding:2px 6px;margin-left:8px;
-  border:2px solid var(--negro);
-  vertical-align:middle;
-  text-transform:uppercase;
-}
-
-/* PARTY MEMBER count in caravana */
-.party-count{
-  font-family:'EB Garamond',serif;font-weight:800;
-  font-size:12px;letter-spacing:2px;color:var(--verde);
-  text-align:center;margin-bottom:12px;
-}
 
 /* ══════════════════════════════════
    DARK MODE — NIGHT
@@ -982,6 +1065,10 @@ body.night .night-toggle{
   .lock-txt{font-size:14px;letter-spacing:1px}
   .map-btn{padding:8px 20px;font-size:14px}
   .addr-big{font-size:22px}
+  .artist-img{width:40px;height:40px}
+  .artist-name{font-size:14px}
+  .artist-desc{font-size:12px}
+  .artist-play{width:38px;height:38px;font-size:16px}
   .admin-title{font-size:36px}
   .admin-modal-box{padding:20px}
 }
@@ -1020,7 +1107,7 @@ body.night .night-toggle{
     <button class="tb on" id="tab-main">Inicio</button>
     <button class="tb" id="tab-brd">Tablón</button>
     <button class="tb" id="tab-cp">Caravana</button>
-    <button class="tb" id="tab-sc">Señal</button>
+    <button class="tb" id="tab-sc">Menú</button>
     <button class="tb" id="tab-info">Info</button>
   </div>
 
@@ -1031,7 +1118,7 @@ body.night .night-toggle{
     <div class="card">
       <div class="card-stripe"></div>
       <div class="card-body">
-        <div class="card-title">Cuenta atrás para el pregón</div>
+        <div class="card-title">Cuenta atrás para el pregonazo</div>
         <div class="cd-grid">
           <div class="cd-unit"><span class="cd-num" id="dd">00</span><div class="cd-name">días</div></div>
           <div class="cd-sep">:</div>
@@ -1051,7 +1138,7 @@ body.night .night-toggle{
         </div>
         <button class="demo-btn" id="btn-demo">[ simular desbloqueo ]</button>
         <div class="locked" id="locked-box">
-          <div class="lock-txt">UBICACIÓN CIFRADA</div>
+          <div class="lock-txt">UBICACIÓN CIFRADA... de momento</div>
           <div class="lock-squiggles">? ~ ? ~ ? ~ ?</div>
         </div>
         <div class="unlocked" id="unlocked-box">
@@ -1099,13 +1186,13 @@ body.night .night-toggle{
     <div class="card" style="margin-top:16px">
       <div class="card-stripe"></div>
       <div class="card-body">
-        <div class="card-title">Caravana · Carpool</div>
-        <div class="sec-desc">Organízate para los viajes. Conduce con cuidado, festero.</div>
+        <div class="card-title">Caravana </div>
+        <div class="sec-desc">Organízate para los viajes. Conduce con cuidado, festejillos.</div>
         <div class="car-list" id="carlist-preview"></div>
       </div>
     </div>
 
-    <!-- SINTONIZA -->
+    <!-- SINTONIZA (artista aleatorio) -->
     <div class="card" style="margin-top:16px">
       <div class="card-stripe"></div>
       <div class="card-body">
@@ -1113,24 +1200,23 @@ body.night .night-toggle{
         <div class="sc-wrap">
           <div class="sc-hdr">
             <div class="sc-dot"></div>
-            <div class="sc-name" id="sc-artist-name">Cargando señal...</div>
-            <button class="sc-next" id="btn-next">Siguiente ›</button>
+            <div class="sc-name" id="sc-rnd-name">Cargando señal...</div>
+            <button class="sc-next" id="btn-rnd-next">Siguiente ›</button>
           </div>
-          <div class="sc-artist-desc" id="sc-artist-desc"></div>
-          <button class="sc-play-btn" id="sc-play">▶ Reproducir</button>
-          <iframe class="sc-frame" id="sc-frame" height="280" scrolling="no" frameborder="no" allow="autoplay" src="about:blank"></iframe>
+          <div class="sc-artist-desc" id="sc-rnd-desc"></div>
+          <div class="sc-cover" id="sc-rnd-cover">
+            <img class="sc-cover-img" id="sc-rnd-img" src="" alt=""/>
+            <button class="sc-play-btn" id="sc-rnd-play">▶ Reproducir</button>
+          </div>
+          <iframe class="sc-frame" id="sc-rnd-frame" height="166" scrolling="no" frameborder="no" allow="autoplay" src="about:blank"></iframe>
           <div class="sc-links">
-            <a id="sc-link-sc" href="https://soundcloud.com" target="_blank">soundcloud</a>
-            <a id="sc-link-ig" href="https://instagram.com" target="_blank">instagram</a>
+            <a id="sc-rnd-sc" href="#" target="_blank">soundcloud</a>
+            <a id="sc-rnd-ig" href="#" target="_blank">instagram</a>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Admin access -->
-    <div style="text-align:center;margin-top:30px;padding-bottom:20px">
-      <button class="admin-link" id="btn-admin">Consejo del Festejo</button>
-    </div>
   </div>
 
   <!-- ═══ TAB: TABLÓN (con formulario) ═══ -->
@@ -1139,19 +1225,21 @@ body.night .night-toggle{
       <div class="card-stripe"></div>
       <div class="card-body">
         <div class="card-title">Tablón Municipal</div>
-        <div class="sec-desc">Selecciona una categoría, pon tu nombre y escribe tu aviso.</div>
-        <div class="tags-row">
-          <button class="tag-btn" data-id="ice" data-label="[Hielo]">Hielo</button>
-          <button class="tag-btn" data-id="beer" data-label="[Birras]">Birras</button>
-          <button class="tag-btn" data-id="gf" data-label="[Sin gluten]">s/Gluten</button>
-          <button class="tag-btn" data-id="allergy" data-label="[Alérgenos]">Alérgenos</button>
-          <button class="tag-btn" data-id="food" data-label="[Comida]">Comida</button>
-          <button class="tag-btn sel" data-id="other" data-label="[Otros]">Otros</button>
-        </div>
-        <input class="msg-inp" id="minp-name" placeholder="Tu nombre o aka" maxlength="30" style="width:100%;margin-bottom:6px;font-size:14px;padding:8px"/>
-        <div class="inp-row">
-          <input class="msg-inp" id="minp" placeholder="Escribe tu aviso..." maxlength="140"/>
-          <button class="send-btn" id="btn-send">→</button>
+        <div class="sec-desc" id="board-desc">Selecciona una categoría, pon tu nombre y escribe tu aviso.</div>
+        <div id="board-form">
+          <div class="tags-row">
+            <button class="tag-btn" data-id="ice" data-label="[Hielo]">Hielo</button>
+            <button class="tag-btn" data-id="beer" data-label="[Birras]">Birras</button>
+            <button class="tag-btn" data-id="gf" data-label="[Sin gluten]">s/Gluten</button>
+            <button class="tag-btn" data-id="allergy" data-label="[Alérgenos]">Alérgenos</button>
+            <button class="tag-btn" data-id="food" data-label="[Comida]">Comida</button>
+            <button class="tag-btn sel" data-id="other" data-label="[Otros]">Otros</button>
+          </div>
+          <input class="msg-inp" id="minp-name" placeholder="Tu nombre o aka" maxlength="30" style="width:100%;margin-bottom:6px;font-size:14px;padding:8px"/>
+          <div class="inp-row">
+            <input class="msg-inp" id="minp" placeholder="Escribe tu aviso..." maxlength="140"/>
+            <button class="send-btn" id="btn-send">→</button>
+          </div>
         </div>
         <div class="msgs" id="mlist"></div>
       </div>
@@ -1163,7 +1251,7 @@ body.night .night-toggle{
     <div class="card">
       <div class="card-stripe"></div>
       <div class="card-body">
-        <div class="card-title">Caravana · Carpool</div>
+        <div class="card-title">Caravana</div>
         <div class="sec-desc">Si ofreces plaza deja tu contacto. Tu entrada aparece una vez validada por el Consejo del Festejo.</div>
         <div class="cp-form">
           <span class="cp-label">Registrar plaza disponible</span>
@@ -1182,26 +1270,18 @@ body.night .night-toggle{
     </div>
   </div>
 
-  <!-- ═══ TAB: SEÑAL ═══ -->
+  <!-- ═══ TAB: MENÚ POPULAR ═══ -->
   <div id="tc-sc" class="tc">
     <div class="card">
       <div class="card-stripe"></div>
       <div class="card-body">
-        <div class="card-title">Sintoniza</div>
-        <div class="sc-wrap">
-          <div class="sc-hdr">
-            <div class="sc-dot"></div>
-            <div class="sc-name" id="sc-artist-name2">Cargando señal...</div>
-            <button class="sc-next" id="btn-next2">Siguiente ›</button>
-          </div>
-          <div class="sc-artist-desc" id="sc-artist-desc2"></div>
-          <button class="sc-play-btn" id="sc-play2">▶ Reproducir</button>
-          <iframe class="sc-frame" id="sc-frame2" height="280" scrolling="no" frameborder="no" allow="autoplay" src="about:blank"></iframe>
-          <div class="sc-links">
-            <a id="sc-link-sc2" href="https://soundcloud.com" target="_blank">soundcloud</a>
-            <a id="sc-link-ig2" href="https://instagram.com" target="_blank">instagram</a>
-          </div>
+        <div class="card-title">Menú Popular</div>
+        <div class="sec-desc">Los artistas que van a pinchar. Dale al play para escuchar.</div>
+        <div class="lineup-player" id="lineup-player">
+          <div class="lineup-player-name" id="lineup-player-name"></div>
+          <iframe class="sc-frame" id="lineup-frame" height="166" scrolling="no" frameborder="no" allow="autoplay" src="about:blank" style="width:100%;display:block"></iframe>
         </div>
+        <div id="lineup-list"></div>
       </div>
     </div>
   </div>
@@ -1215,6 +1295,11 @@ body.night .night-toggle{
         <div id="info-list2"></div>
       </div>
     </div>
+  </div>
+
+  <!-- Admin access (visible en todas las pestañas) -->
+  <div style="text-align:center;margin-top:30px;padding-bottom:20px">
+    <button class="admin-link" id="btn-admin">Consejo del Festejo</button>
   </div>
 
 </div>
@@ -1258,7 +1343,7 @@ body.night .night-toggle{
         <textarea class="admin-textarea" id="adm-llevar" rows="3" placeholder="Lista de cosas..."></textarea>
       </div>
       <div class="admin-field">
-        <label class="admin-field-label">Contacto de emergencia</label>
+        <label class="admin-field-label">Contactos</label>
         <textarea class="admin-textarea" id="adm-emergencia" rows="2" placeholder="Teléfono, persona..."></textarea>
       </div>
       <div class="admin-field">
@@ -1276,7 +1361,7 @@ body.night .night-toggle{
   </div>
 
   <div class="admin-section">
-    <div class="admin-sec-title">plazas carpool</div>
+    <div class="admin-sec-title">plazas Caravana</div>
     <div id="admin-cars"></div>
   </div>
   <div class="admin-section">
@@ -1300,6 +1385,45 @@ import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc
 // ══════════════════════════════════════
 const ACCESS_PASSWORD = "sonora2026";
 const ADMIN_PASSWORD  = "orgiasonora";
+const BOARD_FROZEN    = true; // Tablón congelado: solo lectura para asistentes
+const TAB_KEY = 'sonora_xi_tab';
+const scUrl = (url) => `https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}&color=%23e8001a&auto_play=true&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=false`;
+const TAG_BC = { ice:'b-ice', beer:'b-beer', gf:'b-gf', allergy:'b-allergy', food:'b-food', other:'b-other' };
+const ED_KEY = 'sonora_xi_editions';
+const EDITIONS = [
+  { id:'0',    name:'Es mi primer Sonora', sub:'Ojalá ser tú ahora mismo', date:'', first:true },
+  { id:'I',    name:'Bicorp',         sub:'El pleistoceno',           date:'Noviembre 2022' },
+  { id:'II',   name:'Casinos',       sub:'Unos guiris lo cambian todo', date:'Febrero 2023' },
+  { id:'III',  name:'Aliens',        sub:'El primer verano del amor', date:'Junio 2023' },
+  { id:'IV',   name:'Mazmorras',     sub:'Crackhouse y nos cortan el agua', date:'Noviembre 2023' },
+  { id:'V',    name:'Agua',          sub:'Pocas noches mejores verá el porche de don Bosco', date:'Junio 2024' },
+  { id:'VI',   name:'Jungla',        sub:'Infierno improvisado bajo la piscina', date:'Septiembre 2024' },
+  { id:'VII',  name:'West',          sub:'Salvaje oeste y una ceja menos', date:'Febrero 2025' },
+  { id:'VIII', name:'Machine',       sub:'Un camión cisterna abre el pasadizo al submundo', date:'Junio 2025' },
+  { id:'IX',   name:'Age of Empires',sub:'Una vez se superan 100, ya no es un cumpleaños', date:'Septiembre 2025' },
+  { id:'X',    name:'Noxevieja',     sub:'10 fiestas, 4 días. Se consiguió.', date:'Año nuevo 2026' },
+  { id:'XI',   name:'???',           sub:'No dejéis que los niños se acerquen a San Sonorín', date:'Mayo 2026', locked:true },
+];
+const ED_ROLES = [
+  { min:0,  name:'' },
+  { min:1,  name:'Te quedan cosas espectaculares por descubrir' },
+  { min:2,  name:'Proyecto de duende' },
+  { min:3,  name:'Animal de bafle' },
+  { min:4,  name:'Ya estás preparando el disfraz' },
+  { min:5,  name:'Has pedido días en el curro' },
+  { min:6,  name:'Ya no vas a bodas' },
+  { min:7,  name:'Estás entrenando para los juegos sonoros' },
+  { min:8,  name:'A ver a qué huele eso' },
+  { min:9,  name:'Pum pum pum' },
+  { min:10, name:'Te llamas María' },
+];
+const INFO_FIELDS = [
+  { key:'normas',      label:'Normas del espacio',         color:'var(--rojo)' },
+  { key:'transporte',  label:'Transporte',                 color:'var(--azul-dark)' },
+  { key:'llevar',      label:'Qué llevar / Qué no llevar', color:'var(--verde)' },
+  { key:'emergencia',  label:'Contactos',     color:'var(--amarillo)' },
+  { key:'horarios',    label:'Horarios',                   color:'#8833cc' },
+];
 const ADDRESS_TEXT    = "PASACALLES ACID";
 const ADDRESS_DETAIL  = "Aquí la dirección completa · Valencia";
 const MAP_LINK        = "https://maps.google.com/?q=TU+UBICACION";
@@ -1307,17 +1431,17 @@ const TARGET = new Date('2026-05-29T22:00:00');
 const START  = new Date('2026-01-01T00:00:00');
 
 const SC_ARTISTS = [
-  { name:"Francis Espinaco", desc:"Acid house y psicodelia mediterránea", url:"https://soundcloud.com/user-845235880", sc:"https://soundcloud.com/user-845235880", ig:"https://instagram.com/motelxamar" },
-  { name:"Senmeri", desc:"Electrónica orgánica y texturas envolventes", url:"https://soundcloud.com/senmeri/tracks", sc:"https://soundcloud.com/senmeri", ig:"https://instagram.com/senmeri" },
-  { name:"Mireia Cj", desc:"Techno melódico desde Valencia", url:"https://soundcloud.com/mireia-camarena/tracks", sc:"https://soundcloud.com/mireia-camarena", ig:"https://instagram.com/mireiacj2" },
-  { name:"Apparatchik", desc:"Industrial y EBM sin concesiones", url:"https://soundcloud.com/user901179098/tracks", sc:"https://soundcloud.com/user901179098", ig:"https://instagram.com/itsapparatchik" },
-  { name:"Cizette", desc:"Breaks y electro con alma de vinilo", url:"https://soundcloud.com/clara-zaragoza-175684940/tracks", sc:"https://soundcloud.com/clara-zaragoza-175684940", ig:"https://instagram.com/cizette.music" },
-  { name:"Toretto", desc:"Hard groove y sesiones de madrugada", url:"https://soundcloud.com/toretto-sounds/tracks", sc:"https://soundcloud.com/toretto-sounds", ig:"https://instagram.com/torettosounds" },
-  { name:"Deejeya", desc:"House con raíces en el funk y el soul", url:"https://soundcloud.com/deejeya/tracks", sc:"https://soundcloud.com/deejeya", ig:"https://instagram.com/deejeya" },
-  { name:"Astora", desc:"Trance progresivo y viajes sonoros", url:"https://soundcloud.com/juan-carmona-513512584/tracks", sc:"https://soundcloud.com/juan-carmona-513512584", ig:"https://instagram.com/astoramusic" },
-  { name:"K.I.R.", desc:"Techno duro y contundente", url:"https://soundcloud.com/cristian-marcos-288862063/tracks", sc:"https://soundcloud.com/cristian-marcos-288862063", ig:"https://instagram.com/k.i.rdj" },
-  { name:"KØRE.TEK", desc:"Sonido 909 y raves de pueblo", url:"https://soundcloud.com/kore-909668299/tracks", sc:"https://soundcloud.com/kore-909668299", ig:"https://instagram.com/kore.tek_" },
-  { name:"Cabani", desc:"Minimal y micro house nocturno", url:"https://soundcloud.com/cabani-music/tracks", sc:"https://soundcloud.com/cabani-music", ig:"https://instagram.com/cabani.dj" },
+  { name:"Francis Espinaco", desc:"Acid punk, trance y vinacho.", url:"https://soundcloud.com/user-845235880", sc:"https://soundcloud.com/user-845235880", ig:"https://instagram.com/motelxamar", img:"https://i1.sndcdn.com/avatars-wWiIj9Lt1Vg6C5BK-EMlYCw-t500x500.jpg" },
+  { name:"Senmeri", desc:"Electrónica orgánica y texturas envolventes", url:"https://soundcloud.com/senmeri", sc:"https://soundcloud.com/senmeri", ig:"https://instagram.com/senmeri", img:"https://i1.sndcdn.com/avatars-zhWKPep86RNQxU3a-PiBRFg-t500x500.jpg" },
+  { name:"Mireia Cj", desc:"Techno melódico desde Valencia", url:"https://soundcloud.com/mireia-camarena", sc:"https://soundcloud.com/mireia-camarena", ig:"https://instagram.com/mireiacj2", img:"https://i1.sndcdn.com/avatars-F9eEUT0dgEfRQ7Rz-oXwk6w-t500x500.jpg" },
+  { name:"Apparatchik", desc:"Industrial y EBM sin concesiones", url:"https://soundcloud.com/user901179098", sc:"https://soundcloud.com/user901179098", ig:"https://instagram.com/itsapparatchik", img:"https://i1.sndcdn.com/avatars-8yzKhifSN7MMxfyG-wHbkwQ-t500x500.jpg" },
+  { name:"Cizette", desc:"Breaks y electro con alma de vinilo", url:"https://soundcloud.com/clara-zaragoza-175684940", sc:"https://soundcloud.com/clara-zaragoza-175684940", ig:"https://instagram.com/cizette.music", img:"https://i1.sndcdn.com/avatars-RqzQYCENWDtG00cy-RW1gEw-t500x500.jpg" },
+  { name:"Toretto", desc:"Hard groove y sesiones de madrugada", url:"https://soundcloud.com/toretto-sounds", sc:"https://soundcloud.com/toretto-sounds", ig:"https://instagram.com/torettosounds", img:"https://i1.sndcdn.com/avatars-WCDqTymdagNTBQad-jjYWkA-t500x500.jpg" },
+  { name:"Deejeya", desc:"House con raíces en el funk y el soul", url:"https://soundcloud.com/deejeya", sc:"https://soundcloud.com/deejeya", ig:"https://instagram.com/deejeya", img:"https://i1.sndcdn.com/avatars-1xREn6hQsYPaDW2N-MuoJMw-t500x500.jpg" },
+  { name:"Astora", desc:"Trance progresivo y viajes sonoros", url:"https://soundcloud.com/juan-carmona-513512584", sc:"https://soundcloud.com/juan-carmona-513512584", ig:"https://instagram.com/astoramusic", img:"https://i1.sndcdn.com/avatars-aL7A2KBu8wlPM4Zp-Bcescw-t500x500.jpg" },
+  { name:"K.I.R.", desc:"Techno duro y contundente", url:"https://soundcloud.com/cristian-marcos-288862063", sc:"https://soundcloud.com/cristian-marcos-288862063", ig:"https://instagram.com/k.i.rdj", img:"https://i1.sndcdn.com/avatars-Sy6S0te4hGHTIziB-nyjDww-t500x500.jpg" },
+  { name:"KØRE.TEK", desc:"Sonido 909 y raves de pueblo", url:"https://soundcloud.com/kore-909668299", sc:"https://soundcloud.com/kore-909668299", ig:"https://instagram.com/kore.tek_", img:"https://i1.sndcdn.com/avatars-CpRYbLrujJ8zY1XG-LUqPFg-t500x500.jpg" },
+  { name:"Cabani", desc:"Minimal y micro house nocturno", url:"https://soundcloud.com/cabani-music", sc:"https://soundcloud.com/cabani-music", ig:"https://instagram.com/cabani.dj", img:"https://i1.sndcdn.com/avatars-uKSNdI8DQ8gGIGzz-8FoDdA-t500x500.jpg" },
 ];
 
 const FAKE_LOCS = [
@@ -1416,7 +1540,6 @@ function doLogin(){
 document.getElementById('btn-login').addEventListener('click', doLogin);
 document.getElementById('inp-pwd').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
 document.getElementById('btn-back').addEventListener('click', () => { showScreen('app'); initApp(); });
-if (sessionStorage.getItem(SK) === 'ok'){ showScreen('app'); initApp(); }
 
 // ── ADMIN MODAL ──
 document.getElementById('btn-admin').addEventListener('click', () => {
@@ -1449,7 +1572,6 @@ setTimeout(() => {
 }, 2000);
 
 // ── TABS ──
-const TAB_KEY = 'sonora_xi_tab';
 function sw(id){
   document.querySelectorAll('.tc').forEach(t => t.classList.remove('on'));
   document.querySelectorAll('.tb').forEach(b => b.classList.remove('on'));
@@ -1460,12 +1582,10 @@ function sw(id){
 document.getElementById('tab-main').addEventListener('click', () => sw('main'));
 document.getElementById('tab-brd').addEventListener('click',  () => sw('brd'));
 document.getElementById('tab-cp').addEventListener('click',   () => sw('cp'));
-document.getElementById('tab-sc').addEventListener('click',   () => { sw('sc'); loadSC2(scIdx); });
+document.getElementById('tab-sc').addEventListener('click',   () => sw('sc'));
 document.getElementById('tab-info').addEventListener('click', () => sw('info'));
 
 // ── CUENTA ATRÁS ──
-let unlocked = false;
-let lastRank = '';
 function updateCD(){
   const now = new Date(), diff = Math.max(0, TARGET - now);
   if (diff === 0 && !unlocked) triggerUnlock();
@@ -1523,7 +1643,6 @@ document.getElementById('btn-demo').addEventListener('click', () => {
 });
 
 // ── TABLÓN ──
-const TAG_BC = { ice:'b-ice', beer:'b-beer', gf:'b-gf', allergy:'b-allergy', food:'b-food', other:'b-other' };
 let curTagId = 'other', curTagLabel = '[otros]';
 
 document.querySelectorAll('.tag-btn').forEach(btn => {
@@ -1551,12 +1670,25 @@ function initMsgs(){
     const list = document.getElementById('mlist');
     const preview = document.getElementById('mlist-preview');
     list.innerHTML = ''; preview.innerHTML = '';
-    if (snap.empty) return;
+    if (snap.empty) {
+      list.innerHTML = '<div class="empty-msg">Ningún aviso todavía. ¡Sé el primero!</div>';
+      preview.innerHTML = '<div class="empty-msg">Ningún aviso todavía</div>';
+      return;
+    }
+    let count = 0;
     snap.forEach(ds => {
       const m = ds.data();
       list.appendChild(renderMsg(m));
-      preview.appendChild(renderMsg(m));
+      if (count < 3) preview.appendChild(renderMsg(m));
+      count++;
     });
+    if (count > 3) {
+      const more = document.createElement('div');
+      more.className = 'empty-msg';
+      more.innerHTML = `<a href="#" style="color:var(--rojo);font-weight:700;text-decoration:none;letter-spacing:1px">Ver los ${count} avisos →</a>`;
+      more.querySelector('a').addEventListener('click', e => { e.preventDefault(); sw('brd'); });
+      preview.appendChild(more);
+    }
   }, err => { console.warn('Messages listener error:', err); });
 }
 
@@ -1568,15 +1700,16 @@ async function sendMsg(){
   if (msgCooldown) { toast('Espera unos segundos...'); return; }
   const btn = document.getElementById('btn-send');
   btn.disabled = true; msgCooldown = true;
+  btn.classList.add('sending'); btn.textContent = '···';
   const now = new Date();
   const day = now.getDate() + '/' + (now.getMonth()+1);
   const time = day + ' ' + now.getHours() + ':' + String(now.getMinutes()).padStart(2,'0');
   await addDoc(collection(db,'messages'), { tagId:curTagId, tag:curTagLabel, txt, time, ts:now.getTime(), verified:false, struck:false, reply:'', author });
   inp.value = '';
-  // Guardar nombre para próximos mensajes
   localStorage.setItem('sonora_xi_name', author);
+  btn.classList.remove('sending'); btn.classList.add('done'); btn.textContent = '✓';
   toast('★ +1 TRANSMISIÓN ENVIADA');
-  setTimeout(() => { btn.disabled = false; msgCooldown = false; }, 15000);
+  setTimeout(() => { btn.classList.remove('done'); btn.textContent = '→'; btn.disabled = false; msgCooldown = false; }, 15000);
 }
 document.getElementById('btn-send').addEventListener('click', sendMsg);
 document.getElementById('minp').addEventListener('keydown', e => { if (e.key === 'Enter') sendMsg(); });
@@ -1598,12 +1731,25 @@ function initCars(){
     const list = document.getElementById('carlist');
     const preview = document.getElementById('carlist-preview');
     list.innerHTML = ''; preview.innerHTML = '';
-    if (snap.empty) return;
+    if (snap.empty) {
+      list.innerHTML = '<div class="empty-msg">Sin plazas todavía. ¡Ofrece la tuya!</div>';
+      preview.innerHTML = '<div class="empty-msg">Sin plazas todavía</div>';
+      return;
+    }
+    let count = 0;
     snap.forEach(ds => {
       const c = { id:ds.id, ...ds.data() };
       list.appendChild(renderCar(c));
-      preview.appendChild(renderCar(c));
+      if (count < 3) preview.appendChild(renderCar(c));
+      count++;
     });
+    if (count > 3) {
+      const more = document.createElement('div');
+      more.className = 'empty-msg';
+      more.innerHTML = `<a href="#" style="color:var(--verde);font-weight:700;text-decoration:none;letter-spacing:1px">Ver las ${count} plazas →</a>`;
+      more.querySelector('a').addEventListener('click', e => { e.preventDefault(); sw('cp'); });
+      preview.appendChild(more);
+    }
   }, err => { console.warn('Carpool listener error:', err); });
 }
 
@@ -1615,52 +1761,112 @@ document.getElementById('btn-car').addEventListener('click', async () => {
   if (!contact) { toast('Pon tu contacto'); return; }
   const btn = document.getElementById('btn-car');
   btn.disabled = true;
+  btn.classList.add('sending'); btn.textContent = 'Enviando...';
   await addDoc(collection(db,'carpool'), { from, contact, seats, ts:Date.now(), approved:false, full:false });
   document.getElementById('cpfrom').value = '';
   document.getElementById('cpcont').value = '';
+  btn.classList.remove('sending'); btn.classList.add('done'); btn.textContent = '✓ Enviado';
   toast('★ +1 MIEMBRO · PENDIENTE DE VALIDACIÓN');
-  setTimeout(() => { btn.disabled = false; }, 30000);
+  setTimeout(() => { btn.classList.remove('done'); btn.textContent = '★ Publicar plaza ★'; btn.disabled = false; }, 30000);
 });
 
-// ── SOUNDCLOUD ──
-let scIdx = Math.floor(Math.random() * SC_ARTISTS.length);
-const scUrl = (url) => {
-  const rand = Math.floor(Math.random() * 50);
-  return `https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}&color=%23e8001a&auto_play=true&hide_related=false&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=true&start_track=${rand}`;
-};
+// ── LINEUP / SOUNDCLOUD ──
+let playingIdx = -1;
+let appInited = false;
+let unlocked = false;
+let lastRank = '';
+let rndIdx = Math.floor(Math.random() * SC_ARTISTS.length);
 
-function loadSC(idx){
+// ── PLAYER ALEATORIO (Inicio) ──
+function loadRndPlayer(idx){
   const a = SC_ARTISTS[idx];
-  // Don't load iframe yet — wait for user click
-  document.getElementById('sc-frame').classList.remove('loaded');
-  document.getElementById('sc-frame').src = 'about:blank';
-  document.getElementById('sc-play').style.display = 'flex';
-  document.getElementById('sc-link-sc').href = a.sc;
-  document.getElementById('sc-link-ig').href = a.ig;
-  document.getElementById('sc-artist-name').textContent = a.name;
-  document.getElementById('sc-artist-desc').textContent = a.customDesc || a.desc || '';
+  document.getElementById('sc-rnd-name').textContent = a.name;
+  document.getElementById('sc-rnd-desc').textContent = a.customDesc || a.desc || '';
+  document.getElementById('sc-rnd-img').src = a.img;
+  document.getElementById('sc-rnd-img').alt = a.name;
+  document.getElementById('sc-rnd-cover').style.display = 'block';
+  document.getElementById('sc-rnd-frame').classList.remove('loaded');
+  document.getElementById('sc-rnd-frame').src = 'about:blank';
+  document.getElementById('sc-rnd-sc').href = a.sc;
+  document.getElementById('sc-rnd-ig').href = a.ig;
 }
-function loadSC2(idx){
+document.getElementById('sc-rnd-cover').addEventListener('click', () => {
+  const a = SC_ARTISTS[rndIdx];
+  document.getElementById('sc-rnd-cover').style.display = 'none';
+  document.getElementById('sc-rnd-frame').src = scUrl(a.url);
+  document.getElementById('sc-rnd-frame').classList.add('loaded');
+});
+document.getElementById('btn-rnd-next').addEventListener('click', () => {
+  rndIdx = (rndIdx + 1) % SC_ARTISTS.length;
+  loadRndPlayer(rndIdx);
+});
+
+// ── LINEUP (tab Menú) ──
+function renderLineup(){
+  const list = document.getElementById('lineup-list');
+  list.innerHTML = '';
+
+  SC_ARTISTS.forEach((a, i) => {
+    const hasUrl = !!a.url;
+    list.appendChild(makeArtistItem(a, i, hasUrl, false));
+  });
+}
+
+function makeArtistItem(a, i, hasUrl, isPreview){
+  const d = document.createElement('div');
+  d.className = 'artist-item';
+  d.dataset.idx = i;
+
+  const img = document.createElement('img');
+  img.className = 'artist-img';
+  img.src = a.img;
+  img.alt = a.name;
+  img.loading = 'lazy';
+
+  const info = document.createElement('div');
+  info.className = 'artist-info';
+  info.innerHTML = `<div class="artist-name">${esc(a.name)}</div>`
+    + `<div class="artist-desc">${esc(a.customDesc || a.desc || '')}</div>`
+    + `<div class="artist-links">`
+    + (a.sc ? `<a class="artist-link" href="${a.sc}" target="_blank">soundcloud</a>` : '')
+    + (a.ig ? `<a class="artist-link" href="${a.ig}" target="_blank">instagram</a>` : '')
+    + `</div>`;
+
+  d.appendChild(img);
+  d.appendChild(info);
+
+  if (!isPreview) {
+    const btn = document.createElement('button');
+    btn.className = 'artist-play' + (hasUrl ? '' : ' disabled');
+    btn.textContent = '▶';
+    if (hasUrl) {
+      btn.addEventListener('click', () => playArtist(i));
+    }
+    d.appendChild(btn);
+  }
+
+  return d;
+}
+
+function playArtist(idx){
   const a = SC_ARTISTS[idx];
-  document.getElementById('sc-frame2').classList.remove('loaded');
-  document.getElementById('sc-frame2').src = 'about:blank';
-  document.getElementById('sc-play2').style.display = 'flex';
-  document.getElementById('sc-link-sc2').href = a.sc;
-  document.getElementById('sc-link-ig2').href = a.ig;
-  document.getElementById('sc-artist-name2').textContent = a.name;
-  document.getElementById('sc-artist-desc2').textContent = a.customDesc || a.desc || '';
+  if (!a.url) return;
+
+  // Highlight playing artist
+  playingIdx = idx;
+  document.querySelectorAll('#lineup-list .artist-item').forEach(el => {
+    el.classList.toggle('playing', parseInt(el.dataset.idx) === idx);
+  });
+
+  // Show and load player
+  const player = document.getElementById('lineup-player');
+  player.classList.add('active');
+  document.getElementById('lineup-player-name').textContent = '♪ ' + a.name;
+  document.getElementById('lineup-frame').src = scUrl(a.url);
+
+  // Scroll player into view
+  player.scrollIntoView({ behavior:'smooth', block:'nearest' });
 }
-function playSC(frameId, btnId){
-  const a = SC_ARTISTS[scIdx];
-  document.getElementById(frameId).src = scUrl(a.url);
-  document.getElementById(frameId).classList.add('loaded');
-  document.getElementById(btnId).style.display = 'none';
-}
-document.getElementById('sc-play').addEventListener('click', () => playSC('sc-frame','sc-play'));
-document.getElementById('sc-play2').addEventListener('click', () => playSC('sc-frame2','sc-play2'));
-function nextSC(){ scIdx = (scIdx+1) % SC_ARTISTS.length; loadSC(scIdx); loadSC2(scIdx); }
-document.getElementById('btn-next').addEventListener('click', nextSC);
-document.getElementById('btn-next2').addEventListener('click', nextSC);
 
 // ── COPIAR DIRECCIÓN ──
 document.getElementById('btn-copy').addEventListener('click', () => {
@@ -1739,40 +1945,17 @@ function initAdmin(){
 }
 
 // ── EDICIONES ASISTIDAS ──
-const ED_KEY = 'sonora_xi_editions';
-const EDITIONS = [
-  { id:'0',    name:'Es mi primer Sonora', sub:'Ojalá ser tú ahora mismo', date:'', first:true },
-  { id:'I',    name:'Bicorp',         sub:'El pleistoceno',           date:'Noviembre 2022' },
-  { id:'II',   name:'Casinos',       sub:'Unos guiris lo cambian todo', date:'Febrero 2023' },
-  { id:'III',  name:'Aliens',        sub:'El primer verano del amor', date:'Junio 2023' },
-  { id:'IV',   name:'Mazmorras',     sub:'Crackhouse y nos cortan el agua', date:'Noviembre 2023' },
-  { id:'V',    name:'Agua',          sub:'El porche de Don Bosco no verá noches mejores', date:'Junio 2024' },
-  { id:'VI',   name:'Jungla',        sub:'Infierno improvisado bajo la piscina', date:'Septiembre 2024' },
-  { id:'VII',  name:'West',          sub:'Espectáculo con fuego y una ceja menos', date:'Febrero 2025' },
-  { id:'VIII', name:'Machine',       sub:'Un camión cisterna abre el submundo y refugio en el rocódromo', date:'Junio 2025' },
-  { id:'IX',   name:'Age of Empires',sub:'Superamos los 100, ya no es un cumpleaños', date:'Septiembre 2025' },
-  { id:'X',    name:'Noxevieja',     sub:'10 fiestas, 4 días de locura y musicón', date:'Año nuevo 2026' },
-  { id:'XI',   name:'???',           sub:'San Sonorín te espera', date:'Mayo 2026', locked:true },
-];
-const ED_ROLES = [
-  { min:0,  name:'Marca cada edición a la que has asistido' },
-  { min:1,  name:'Te quedan cosas espectaculares por descubrir' },
-  { min:2,  name:'Proyecto de duende' },
-  { min:3,  name:'Animal de bafle' },
-  { min:4,  name:'Ya estás preparando el disfraz' },
-  { min:5,  name:'Has pedido días en el curro' },
-  { min:6,  name:'No vas a bodas' },
-  { min:7,  name:'Estás entrenando para los juegos sonoros' },
-  { min:8,  name:'A ver a qué huele eso' },
-  { min:9,  name:'Pum pum pum' },
-  { min:10, name:'Te llamas María' },
-];
 function getEdRole(count){
   let role = ED_ROLES[0];
   for (let i = ED_ROLES.length - 1; i >= 0; i--){
     if (count >= ED_ROLES[i].min){ role = ED_ROLES[i]; break; }
   }
   return role.name;
+}
+function getEdRoleText(saved){
+  if (saved.includes('0')) return 'Ojalá ser tú ahora mismo';
+  const count = saved.filter(c => c !== '0').length;
+  return getEdRole(count);
 }
 function initEditions(){
   const saved = JSON.parse(localStorage.getItem(ED_KEY) || '[]');
@@ -1797,25 +1980,16 @@ function initEditions(){
         }
         const checked = [...grid.querySelectorAll('.ed-chip.on .ed-num')].map(c => c.textContent);
         localStorage.setItem(ED_KEY, JSON.stringify(checked));
-        const count = checked.filter(c => c !== '0').length;
-        document.getElementById('ed-role').textContent = getEdRole(count);
+        document.getElementById('ed-role').textContent = getEdRoleText(checked);
         updateRank();
       });
     }
     grid.appendChild(chip);
   });
-  const count = saved.filter(c => c !== '0').length;
-  document.getElementById('ed-role').textContent = getEdRole(count);
+  document.getElementById('ed-role').textContent = getEdRoleText(saved);
 }
 
 // ── INFO DINÁMICA ──
-const INFO_FIELDS = [
-  { key:'normas',      label:'Normas del espacio',         color:'var(--rojo)' },
-  { key:'transporte',  label:'Transporte',                 color:'var(--azul-dark)' },
-  { key:'llevar',      label:'Qué llevar / Qué no llevar', color:'var(--verde)' },
-  { key:'emergencia',  label:'Contacto de emergencia',     color:'var(--amarillo)' },
-  { key:'horarios',    label:'Horarios',                   color:'#8833cc' },
-];
 function renderInfoTo(el, data){
   el.innerHTML = '';
   INFO_FIELDS.forEach(f => {
@@ -1878,23 +2052,34 @@ document.getElementById('btn-save-artists').addEventListener('click', async () =
     if (val) { data[a.name] = val; a.customDesc = val; }
   });
   await setDoc(doc(db,'config','artists'), data);
-  // Update current player
-  loadSC(scIdx);
+  renderLineup();
   toast('Descripciones guardadas');
 });
 
 // ── APP INIT ──
-let appInited = false;
 function initApp(){
   if (appInited) return; appInited = true;
   // Restaurar nombre guardado
   const savedName = localStorage.getItem('sonora_xi_name');
   if (savedName) document.getElementById('minp-name').value = savedName;
+  // Restaurar tab guardado
+  try {
+    const savedTab = localStorage.getItem(TAB_KEY);
+    if (savedTab && document.getElementById('tc-' + savedTab)) sw(savedTab);
+  } catch(e) { console.warn('Tab restore:', e); }
+  // Congelar tablón si está activado
+  if (BOARD_FROZEN) {
+    const bf = document.getElementById('board-form');
+    const bd = document.getElementById('board-desc');
+    if (bf) bf.style.display = 'none';
+    if (bd) bd.textContent = 'El tablón está cerrado por el momento. Solo lectura.';
+  }
   // Local first (no Firestore)
   initEditions();
   updateRank();
   setInterval(updateCD, 1000); updateCD();
-  loadSC(scIdx);
+  loadRndPlayer(rndIdx);
+  renderLineup();
   // Firestore (may fail on permissions)
   try { initMsgs(); } catch(e) { console.warn('initMsgs:', e); }
   try { initCars(); } catch(e) { console.warn('initCars:', e); }
@@ -1905,14 +2090,16 @@ function initApp(){
       if (!snap.exists()) return;
       const data = snap.data();
       SC_ARTISTS.forEach(a => { if (data[a.name]) a.customDesc = data[a.name]; });
-      loadSC(scIdx);
+      loadRndPlayer(rndIdx);
+      renderLineup();
     }, err => console.warn('Artists config:', err));
   } catch(e) {}
 }
 
 function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-// Service worker disabled
+// ── AUTO-LOGIN (al final para que todas las variables estén declaradas) ──
+if (sessionStorage.getItem(SK) === 'ok'){ showScreen('app'); initApp(); }
 </script>
 </body>
 </html>

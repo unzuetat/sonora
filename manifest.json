@@ -1,0 +1,18 @@
+{
+  "name": "San Sonorín XI",
+  "short_name": "Sonorín",
+  "description": "Gran Función · Edición XI · 29 mayo 2026",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#5bb8f5",
+  "theme_color": "#5bb8f5",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "sonorin.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any"
+    }
+  ]
+}
