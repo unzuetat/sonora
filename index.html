@@ -1172,16 +1172,15 @@ body.night .night-toggle{
       </div>
     </div>
 
-    <!-- INFO -->
-    <div class="card" style="margin-top:16px">
+    <!-- INFO (replegado, enlaza a pestaña) -->
+    <div class="card" id="info-shortcut" style="margin-top:16px;cursor:pointer">
       <div class="card-stripe"></div>
-      <div class="card-body">
-        <div class="card-title">Información útil</div>
-        <div id="info-list">
-          <div class="info-placeholder">Cargando información...</div>
-        </div>
+      <div class="card-body" style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+        <div class="card-title" style="margin:0">Información útil</div>
+        <div style="font-family:'EB Garamond',serif;font-style:italic;font-size:14px;color:var(--rojo);letter-spacing:1px">ver más ›</div>
       </div>
     </div>
+    <div id="info-list" style="display:none"></div>
 
     <!-- TABLÓN PREVIEW (read-only) -->
     <div class="card" style="margin-top:16px">
@@ -1638,6 +1637,7 @@ document.getElementById('tab-brd').addEventListener('click',  () => sw('brd'));
 document.getElementById('tab-cp').addEventListener('click',   () => sw('cp'));
 document.getElementById('tab-sc').addEventListener('click',   () => sw('sc'));
 document.getElementById('tab-info').addEventListener('click', () => sw('info'));
+document.getElementById('info-shortcut').addEventListener('click', () => sw('info'));
 
 // ── CUENTA ATRÁS ──
 function updateCD(){
