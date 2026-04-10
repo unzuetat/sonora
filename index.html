@@ -704,6 +704,7 @@ body.night .admin-textarea{background:var(--bg-input);border-color:var(--border)
 /* INFO SECTION (dynamic) */
 .info-section{
   border-bottom:1px solid #e0d8c8;padding:12px 0;
+  scroll-margin-top:60px;
 }
 .info-section:last-child{border-bottom:none}
 .info-section-title{
@@ -2126,6 +2127,7 @@ function renderInfoTo(el, data){
   INFO_FIELDS.forEach(f => {
     const sec = document.createElement('div');
     sec.className = 'info-section';
+    sec.id = 'info-sec-' + f.key;
     const content = data[f.key] || '';
     sec.innerHTML = `<div class="info-section-title"><div class="info-dot" style="background:${f.color}"></div>${f.label}</div><div class="info-section-content">${content ? esc(content) : ''}</div>`;
     el.appendChild(sec);
@@ -2136,7 +2138,16 @@ function renderInfoTitlesTo(el){
   INFO_FIELDS.forEach(f => {
     const row = document.createElement('div');
     row.className = 'info-item';
+    row.style.cursor = 'pointer';
     row.innerHTML = `<div class="info-dot" style="background:${f.color}"></div>${f.label}`;
+    row.addEventListener('click', (e) => {
+      e.stopPropagation();
+      sw('info');
+      setTimeout(() => {
+        const target = document.getElementById('info-sec-' + f.key);
+        if (target) target.scrollIntoView({ behavior:'smooth', block:'start' });
+      }, 50);
+    });
     el.appendChild(row);
   });
 }
