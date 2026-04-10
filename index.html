@@ -540,6 +540,18 @@ body.night .sc-play-btn{background:rgba(10,14,26,.85);border-color:var(--amarill
   font-size:22px;color:var(--rojo);
 }
 body.night .artist-img-placeholder{background:var(--bg-card);border-color:var(--border);color:var(--amarillo)}
+
+/* CONFETTI */
+.confetti-piece{
+  position:fixed;top:-20px;
+  width:10px;height:14px;
+  z-index:9999;pointer-events:none;
+  animation:confettiFall linear forwards;
+}
+@keyframes confettiFall{
+  0%{transform:translateY(-20px) rotate(0deg);opacity:1}
+  100%{transform:translateY(110vh) rotate(720deg);opacity:.9}
+}
 .artist-info{flex:1;min-width:0}
 .artist-name{
   font-family:'EB Garamond',serif;font-weight:800;
@@ -1334,6 +1346,15 @@ body.night .night-toggle{
   </div>
 </div>
 
+<!-- ══ MARÍA MODAL (10 ediciones) ══ -->
+<div class="admin-modal" id="maria-modal" style="display:none">
+  <div class="admin-modal-box" style="text-align:center;max-width:380px;background:#fff">
+    <div style="font-family:'EB Garamond',serif;font-weight:800;font-size:28px;letter-spacing:2px;color:var(--rojo);margin-bottom:10px;-webkit-text-stroke:1px var(--negro);paint-order:stroke fill">★ TE LLAMAS MARÍA ★</div>
+    <div style="font-family:'EB Garamond',serif;font-style:italic;font-size:18px;color:var(--negro);line-height:1.4;margin-bottom:18px">y no lo sabías</div>
+    <button class="auth-btn" id="btn-maria-close" style="padding:10px 24px;font-size:14px">Cerrar</button>
+  </div>
+</div>
+
 <!-- ══ HUELE MODAL (8 ediciones) ══ -->
 <div class="admin-modal" id="huele-modal" style="display:none">
   <div class="admin-modal-box" style="text-align:center;max-width:420px;background:#fff">
@@ -1593,7 +1614,7 @@ function doLogin(){
   const err = document.getElementById('auth-err');
   err.textContent = '';
   if (val === ADMIN_PASSWORD){ sessionStorage.setItem(SK,'ok'); showScreen('admin'); initAdmin(); }
-  else if (val === ACCESS_PASSWORD){ sessionStorage.setItem(SK,'ok'); showScreen('app'); initApp(); }
+  else if (val === ACCESS_PASSWORD){ sessionStorage.setItem(SK,'ok'); localStorage.removeItem(ED_KEY); showScreen('app'); initApp(); }
   else {
     err.textContent = 'contraseña incorrecta, inténtalo de nuevo.';
     document.getElementById('inp-pwd').value = '';
@@ -1958,6 +1979,29 @@ document.getElementById('btn-primer-close').addEventListener('click', () => {
 document.getElementById('primer-modal').addEventListener('click', (e) => {
   if (e.target.id === 'primer-modal') document.getElementById('primer-modal').style.display = 'none';
 });
+document.getElementById('btn-maria-close').addEventListener('click', () => {
+  document.getElementById('maria-modal').style.display = 'none';
+});
+document.getElementById('maria-modal').addEventListener('click', (e) => {
+  if (e.target.id === 'maria-modal') document.getElementById('maria-modal').style.display = 'none';
+});
+
+function launchConfetti(){
+  const colors = ['#e8001a', '#f4c542', '#2da44e', '#2b7fff', '#ff8c00', '#c850ff'];
+  const N = 80;
+  for (let i = 0; i < N; i++){
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = (Math.random() * 100) + 'vw';
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.animationDuration = (2 + Math.random() * 2) + 's';
+    piece.style.animationDelay = (Math.random() * 0.6) + 's';
+    piece.style.width = (6 + Math.random() * 8) + 'px';
+    piece.style.height = (10 + Math.random() * 10) + 'px';
+    document.body.appendChild(piece);
+    setTimeout(() => piece.remove(), 5000);
+  }
+}
 
 function playArtist(idx){
   const a = SC_ARTISTS[idx];
@@ -2110,6 +2154,12 @@ function initEditions(){
         const newCount = checked.filter(c => c !== '0').length;
         if (newCount === 8 && prevCount !== 8) {
           document.getElementById('huele-modal').style.display = 'flex';
+        }
+        if (newCount === 10 && prevCount !== 10) {
+          launchConfetti();
+          setTimeout(() => {
+            document.getElementById('maria-modal').style.display = 'flex';
+          }, 500);
         }
         if (justMarkedFirst) {
           document.getElementById('primer-modal').style.display = 'flex';
