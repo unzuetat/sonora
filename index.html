@@ -637,8 +637,8 @@ body.night .lineup-player-name{color:var(--amarillo)}
   font-weight:800;font-size:15px;flex-shrink:0;
 }
 .ed-sub{
-  font-style:italic;font-size:14px;
-  opacity:.7;flex:1;min-width:0;
+  font-size:14px;
+  opacity:.85;flex:1;min-width:0;
 }
 .ed-date{
   font-style:italic;font-size:11px;letter-spacing:1px;
@@ -1172,15 +1172,15 @@ body.night .night-toggle{
       </div>
     </div>
 
-    <!-- INFO (replegado, enlaza a pestaña) -->
+    <!-- INFO (solo títulos, click lleva a pestaña) -->
     <div class="card" id="info-shortcut" style="margin-top:16px;cursor:pointer">
       <div class="card-stripe"></div>
-      <div class="card-body" style="display:flex;align-items:center;justify-content:space-between;gap:12px">
-        <div class="card-title" style="margin:0">Información útil</div>
-        <div style="font-family:'EB Garamond',serif;font-style:italic;font-size:14px;color:var(--rojo);letter-spacing:1px">ver más ›</div>
+      <div class="card-body">
+        <div class="card-title">Información útil</div>
+        <div id="info-list"></div>
+        <div style="text-align:right;font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:var(--rojo);letter-spacing:1px;margin-top:10px">ver más ›</div>
       </div>
     </div>
-    <div id="info-list" style="display:none"></div>
 
     <!-- TABLÓN PREVIEW (read-only) -->
     <div class="card" style="margin-top:16px">
@@ -2121,14 +2121,22 @@ function renderInfoTo(el, data){
     el.appendChild(sec);
   });
 }
+function renderInfoTitlesTo(el){
+  el.innerHTML = '';
+  INFO_FIELDS.forEach(f => {
+    const row = document.createElement('div');
+    row.className = 'info-item';
+    row.innerHTML = `<div class="info-dot" style="background:${f.color}"></div>${f.label}`;
+    el.appendChild(row);
+  });
+}
 function initInfo(){
+  try { renderInfoTitlesTo(document.getElementById('info-list')); } catch(e){}
   onSnapshot(doc(db,'config','info'), snap => {
     const data = snap.exists() ? snap.data() : {};
-    renderInfoTo(document.getElementById('info-list'), data);
     renderInfoTo(document.getElementById('info-list2'), data);
   }, err => {
     console.warn('Info listener error:', err);
-    document.getElementById('info-list').innerHTML = '<div class="info-placeholder">Información no disponible todavía</div>';
     document.getElementById('info-list2').innerHTML = '<div class="info-placeholder">Información no disponible todavía</div>';
   });
 }
@@ -2183,11 +2191,8 @@ function initApp(){
   // Restaurar nombre guardado
   const savedName = localStorage.getItem('sonora_xi_name');
   if (savedName) document.getElementById('minp-name').value = savedName;
-  // Restaurar tab guardado
-  try {
-    const savedTab = localStorage.getItem(TAB_KEY);
-    if (savedTab && document.getElementById('tc-' + savedTab)) sw(savedTab);
-  } catch(e) { console.warn('Tab restore:', e); }
+  // Siempre arrancar en Inicio
+  sw('main');
   // Congelar tablón si está activado
   if (BOARD_FROZEN) {
     const bf = document.getElementById('board-form');
