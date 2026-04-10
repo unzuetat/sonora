@@ -1860,12 +1860,24 @@ document.getElementById('btn-rnd-next').addEventListener('click', () => {
 // ── LINEUP (tab Menú) ──
 function renderLineup(){
   const list = document.getElementById('lineup-list');
+  // Sacar el player antes de wipear para no perderlo
+  const player = document.getElementById('lineup-player');
+  if (player && player.parentNode === list) list.parentNode.insertBefore(player, list);
   list.innerHTML = '';
 
   SC_ARTISTS.forEach((a, i) => {
     const hasUrl = !!a.url;
     list.appendChild(makeArtistItem(a, i, hasUrl, false));
   });
+
+  // Si hay artista sonando, recolocar el player debajo
+  if (playingIdx >= 0) {
+    const clickedItem = list.querySelector(`.artist-item[data-idx="${playingIdx}"]`);
+    if (clickedItem && player) {
+      clickedItem.classList.add('playing');
+      clickedItem.after(player);
+    }
+  }
 }
 
 function makeArtistItem(a, i, hasUrl, isPreview){
@@ -1949,6 +1961,10 @@ function playArtist(idx){
   player.classList.add('active');
   document.getElementById('lineup-player-name').textContent = '♪ ' + a.name;
   document.getElementById('lineup-frame').src = scUrl(a.url);
+
+  // Mover el player justo debajo del artista pulsado
+  const clickedItem = document.querySelector(`#lineup-list .artist-item[data-idx="${idx}"]`);
+  if (clickedItem) clickedItem.after(player);
 
   // Sync Sintoniza card en Inicio al mismo artista
   const poolPos = RND_POOL.indexOf(idx);
