@@ -1315,6 +1315,14 @@ body.night .night-toggle{
 </div>
 </div>
 
+<!-- ══ HUELE MODAL (8 ediciones) ══ -->
+<div class="admin-modal" id="huele-modal" style="display:none">
+  <div class="admin-modal-box" style="text-align:center;max-width:420px;background:#fff">
+    <img src="img/a-ver-a-que-huele.png" alt="A ver a qué huele eso" style="width:100%;max-width:340px;display:block;margin:0 auto 14px"/>
+    <button class="auth-btn" id="btn-huele-close" style="padding:10px 24px;font-size:14px">Cerrar</button>
+  </div>
+</div>
+
 <!-- ══ CHEF MODAL (artista sin link) ══ -->
 <div class="admin-modal" id="chef-modal" style="display:none">
   <div class="admin-modal-box" style="text-align:center;max-width:380px">
@@ -1903,6 +1911,12 @@ document.getElementById('btn-chef-close').addEventListener('click', () => {
 document.getElementById('chef-modal').addEventListener('click', (e) => {
   if (e.target.id === 'chef-modal') document.getElementById('chef-modal').style.display = 'none';
 });
+document.getElementById('btn-huele-close').addEventListener('click', () => {
+  document.getElementById('huele-modal').style.display = 'none';
+});
+document.getElementById('huele-modal').addEventListener('click', (e) => {
+  if (e.target.id === 'huele-modal') document.getElementById('huele-modal').style.display = 'none';
+});
 
 function playArtist(idx){
   const a = SC_ARTISTS[idx];
@@ -2034,10 +2048,15 @@ function initEditions(){
           if (zeroChip) zeroChip.classList.remove('on');
           chip.classList.toggle('on');
         }
+        const prevCount = getEdCount();
         const checked = [...grid.querySelectorAll('.ed-chip.on .ed-num')].map(c => c.textContent);
         localStorage.setItem(ED_KEY, JSON.stringify(checked));
         document.getElementById('ed-role').textContent = getEdRoleText(checked);
         updateRank();
+        const newCount = checked.filter(c => c !== '0').length;
+        if (newCount === 8 && prevCount !== 8) {
+          document.getElementById('huele-modal').style.display = 'flex';
+        }
       });
     }
     grid.appendChild(chip);
