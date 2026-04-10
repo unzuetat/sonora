@@ -1949,6 +1949,14 @@ function playArtist(idx){
   document.getElementById('lineup-player-name').textContent = '♪ ' + a.name;
   document.getElementById('lineup-frame').src = scUrl(a.url);
 
+  // Sync Sintoniza card en Inicio al mismo artista
+  const poolPos = RND_POOL.indexOf(idx);
+  if (poolPos >= 0) {
+    rndPoolPos = poolPos;
+    rndIdx = idx;
+    loadRndPlayer(idx);
+  }
+
   // Scroll player into view
   player.scrollIntoView({ behavior:'smooth', block:'nearest' });
 }
