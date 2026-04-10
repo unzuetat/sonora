@@ -1315,6 +1315,15 @@ body.night .night-toggle{
 </div>
 </div>
 
+<!-- ══ PRIMER SONORA MODAL (edición 0) ══ -->
+<div class="admin-modal" id="primer-modal" style="display:none">
+  <div class="admin-modal-box" style="text-align:center;max-width:420px;background:#fff">
+    <img src="img/primer-sonora.jpg" alt="Ojalá ser tú ahora mismo" style="width:100%;max-width:340px;display:block;margin:0 auto 14px"/>
+    <div style="font-family:'EB Garamond',serif;font-style:italic;font-size:16px;color:var(--negro);margin-bottom:14px">Ojalá ser tú ahora mismo</div>
+    <button class="auth-btn" id="btn-primer-close" style="padding:10px 24px;font-size:14px">Cerrar</button>
+  </div>
+</div>
+
 <!-- ══ HUELE MODAL (8 ediciones) ══ -->
 <div class="admin-modal" id="huele-modal" style="display:none">
   <div class="admin-modal-box" style="text-align:center;max-width:420px;background:#fff">
@@ -1917,6 +1926,12 @@ document.getElementById('btn-huele-close').addEventListener('click', () => {
 document.getElementById('huele-modal').addEventListener('click', (e) => {
   if (e.target.id === 'huele-modal') document.getElementById('huele-modal').style.display = 'none';
 });
+document.getElementById('btn-primer-close').addEventListener('click', () => {
+  document.getElementById('primer-modal').style.display = 'none';
+});
+document.getElementById('primer-modal').addEventListener('click', (e) => {
+  if (e.target.id === 'primer-modal') document.getElementById('primer-modal').style.display = 'none';
+});
 
 function playArtist(idx){
   const a = SC_ARTISTS[idx];
@@ -2037,11 +2052,12 @@ function initEditions(){
     chip.innerHTML = `<span class="ed-num">${ed.id}</span><span class="ed-name">${ed.name}</span><span class="ed-sub">${ed.sub}</span><span class="ed-date">${ed.date}</span>`;
     if (!ed.locked) {
       chip.addEventListener('click', () => {
+        let justMarkedFirst = false;
         if (ed.first) {
           // "Es mi primer Sonora" — desmarca todas las demás
           const wasOn = chip.classList.contains('on');
           grid.querySelectorAll('.ed-chip').forEach(c => c.classList.remove('on'));
-          if (!wasOn) chip.classList.add('on');
+          if (!wasOn) { chip.classList.add('on'); justMarkedFirst = true; }
         } else {
           // Edición normal — desmarca la 0 si estaba marcada
           const zeroChip = grid.querySelector('.ed-chip:first-child');
@@ -2056,6 +2072,9 @@ function initEditions(){
         const newCount = checked.filter(c => c !== '0').length;
         if (newCount === 8 && prevCount !== 8) {
           document.getElementById('huele-modal').style.display = 'flex';
+        }
+        if (justMarkedFirst) {
+          document.getElementById('primer-modal').style.display = 'flex';
         }
       });
     }
