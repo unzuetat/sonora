@@ -2156,9 +2156,7 @@ function initEditions(){
         }
         if (newCount === 10 && prevCount !== 10) {
           launchConfetti();
-          setTimeout(() => {
-            document.getElementById('maria-modal').style.display = 'flex';
-          }, 500);
+          document.getElementById('maria-modal').style.display = 'flex';
         }
         if (justMarkedFirst) {
           document.getElementById('primer-modal').style.display = 'flex';
