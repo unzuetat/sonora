@@ -529,6 +529,16 @@ body.night .sc-play-btn{background:rgba(10,14,26,.85);border-color:var(--amarill
   border:2px solid var(--negro);
   object-fit:cover;flex-shrink:0;
 }
+.artist-img-placeholder{
+  width:52px;height:52px;
+  border:2px solid var(--negro);
+  background:var(--crema);
+  flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'EB Garamond',serif;font-weight:800;
+  font-size:22px;color:var(--rojo);
+}
+body.night .artist-img-placeholder{background:var(--bg-card);border-color:var(--border);color:var(--amarillo)}
 .artist-info{flex:1;min-width:0}
 .artist-name{
   font-family:'EB Garamond',serif;font-weight:800;
@@ -1305,6 +1315,15 @@ body.night .night-toggle{
 </div>
 </div>
 
+<!-- ══ CHEF MODAL (artista sin link) ══ -->
+<div class="admin-modal" id="chef-modal" style="display:none">
+  <div class="admin-modal-box" style="text-align:center;max-width:380px">
+    <div style="font-family:'EB Garamond',serif;font-weight:800;font-size:18px;letter-spacing:2px;color:var(--rojo);margin-bottom:14px">★ COMANDA DEL CHEF ★</div>
+    <div style="font-family:'EB Garamond',serif;font-style:italic;font-size:16px;color:var(--negro);line-height:1.5;margin-bottom:18px">Por comanda del chef, este menú se degustará en directo.</div>
+    <button class="auth-btn" id="btn-chef-close" style="padding:10px 24px;font-size:14px">Cerrar</button>
+  </div>
+</div>
+
 <!-- ══ ADMIN LOGIN MODAL ══ -->
 <div class="admin-modal" id="admin-modal" style="display:none">
   <div class="admin-modal-box">
@@ -1442,6 +1461,20 @@ const SC_ARTISTS = [
   { name:"K.I.R.", url:"https://soundcloud.com/cristian-marcos-288862063", sc:"https://soundcloud.com/cristian-marcos-288862063", ig:"https://instagram.com/k.i.rdj", img:"https://i1.sndcdn.com/avatars-Sy6S0te4hGHTIziB-nyjDww-t500x500.jpg" },
   { name:"KØRE.TEK", url:"https://soundcloud.com/kore-909668299", sc:"https://soundcloud.com/kore-909668299", ig:"https://instagram.com/kore.tek_", img:"https://i1.sndcdn.com/avatars-CpRYbLrujJ8zY1XG-LUqPFg-t500x500.jpg" },
   { name:"Cabani", url:"https://soundcloud.com/cabani-music", sc:"https://soundcloud.com/cabani-music", ig:"https://instagram.com/cabani.dj", img:"https://i1.sndcdn.com/avatars-uKSNdI8DQ8gGIGzz-8FoDdA-t500x500.jpg" },
+  { name:"Amphetamix" },
+  { name:"Lost Mery" },
+  { name:"Gurke" },
+  { name:"BØHM" },
+  { name:"Droglo" },
+  { name:"Raso" },
+  { name:"Falso Judas" },
+  { name:"Candel" },
+  { name:"Machete" },
+  { name:"Elena Magdalena" },
+  { name:"Llinares" },
+  { name:"D.SastreSonoro" },
+  { name:"D-Bunk" },
+  { name:"Nómada" },
 ];
 
 const FAKE_LOCS = [
@@ -1775,7 +1808,9 @@ let playingIdx = -1;
 let appInited = false;
 let unlocked = false;
 let lastRank = '';
-let rndIdx = Math.floor(Math.random() * SC_ARTISTS.length);
+const RND_POOL = SC_ARTISTS.map((a,i) => a.url ? i : -1).filter(i => i >= 0);
+let rndPoolPos = Math.floor(Math.random() * RND_POOL.length);
+let rndIdx = RND_POOL[rndPoolPos] ?? 0;
 
 // ── PLAYER ALEATORIO (Inicio) ──
 function loadRndPlayer(idx){
@@ -1797,7 +1832,8 @@ document.getElementById('sc-rnd-cover').addEventListener('click', () => {
   document.getElementById('sc-rnd-frame').classList.add('loaded');
 });
 document.getElementById('btn-rnd-next').addEventListener('click', () => {
-  rndIdx = (rndIdx + 1) % SC_ARTISTS.length;
+  rndPoolPos = (rndPoolPos + 1) % RND_POOL.length;
+  rndIdx = RND_POOL[rndPoolPos];
   loadRndPlayer(rndIdx);
 });
 
@@ -1817,11 +1853,18 @@ function makeArtistItem(a, i, hasUrl, isPreview){
   d.className = 'artist-item';
   d.dataset.idx = i;
 
-  const img = document.createElement('img');
-  img.className = 'artist-img';
-  img.src = a.img;
-  img.alt = a.name;
-  img.loading = 'lazy';
+  let imgEl;
+  if (a.img) {
+    imgEl = document.createElement('img');
+    imgEl.className = 'artist-img';
+    imgEl.src = a.img;
+    imgEl.alt = a.name;
+    imgEl.loading = 'lazy';
+  } else {
+    imgEl = document.createElement('div');
+    imgEl.className = 'artist-img-placeholder';
+    imgEl.textContent = a.name.charAt(0).toUpperCase();
+  }
 
   const info = document.createElement('div');
   info.className = 'artist-info';
@@ -1832,21 +1875,32 @@ function makeArtistItem(a, i, hasUrl, isPreview){
     + (a.ig ? `<a class="artist-link" href="${a.ig}" target="_blank">instagram</a>` : '')
     + `</div>`;
 
-  d.appendChild(img);
+  d.appendChild(imgEl);
   d.appendChild(info);
 
   if (!isPreview) {
     const btn = document.createElement('button');
-    btn.className = 'artist-play' + (hasUrl ? '' : ' disabled');
+    btn.className = 'artist-play';
     btn.textContent = '▶';
-    if (hasUrl) {
-      btn.addEventListener('click', () => playArtist(i));
-    }
+    btn.addEventListener('click', () => {
+      if (hasUrl) playArtist(i);
+      else showChefModal();
+    });
     d.appendChild(btn);
   }
 
   return d;
 }
+
+function showChefModal(){
+  document.getElementById('chef-modal').style.display = 'flex';
+}
+document.getElementById('btn-chef-close').addEventListener('click', () => {
+  document.getElementById('chef-modal').style.display = 'none';
+});
+document.getElementById('chef-modal').addEventListener('click', (e) => {
+  if (e.target.id === 'chef-modal') document.getElementById('chef-modal').style.display = 'none';
+});
 
 function playArtist(idx){
   const a = SC_ARTISTS[idx];
