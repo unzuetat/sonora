@@ -542,6 +542,21 @@ body.night .sc-play-btn{background:rgba(10,14,26,.85);border-color:var(--amarill
 }
 body.night .artist-img-placeholder{background:var(--bg-card);border-color:var(--border);color:var(--amarillo)}
 
+/* LIGHTBOX */
+.lightbox{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.92);
+  display:none;align-items:center;justify-content:center;
+  z-index:9998;cursor:zoom-out;padding:20px;
+}
+.lightbox.open{display:flex}
+.lightbox img{
+  max-width:100%;max-height:100%;
+  border:3px solid var(--amarillo);
+  box-shadow:0 0 40px rgba(232,0,26,.4);
+}
+.artist-img{cursor:zoom-in}
+
 /* CONFETTI */
 .confetti-piece{
   position:fixed;top:-20px;
@@ -1364,6 +1379,11 @@ body.night .night-toggle{
   </div>
 </div>
 
+<!-- ══ LIGHTBOX (ampliar foto artista) ══ -->
+<div class="lightbox" id="lightbox">
+  <img id="lightbox-img" src="" alt=""/>
+</div>
+
 <!-- ══ CHEF MODAL (artista sin link) ══ -->
 <div class="admin-modal" id="chef-modal" style="display:none">
   <div class="admin-modal-box" style="text-align:center;max-width:380px">
@@ -1927,6 +1947,10 @@ function makeArtistItem(a, i, hasUrl, isPreview){
     imgEl.src = a.img;
     imgEl.alt = a.name;
     imgEl.loading = 'lazy';
+    imgEl.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openLightbox(a.img, a.name);
+    });
   } else {
     imgEl = document.createElement('div');
     imgEl.className = 'artist-img-placeholder';
@@ -1985,6 +2009,16 @@ document.getElementById('btn-maria-close').addEventListener('click', () => {
 });
 document.getElementById('maria-modal').addEventListener('click', (e) => {
   if (e.target.id === 'maria-modal') document.getElementById('maria-modal').style.display = 'none';
+});
+
+function openLightbox(src, alt){
+  const lb = document.getElementById('lightbox');
+  document.getElementById('lightbox-img').src = src;
+  document.getElementById('lightbox-img').alt = alt || '';
+  lb.classList.add('open');
+}
+document.getElementById('lightbox').addEventListener('click', () => {
+  document.getElementById('lightbox').classList.remove('open');
 });
 
 function launchConfetti(){
