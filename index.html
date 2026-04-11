@@ -554,15 +554,16 @@ body.night .artist-img-placeholder{background:var(--bg-card);border-color:var(--
   100%{transform:translateY(110vh) rotate(720deg);opacity:.9}
 }
 .artist-info{flex:1;min-width:0}
+.artist-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .artist-name{
   font-family:'EB Garamond',serif;font-weight:800;
-  font-size:16px;color:var(--negro);letter-spacing:1px;
+  font-size:22px;color:var(--negro);letter-spacing:1px;
 }
 .artist-desc{
   font-family:'EB Garamond',serif;font-style:italic;
-  font-size:13px;color:#888;margin-top:2px;line-height:1.4;
+  font-size:13px;color:#888;margin-top:4px;line-height:1.4;
 }
-.artist-links{display:flex;gap:12px;margin-top:6px}
+.artist-links{display:flex;gap:12px;flex-shrink:0}
 .artist-link{
   font-family:'EB Garamond',serif;font-style:italic;
   font-size:12px;letter-spacing:1px;
@@ -1934,12 +1935,12 @@ function makeArtistItem(a, i, hasUrl, isPreview){
 
   const info = document.createElement('div');
   info.className = 'artist-info';
-  info.innerHTML = `<div class="artist-name">${esc(a.name)}</div>`
-    + `<div class="artist-desc">${esc(a.customDesc || a.desc || '')}</div>`
-    + `<div class="artist-links">`
+  const linksHtml = `<div class="artist-links">`
     + (a.sc ? `<a class="artist-link" href="${a.sc}" target="_blank">soundcloud</a>` : '')
     + (a.ig ? `<a class="artist-link" href="${a.ig}" target="_blank">instagram</a>` : '')
     + `</div>`;
+  info.innerHTML = `<div class="artist-head"><div class="artist-name">${esc(a.name)}</div>${linksHtml}</div>`
+    + `<div class="artist-desc">${esc(a.customDesc || a.desc || '')}</div>`;
 
   d.appendChild(imgEl);
   d.appendChild(info);
