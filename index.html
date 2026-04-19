@@ -1635,7 +1635,7 @@ function doLogin(){
   const err = document.getElementById('auth-err');
   err.textContent = '';
   if (val === ADMIN_PASSWORD){ sessionStorage.setItem(SK,'ok'); showScreen('admin'); initAdmin(); }
-  else if (val === ACCESS_PASSWORD){ sessionStorage.setItem(SK,'ok'); localStorage.removeItem(ED_KEY); showScreen('app'); initApp(); }
+  else if (val === ACCESS_PASSWORD){ sessionStorage.setItem(SK,'ok'); localStorage.removeItem(ED_KEY); showScreen('app'); initApp(); startWelcomeMusic(); }
   else {
     err.textContent = 'contraseña incorrecta, inténtalo de nuevo.';
     document.getElementById('inp-pwd').value = '';
@@ -1778,7 +1778,6 @@ function initMsgs(){
     const preview = document.getElementById('mlist-preview');
     list.innerHTML = ''; preview.innerHTML = '';
     if (snap.empty) {
-      list.innerHTML = '<div class="empty-msg">Ningún aviso todavía. ¡Sé el primero!</div>';
       preview.innerHTML = '<div class="empty-msg">Ningún aviso todavía</div>';
       return;
     }
@@ -2327,6 +2326,26 @@ function initApp(){
 }
 
 function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// ── WELCOME MUSIC (arranca el reproductor SINTONIZA tras el login) ──
+function startWelcomeMusic(){
+  if (!RND_POOL.length) return;
+  // Reintentar hasta que el DOM del reproductor esté listo (initApp puede tardar)
+  const tryPlay = (attempts = 0) => {
+    const cover = document.getElementById('sc-rnd-cover');
+    const frame = document.getElementById('sc-rnd-frame');
+    if (!cover || !frame) {
+      if (attempts < 20) setTimeout(() => tryPlay(attempts + 1), 100);
+      return;
+    }
+    const a = SC_ARTISTS[rndIdx];
+    if (!a || !a.url) return;
+    cover.style.display = 'none';
+    frame.src = scUrl(a.url);
+    frame.classList.add('loaded');
+  };
+  tryPlay();
+}
 
 // ── AUTO-LOGIN (al final para que todas las variables estén declaradas) ──
 if (sessionStorage.getItem(SK) === 'ok'){ showScreen('app'); initApp(); }
