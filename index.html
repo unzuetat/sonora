@@ -4,6 +4,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#5bb8f5">
+<meta name="description" content="San Sonorín XI · Gran Función · 29-31 mayo 2026 · Valencia">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" href="favicon-180.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://sonora.community/">
+<meta property="og:title" content="San Sonorín XI">
+<meta property="og:description" content="Gran Función · 29-31 mayo 2026 · Valencia">
+<meta property="og:image" content="https://sonora.community/img/cartel-og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="San Sonorín XI">
+<meta name="twitter:description" content="Gran Función · 29-31 mayo 2026 · Valencia">
+<meta name="twitter:image" content="https://sonora.community/img/cartel-og.png">
 <title>SAN SONORÍN</title>
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,700;0,800;1,400;1,700;1,800&display=swap" rel="stylesheet">
 <style>
@@ -32,85 +47,93 @@ body{
 .screen.active{display:block}
 
 /* ══════════════════════════════════
-   AUTH — díptico
+   AUTH — ilustración fullscreen + form overlay
 ══════════════════════════════════ */
 #screen-auth{
   min-height:100vh;
   display:none;
-  align-items:stretch;
+  position:relative;
+  overflow:hidden;
 }
-#screen-auth.active{display:flex}
+#screen-auth.active{display:block}
 
-.auth-img{
-  width:50%;
-  flex-shrink:0;
+.auth-bg{
+  width:100%;
+  min-height:100vh;
   background-image:url('sonorin.jpg');
   background-size:contain;
   background-repeat:no-repeat;
   background-position:center center;
   background-color:var(--crema);
-  border-right:4px solid var(--negro);
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  padding:0 20px 40px;
+}
+
+/* Degradado inferior para legibilidad del form */
+.auth-bg::after{
+  content:'';
+  position:absolute;
+  bottom:0;left:0;right:0;
+  height:55%;
+  background:linear-gradient(0deg,
+    rgba(26,26,26,.88) 0%,
+    rgba(26,26,26,.6) 40%,
+    transparent 100%
+  );
+  pointer-events:none;
+  z-index:1;
 }
 
 .auth-form{
-  flex:1;
-  background:var(--crema);
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  padding:32px 24px;
+  position:relative;
+  z-index:2;
+  width:100%;
+  max-width:340px;
   text-align:center;
+  padding-bottom:20px;
+  /* empieza oculto */
+  opacity:0;
+  transform:translateY(30px);
+  transition:opacity .8s ease, transform .8s ease;
+}
+.auth-form.visible{
+  opacity:1;
+  transform:translateY(0);
 }
 
 .auth-eyebrow{
   font-family:'EB Garamond',serif;
-  font-style:italic;font-weight:400;
-  font-size:12px;letter-spacing:3px;
-  color:#aaa;margin-bottom:10px;
-}
-
-.auth-title{
-  font-family:'EB Garamond',serif;font-weight:800;
-  font-size:clamp(48px,10vw,72px);
-  line-height:.82;
-  color:var(--negro);
-  -webkit-text-stroke:2px var(--negro);
-  paint-order:stroke fill;
-  letter-spacing:2px;display:block;margin-bottom:4px;
-}
-
-.auth-xi{
-  font-family:'EB Garamond',serif;font-weight:800;
-  font-size:clamp(32px,6vw,48px);
-  color:var(--rojo);
-  -webkit-text-stroke:2px var(--negro);
-  paint-order:stroke fill;
-  letter-spacing:8px;display:block;margin-bottom:16px;
-}
-
-.auth-rule{
-  border:none;border-top:2px solid var(--negro);
-  margin:0 0 16px;
+  font-weight:700;
+  font-size:13px;letter-spacing:3px;
+  color:#fff;margin-bottom:12px;
+  text-shadow:0 2px 6px rgba(0,0,0,.85);
+  text-transform:uppercase;
 }
 
 .auth-label{
   font-family:'EB Garamond',serif;font-weight:700;
   font-size:13px;letter-spacing:2px;
-  color:var(--negro);margin-bottom:8px;
+  color:var(--amarillo);margin-bottom:8px;
   display:block;text-transform:uppercase;
+  text-shadow:0 1px 4px rgba(0,0,0,.6);
 }
 
 .auth-inp{
-  width:100%;background:#fff;
-  border:3px solid var(--negro);
-  color:var(--negro);
+  width:100%;
+  background:rgba(255,255,255,.12);
+  border:2px solid rgba(255,255,255,.25);
+  color:#fff;
   font-family:'EB Garamond',serif;font-style:italic;
-  font-size:18px;padding:12px;
+  font-size:18px;padding:14px;
   outline:none;margin-bottom:12px;
   text-align:center;letter-spacing:4px;
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
 }
-.auth-inp:focus{border-color:var(--rojo)}
-.auth-inp::placeholder{color:#ccc;letter-spacing:2px;font-size:13px}
+.auth-inp:focus{border-color:var(--amarillo)}
+.auth-inp::placeholder{color:rgba(255,255,255,.3);letter-spacing:2px;font-size:13px}
 
 .auth-btn{
   width:100%;background:var(--rojo);color:var(--amarillo);
@@ -119,21 +142,42 @@ body{
   font-size:20px;letter-spacing:3px;
   cursor:pointer;
   box-shadow:5px 5px 0 var(--negro);
-  transition:.1s;
+  transition:.15s;
   -webkit-text-stroke:.5px var(--negro);paint-order:stroke fill;
 }
 .auth-btn:hover{transform:translate(2px,2px);box-shadow:3px 3px 0 var(--negro)}
 
 .auth-err{
   font-family:'EB Garamond',serif;font-style:italic;
-  font-size:13px;color:var(--rojo);
+  font-size:13px;color:var(--amarillo);
   margin-top:10px;min-height:18px;text-align:center;
+  text-shadow:0 1px 3px rgba(0,0,0,.5);
 }
 
 .auth-info{
+  font-family:'EB Garamond',serif;font-weight:700;
+  font-size:12px;color:var(--amarillo);
+  margin-top:14px;letter-spacing:1px;line-height:1.7;
+  text-shadow:0 2px 5px rgba(0,0,0,.85);
+}
+
+/* Tap hint que desaparece cuando llega el form */
+.auth-tap{
+  position:absolute;
+  bottom:28%;left:0;right:0;
+  z-index:2;
+  text-align:center;
   font-family:'EB Garamond',serif;font-style:italic;
-  font-size:12px;color:#aaa;
-  margin-top:16px;letter-spacing:1px;line-height:1.8;
+  font-size:13px;letter-spacing:3px;
+  color:rgba(255,255,255,.5);
+  animation:fadeInOut 2s ease forwards;
+  pointer-events:none;
+}
+@keyframes fadeInOut{
+  0%{opacity:0}
+  30%{opacity:.6}
+  80%{opacity:.6}
+  100%{opacity:0}
 }
 
 /* ══════════════════════════════════
@@ -147,7 +191,7 @@ body{
 
 .hdr-eyebrow{
   font-family:'EB Garamond',serif;font-style:italic;
-  font-size:12px;letter-spacing:3px;color:var(--azul-dark);margin-bottom:6px;
+  font-size:16px;letter-spacing:3px;color:var(--azul-dark);margin-bottom:6px;
 }
 
 .hdr-title{
@@ -180,14 +224,15 @@ body{
 
 .hdr-sub{
   font-family:'EB Garamond',serif;font-style:italic;
-  font-size:13px;color:var(--azul-dark);
+  font-size:17px;color:var(--azul-dark);
   letter-spacing:2px;margin-top:10px;
   animation:blink 1.2s step-end infinite;
 }
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
 
 /* TABS */
-.tabs{display:flex;border-top:3px solid var(--negro);margin-top:20px}
+.tabs{display:flex;border-top:3px solid var(--negro);border-bottom:3px solid var(--negro);margin-top:20px;position:sticky;top:0;z-index:50;background:var(--crema)}
+body.night .tabs{background:var(--bg)}
 .tb{
   flex:1;padding:11px 3px;text-align:center;
   font-family:'EB Garamond',serif;font-style:italic;
@@ -203,7 +248,8 @@ body{
 }
 .tb:hover:not(.on){background:rgba(255,255,255,.15)}
 .tc{display:none;padding-top:22px}
-.tc.on{display:block}
+.tc.on{display:block;animation:tabIn .25s ease forwards}
+@keyframes tabIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
 /* CARD */
 .card{
@@ -232,9 +278,9 @@ body{
 
 .sec-desc{
   font-family:'EB Garamond',serif;font-style:italic;
-  font-size:13px;color:#666;letter-spacing:.5px;
+  font-size:16px;color:#666;letter-spacing:.5px;
   line-height:1.7;border-left:3px solid var(--amarillo);
-  padding:6px 12px;margin-bottom:16px;
+  padding:8px 14px;margin-bottom:16px;
   background:rgba(255,255,255,.5);
 }
 
@@ -391,7 +437,19 @@ body{
 .mtime{font-family:'EB Garamond',serif;font-style:italic;font-size:11px;color:#bbb;flex-shrink:0;white-space:nowrap}
 .mverified{font-size:12px;color:var(--verde);margin-left:5px;font-weight:700}
 .munverified{font-size:12px;color:#ddd;margin-left:5px}
+.mauthor{
+  display:block;font-weight:700;font-size:12px;
+  letter-spacing:1px;color:var(--azul-dark);margin-bottom:2px;
+}
+body.night .mauthor{color:var(--glow-azul)}
 .empty-msg{font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:#aaa;padding:14px 0;text-align:center}
+.msg-reply{
+  display:block;margin-top:6px;padding:6px 10px;
+  background:rgba(45,164,78,.08);border-left:3px solid var(--verde);
+  font-family:'EB Garamond',serif;font-size:13px;font-style:italic;
+  color:var(--verde);
+}
+body.night .msg-reply{background:rgba(45,164,78,.1);color:#6ddb8a}
 
 /* CARPOOL */
 .cp-form{background:#fff8e7;border:2px solid var(--negro);padding:18px;margin-bottom:16px}
@@ -421,10 +479,151 @@ body{
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 .sc-name{font-family:'EB Garamond',serif;font-style:italic;font-size:13px;letter-spacing:2px;color:var(--crema);margin-left:6px;flex:1}
 .sc-next{background:var(--amarillo);border:2px solid var(--crema);color:var(--negro);font-family:'EB Garamond',serif;font-weight:700;font-size:12px;letter-spacing:1px;padding:4px 12px;cursor:pointer}
-.sc-frame{width:100%;display:block;border:none;background:#000}
+.sc-frame{width:100%;display:none;border:none;background:#f2f2f2}
+.sc-frame.loaded{display:block}
+.sc-artist-desc{
+  font-family:'EB Garamond',serif;font-style:italic;
+  font-size:13px;color:#888;letter-spacing:1px;
+  padding:8px 14px;background:var(--crema);
+  border-bottom:1px solid #e0d8c8;
+}
+body.night .sc-artist-desc{background:var(--bg-card);color:var(--text-dim);border-bottom-color:var(--border)}
 .sc-links{display:flex;justify-content:center;gap:20px;padding:10px;border-top:2px solid var(--negro);background:var(--crema)}
 .sc-links a{font-family:'EB Garamond',serif;font-style:italic;font-size:13px;letter-spacing:2px;color:var(--negro);text-decoration:none;border-bottom:2px solid var(--rojo);padding-bottom:1px}
 .sc-links a:hover{color:var(--rojo)}
+
+/* SC COVER (player aleatorio en Inicio) */
+.sc-cover{
+  position:relative;width:100%;aspect-ratio:16/9;
+  background:var(--negro);overflow:hidden;cursor:pointer;
+}
+.sc-cover-img{
+  width:100%;height:100%;object-fit:cover;
+  display:block;opacity:.85;transition:opacity .3s;
+}
+.sc-cover:hover .sc-cover-img{opacity:.6}
+.sc-play-btn{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:14px 28px;
+  background:rgba(26,26,26,.8);color:var(--amarillo);
+  font-family:'EB Garamond',serif;font-weight:700;
+  font-size:16px;letter-spacing:2px;
+  border:3px solid var(--amarillo);
+  cursor:pointer;transition:.15s;
+  backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
+  box-shadow:0 4px 20px rgba(0,0,0,.4);
+}
+.sc-play-btn:hover{background:rgba(26,26,26,.95);transform:translate(-50%,-50%) scale(1.05)}
+body.night .sc-play-btn{background:rgba(10,14,26,.85);border-color:var(--amarillo)}
+
+/* LINEUP */
+.lineup-player{display:none;margin-bottom:16px}
+.lineup-player.active{display:block}
+.lineup-player-name{
+  font-family:'EB Garamond',serif;font-weight:800;font-style:italic;
+  font-size:13px;letter-spacing:2px;color:var(--rojo);
+  text-align:center;margin-bottom:8px;
+}
+.artist-item{
+  background:#fff;border:2px solid var(--negro);
+  border-left:6px solid var(--rojo);
+  padding:14px;margin-bottom:8px;
+  display:flex;align-items:center;gap:12px;
+  animation:fadeup .2s ease;
+}
+.artist-item.playing{
+  background:var(--rojo);border-left-color:var(--amarillo);
+}
+.artist-item.playing .artist-name{color:var(--amarillo)}
+.artist-item.playing .artist-desc{color:rgba(255,255,255,.7)}
+.artist-item.playing .artist-link{color:var(--amarillo);border-bottom-color:var(--amarillo)}
+.artist-img{
+  width:52px;height:52px;
+  border:2px solid var(--negro);
+  object-fit:cover;flex-shrink:0;
+}
+.artist-img-placeholder{
+  width:52px;height:52px;
+  border:2px solid var(--negro);
+  background:var(--crema);
+  flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'EB Garamond',serif;font-weight:800;
+  font-size:22px;color:var(--rojo);
+}
+body.night .artist-img-placeholder{background:var(--bg-card);border-color:var(--border);color:var(--amarillo)}
+
+/* LIGHTBOX */
+.lightbox{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.92);
+  display:none;align-items:center;justify-content:center;
+  z-index:9998;cursor:zoom-out;padding:20px;
+}
+.lightbox.open{display:flex}
+.lightbox img{
+  max-width:100%;max-height:100%;
+  border:3px solid var(--amarillo);
+  box-shadow:0 0 40px rgba(232,0,26,.4);
+}
+.artist-img{cursor:zoom-in}
+
+/* CONFETTI */
+.confetti-piece{
+  position:fixed;top:-20px;
+  width:10px;height:14px;
+  z-index:9999;pointer-events:none;
+  animation:confettiFall linear forwards;
+}
+@keyframes confettiFall{
+  0%{transform:translateY(-20px) rotate(0deg);opacity:1}
+  100%{transform:translateY(110vh) rotate(720deg);opacity:.9}
+}
+.artist-info{flex:1;min-width:0}
+.artist-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.artist-name{
+  font-family:'EB Garamond',serif;font-weight:800;
+  font-size:22px;color:var(--negro);letter-spacing:1px;
+}
+.artist-desc{
+  font-family:'EB Garamond',serif;font-style:italic;
+  font-size:13px;color:#888;margin-top:4px;line-height:1.4;
+}
+.artist-links{display:flex;gap:12px;flex-shrink:0}
+.artist-link{
+  font-family:'EB Garamond',serif;font-style:italic;
+  font-size:12px;letter-spacing:1px;
+  color:var(--negro);text-decoration:none;
+  border-bottom:2px solid var(--rojo);padding-bottom:1px;
+}
+.artist-link:hover{color:var(--rojo)}
+.artist-play{
+  width:44px;height:44px;flex-shrink:0;
+  background:var(--rojo);color:var(--amarillo);
+  border:3px solid var(--negro);
+  font-family:'EB Garamond',serif;font-weight:800;
+  font-size:18px;cursor:pointer;
+  box-shadow:3px 3px 0 var(--negro);transition:.15s;
+  display:flex;align-items:center;justify-content:center;
+}
+.artist-play:hover{transform:translate(1px,1px);box-shadow:2px 2px 0 var(--negro)}
+.artist-play.disabled{
+  background:#ccc;color:#999;border-color:#aaa;
+  box-shadow:2px 2px 0 #aaa;cursor:default;
+}
+.artist-play.disabled:hover{transform:none;box-shadow:2px 2px 0 #aaa}
+
+/* Night lineup */
+body.night .artist-item{background:var(--bg-card);border-color:var(--border);border-left-color:var(--rojo)}
+body.night .artist-item.playing{background:var(--rojo)}
+body.night .artist-name{color:var(--text)}
+body.night .artist-desc{color:var(--text-dim)}
+body.night .artist-link{color:var(--text);border-bottom-color:var(--rojo)}
+body.night .artist-img{border-color:var(--border)}
+body.night .artist-play{box-shadow:3px 3px 0 #000}
+body.night .lineup-player-name{color:var(--amarillo)}
 
 /* INFO */
 .info-item{padding:10px 4px;border-bottom:1px solid #e0d8c8;font-family:'EB Garamond',serif;font-size:15px;color:var(--negro);display:flex;align-items:center;gap:10px}
@@ -438,7 +637,7 @@ body{
 .admin-sub{font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:#888;letter-spacing:2px;margin-top:4px}
 .admin-section{margin-bottom:28px}
 .admin-sec-title{font-family:'EB Garamond',serif;font-weight:700;font-size:13px;letter-spacing:2px;color:#888;text-transform:uppercase;margin-bottom:12px;padding-bottom:6px;border-bottom:2px dashed #ccc}
-.admin-item{background:#fff8e7;border:2px solid var(--negro);padding:10px 14px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.admin-item{background:#fff8e7;border:2px solid var(--negro);padding:10px 14px;margin-bottom:8px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px}
 .admin-item-info{flex:1;min-width:0}
 .admin-item-name{font-family:'EB Garamond',serif;font-weight:800;font-size:15px;color:var(--negro);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .admin-item-meta{font-family:'EB Garamond',serif;font-style:italic;font-size:12px;color:#888;margin-top:2px}
@@ -448,23 +647,501 @@ body{
 .btn-strike{background:#e67e22;color:#fff;border:2px solid var(--negro);font-family:'EB Garamond',serif;font-weight:700;font-size:12px;padding:4px 8px;cursor:pointer;letter-spacing:1px}
 .admin-back{display:block;margin:0 auto;background:none;border:2px solid var(--negro);color:var(--negro);font-family:'EB Garamond',serif;font-style:italic;font-size:15px;letter-spacing:2px;padding:10px 28px;cursor:pointer;box-shadow:3px 3px 0 var(--negro)}
 .admin-back:hover{background:rgba(0,0,0,.05)}
+
+/* EDICIONES ASISTIDAS */
+.ed-role{
+  font-family:'EB Garamond',serif;font-weight:800;
+  font-size:20px;letter-spacing:3px;color:var(--rojo);
+  text-align:center;margin-bottom:14px;
+  -webkit-text-stroke:1px var(--negro);paint-order:stroke fill;
+}
+.ed-grid{
+  display:flex;flex-direction:column;gap:6px;
+}
+.ed-chip{
+  background:#fff;border:2px solid var(--negro);
+  padding:10px 14px;text-align:left;cursor:pointer;
+  font-family:'EB Garamond',serif;
+  color:var(--negro);
+  box-shadow:2px 2px 0 var(--negro);transition:.15s;
+  display:flex;align-items:center;gap:10px;
+}
+.ed-chip:hover{background:#f0e8d0}
+.ed-chip.on{
+  background:var(--rojo);color:var(--amarillo);
+  border-color:var(--negro);
+}
+.ed-num{
+  font-weight:800;font-size:15px;letter-spacing:1px;
+  min-width:32px;flex-shrink:0;
+}
+.ed-name{
+  font-weight:800;font-size:15px;flex-shrink:0;
+}
+.ed-sub{
+  font-size:14px;
+  opacity:.85;flex:1;min-width:0;
+}
+.ed-date{
+  font-style:italic;font-size:11px;letter-spacing:1px;
+  opacity:.5;flex-shrink:0;
+}
+.ed-chip.on .ed-sub,.ed-chip.on .ed-date{opacity:.7}
+.ed-chip.locked-ed{
+  cursor:default;opacity:.5;
+  border-style:dashed;
+  box-shadow:none;
+}
+.ed-chip.locked-ed:hover{background:#fff}
+body.night .ed-chip.locked-ed:hover{background:var(--bg-card)}
+body.night .ed-chip{background:var(--bg-card);border-color:var(--border);color:var(--text);box-shadow:2px 2px 0 #000}
+body.night .ed-chip.on{background:var(--rojo);color:var(--amarillo)}
+body.night .ed-role{color:var(--amarillo);-webkit-text-stroke:1px transparent;text-shadow:0 0 10px var(--glow-amarillo)}
+
+/* ADMIN LINK */
+.admin-link{
+  background:var(--negro);color:var(--amarillo);
+  border:2px solid var(--negro);
+  font-family:'EB Garamond',serif;font-weight:700;
+  font-size:14px;letter-spacing:2px;
+  padding:10px 24px;cursor:pointer;
+  box-shadow:3px 3px 0 var(--negro);
+  transition:.15s;
+}
+.admin-link:hover{transform:translate(1px,1px);box-shadow:2px 2px 0 var(--negro)}
+body.night .admin-link{background:var(--bg-card);border-color:var(--border);color:var(--amarillo);box-shadow:3px 3px 0 #000}
+
+/* ADMIN MODAL */
+.admin-modal{
+  position:fixed;top:0;left:0;right:0;bottom:0;
+  background:rgba(0,0,0,.7);z-index:10000;
+  display:flex;align-items:center;justify-content:center;
+  padding:20px;
+}
+.admin-modal-box{
+  background:var(--crema);border:3px solid var(--negro);
+  box-shadow:8px 8px 0 var(--negro);
+  padding:28px;max-width:360px;width:100%;text-align:center;
+}
+body.night .admin-modal-box{background:var(--bg-card);border-color:var(--border);box-shadow:8px 8px 0 #000}
+
+/* ADMIN INFO FORM */
+.admin-info-form{display:flex;flex-direction:column;gap:12px}
+.admin-field{display:flex;flex-direction:column;gap:4px}
+.admin-field-label{
+  font-family:'EB Garamond',serif;font-weight:700;
+  font-size:13px;letter-spacing:2px;color:var(--negro);
+  text-transform:uppercase;
+}
+.admin-textarea{
+  background:#fff;border:2px solid var(--negro);
+  font-family:'EB Garamond',serif;font-size:14px;
+  padding:10px;outline:none;resize:vertical;
+  line-height:1.6;
+}
+.admin-textarea:focus{border-color:var(--rojo)}
+body.night .admin-field-label{color:var(--text-dim)}
+body.night .admin-textarea{background:var(--bg-input);border-color:var(--border);color:var(--text)}
+
+/* INFO SECTION (dynamic) */
+.info-section{
+  border-bottom:1px solid #e0d8c8;padding:12px 0;
+  scroll-margin-top:60px;
+}
+.info-section:last-child{border-bottom:none}
+.info-section-title{
+  font-family:'EB Garamond',serif;font-weight:800;
+  font-size:15px;color:var(--negro);letter-spacing:1px;
+  display:flex;align-items:center;gap:8px;
+  cursor:pointer;
+}
+.info-section-title .info-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.info-section-content{
+  font-family:'EB Garamond',serif;font-size:14px;
+  color:#555;line-height:1.8;padding:8px 0 4px 18px;
+  white-space:pre-line;
+}
+.info-section-content:empty{display:none}
+.info-section-content:empty::after{
+  content:'Próximamente...';display:block;
+  font-style:italic;color:#bbb;
+}
+body.night .info-section{border-bottom-color:var(--border)}
+body.night .info-section-title{color:var(--text)}
+body.night .info-section-content{color:var(--text-dim)}
+
+/* TOAST */
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--negro);color:var(--amarillo);
+  font-family:'EB Garamond',serif;font-weight:700;
+  font-size:14px;letter-spacing:2px;
+  padding:12px 24px;
+  border:2px solid var(--amarillo);
+  box-shadow:4px 4px 0 rgba(0,0,0,.3);
+  z-index:9999;opacity:0;
+  transition:opacity .3s ease,transform .3s ease;
+  pointer-events:none;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* COPY BTN */
+.copy-btn{
+  display:inline-block;background:none;color:var(--verde);
+  border:2px solid var(--verde);padding:6px 16px;margin-top:12px;
+  font-family:'EB Garamond',serif;font-weight:700;
+  font-size:13px;letter-spacing:2px;cursor:pointer;
+  transition:.15s;
+}
+.copy-btn:hover{background:var(--verde);color:#fff}
+
+/* DEMO BUTTONS — hidden by default, show via ?dev=1 */
+.demo-btn{display:none!important}
+body.dev-mode .demo-btn{display:block!important;margin:0 auto 12px;background:none;border:2px dashed var(--negro);color:var(--negro);font-family:'EB Garamond',serif;font-style:italic;font-size:13px;letter-spacing:2px;padding:6px 16px;cursor:pointer}
+
+/* SEND BTN COOLDOWN */
+.send-btn:disabled,.offer-btn:disabled{opacity:.4;cursor:not-allowed}
+.send-btn.sending,.offer-btn.sending{
+  opacity:1;cursor:wait;
+  background:var(--negro);color:var(--amarillo);
+  position:relative;overflow:hidden;
+}
+.send-btn.sending::after,.offer-btn.sending::after{
+  content:'';position:absolute;top:0;left:-100%;
+  width:100%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);
+  animation:btnShimmer .8s ease infinite;
+}
+@keyframes btnShimmer{to{left:100%}}
+.send-btn.done,.offer-btn.done{
+  background:var(--verde)!important;color:#fff!important;
+  transition:background .3s;
+}
+
+/* ══════════════════════════════════
+   RPG LAYER
+══════════════════════════════════ */
+
+/* XP BAR */
+.xp-wrap{margin-bottom:16px}
+.xp-hdr{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.xp-level{
+  font-family:'EB Garamond',serif;font-weight:800;
+  font-size:13px;letter-spacing:2px;color:var(--rojo);
+  text-transform:uppercase;
+}
+.xp-pct{
+  font-family:'EB Garamond',serif;font-weight:800;font-style:italic;
+  font-size:13px;letter-spacing:1px;color:#888;
+}
+.xp-bar{
+  height:18px;background:#fff;border:3px solid var(--negro);
+  overflow:hidden;position:relative;
+  box-shadow:inset 0 2px 4px rgba(0,0,0,.1);
+}
+.xp-fill{
+  height:100%;
+  background:repeating-linear-gradient(
+    90deg,
+    var(--rojo) 0,var(--rojo) 6px,
+    var(--amarillo) 6px,var(--amarillo) 12px
+  );
+  transition:width 1s ease;
+  position:relative;
+}
+/* Shimmer on the XP fill */
+.xp-fill::after{
+  content:'';position:absolute;top:0;left:0;right:0;bottom:0;
+  background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.3) 50%,transparent 100%);
+  animation:xpShimmer 2s ease-in-out infinite;
+}
+@keyframes xpShimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+
+/* Notches on bar every 20% */
+.xp-bar::after{
+  content:'';position:absolute;top:0;bottom:0;left:0;right:0;
+  background:repeating-linear-gradient(90deg,
+    transparent 0, transparent calc(20% - 1px),
+    var(--negro) calc(20% - 1px), var(--negro) calc(20% + 1px),
+    transparent calc(20% + 1px)
+  );
+  pointer-events:none;z-index:1;
+}
+
+.xp-rank{
+  font-family:'EB Garamond',serif;font-style:italic;
+  font-size:12px;letter-spacing:2px;color:#aaa;
+  text-align:center;margin-top:6px;
+}
+
+/* LOCKED — RPG boss door style */
+.locked{position:relative;overflow:hidden}
+.locked::before{
+  content:'';position:absolute;top:0;left:0;right:0;bottom:0;
+  background:repeating-linear-gradient(
+    0deg,
+    transparent 0,transparent 3px,
+    rgba(0,0,0,.03) 3px,rgba(0,0,0,.03) 4px
+  );
+  pointer-events:none;
+}
+
+
+/* ══════════════════════════════════
+   DARK MODE — NIGHT
+══════════════════════════════════ */
+body.night{
+  --bg:#0a0e1a;
+  --bg-card:#121828;
+  --bg-input:#0d1220;
+  --text:#e8e4d8;
+  --text-dim:#666;
+  --border:#2a3a5a;
+  --glow-rojo:rgba(232,0,26,.4);
+  --glow-amarillo:rgba(247,226,0,.3);
+  --glow-azul:rgba(91,184,245,.3);
+}
+
+body.night{background:var(--bg)}
+body.night #screen-app{background:var(--bg)}
+body.night #screen-admin{background:var(--bg)}
+
+/* Header */
+body.night .hdr{border-bottom-color:var(--border)}
+body.night .hdr-eyebrow{color:var(--glow-azul)}
+body.night .hdr-title{
+  text-shadow:0 0 30px var(--glow-amarillo),0 0 60px var(--glow-amarillo);
+}
+body.night .hdr-xi{
+  text-shadow:0 0 20px var(--glow-rojo),0 0 40px var(--glow-rojo);
+}
+body.night .hdr-date{
+  background:var(--rojo);box-shadow:5px 5px 0 #000,0 0 20px var(--glow-rojo);
+}
+body.night .hdr-sub{color:var(--glow-azul)}
+
+/* Tabs */
+body.night .tabs{border-top-color:var(--border)}
+body.night .tb{background:var(--bg);color:var(--text-dim);border-right-color:var(--border)}
+body.night .tb.on{background:var(--amarillo);color:var(--negro)}
+body.night .tb:hover:not(.on){background:rgba(91,184,245,.08)}
+
+/* Cards */
+body.night .card{
+  background:var(--bg-card);border-color:var(--border);
+  box-shadow:6px 6px 0 #000;
+}
+body.night .card-stripe{opacity:.6}
+body.night .card-title{color:var(--amarillo);border-bottom-color:var(--border)}
+body.night .card-body{color:var(--text)}
+
+/* Sec desc */
+body.night .sec-desc{
+  background:rgba(91,184,245,.05);color:#889;
+  border-left-color:var(--border);
+}
+
+/* Countdown */
+body.night .cd-num{
+  background:var(--bg);color:var(--amarillo);
+  border-color:var(--border);
+  box-shadow:4px 4px 0 #000,0 0 15px var(--glow-amarillo);
+  -webkit-text-stroke:2px rgba(0,0,0,.5);
+}
+body.night .cd-sep{color:var(--text-dim)}
+body.night .cd-name{color:var(--text-dim)}
+
+/* XP bar night */
+body.night .xp-bar{background:var(--bg);border-color:var(--border);box-shadow:inset 0 2px 4px rgba(0,0,0,.4)}
+body.night .xp-fill{
+  background:repeating-linear-gradient(90deg,
+    var(--rojo) 0,var(--rojo) 6px,
+    #ff4444 6px,#ff4444 12px
+  );
+  box-shadow:0 0 10px var(--glow-rojo);
+}
+body.night .xp-level{color:var(--amarillo);text-shadow:0 0 8px var(--glow-amarillo)}
+body.night .xp-rank{color:var(--text-dim)}
+
+/* Locked */
+body.night .locked{
+  border-color:var(--border);
+  background:rgba(232,0,26,.04);
+}
+body.night .lock-txt{color:var(--text);text-shadow:0 0 8px var(--glow-rojo)}
+body.night .lock-squiggles{color:var(--text-dim)}
+
+/* Unlocked */
+body.night .unlocked{
+  background:rgba(45,164,78,.08);border-color:var(--verde);
+  box-shadow:5px 5px 0 #000,0 0 20px rgba(45,164,78,.2);
+}
+body.night .addr-big{color:var(--amarillo);text-shadow:0 0 12px var(--glow-amarillo)}
+body.night .addr-sub{color:var(--text-dim)}
+
+/* Messages */
+body.night .msg{
+  background:var(--bg-card);border-color:var(--border);
+  border-left-color:var(--rojo);
+}
+body.night .mtxt{color:var(--text)}
+body.night .mtime{color:var(--text-dim)}
+
+/* Input fields */
+body.night .msg-inp{background:var(--bg-input);border-color:var(--border);color:var(--text)}
+body.night .msg-inp::placeholder{color:#555}
+body.night .send-btn{box-shadow:3px 3px 0 #000}
+
+/* Tags */
+body.night .tag-btn{
+  background:var(--bg);border-color:var(--border);color:var(--text-dim);
+  box-shadow:2px 2px 0 #000;
+}
+body.night .tag-btn:hover,body.night .tag-btn.sel{
+  background:var(--rojo);color:var(--amarillo);
+  box-shadow:1px 1px 0 #000;
+}
+
+/* Carpool */
+body.night .car-item{
+  background:var(--bg-card);border-color:var(--border);
+  border-left-color:var(--verde);
+}
+body.night .car-item.pending{border-left-color:var(--border)}
+body.night .car-from{color:var(--text)}
+body.night .car-contact{color:var(--text-dim)}
+body.night .car-seats{background:var(--bg);color:var(--amarillo);border-color:var(--border)}
+body.night .cp-form{background:rgba(91,184,245,.03);border-color:var(--border)}
+body.night .cp-inp{background:var(--bg-input);border-color:var(--border);color:var(--text)}
+body.night .cp-inp::placeholder{color:#555}
+body.night .cp-sel{background:var(--bg-input);border-color:var(--border);color:var(--text)}
+body.night .cp-label{color:var(--text-dim)}
+body.night .car-legend{color:var(--text-dim)}
+body.night .offer-btn{box-shadow:4px 4px 0 #000}
+
+/* Signal */
+body.night .sc-wrap{border-color:var(--border);box-shadow:5px 5px 0 #000}
+body.night .sc-links{background:var(--bg-card);border-top-color:var(--border)}
+body.night .sc-links a{color:var(--text);border-bottom-color:var(--rojo)}
+
+/* Info */
+body.night .info-item{color:var(--text);border-bottom-color:var(--border)}
+body.night .info-placeholder{color:var(--text-dim);border-color:var(--border)}
+
+/* Board header */
+body.night .board-title{color:var(--text-dim)}
+body.night .empty-msg{color:var(--text-dim)}
+
+/* Toast night */
+body.night .toast{
+  background:var(--bg-card);border-color:var(--amarillo);
+  box-shadow:4px 4px 0 #000,0 0 15px var(--glow-amarillo);
+}
+
+/* Copy btn night */
+body.night .copy-btn{color:var(--verde);border-color:var(--verde)}
+body.night .copy-btn:hover{background:var(--verde);color:#fff}
+
+/* Admin night */
+body.night .admin-hdr{border-bottom-color:var(--border)}
+body.night .admin-title{text-shadow:0 0 15px var(--glow-rojo)}
+body.night .admin-sub{color:var(--text-dim)}
+body.night .admin-sec-title{color:var(--text-dim);border-bottom-color:var(--border)}
+body.night .admin-item{background:var(--bg-card);border-color:var(--border)}
+body.night .admin-item-name{color:var(--text)}
+body.night .admin-item-meta{color:var(--text-dim)}
+body.night .admin-back{border-color:var(--border);color:var(--text);box-shadow:3px 3px 0 #000}
+
+/* ── CRT SCANLINES (night only) ── */
+body.night::after{
+  content:'';position:fixed;top:0;left:0;right:0;bottom:0;
+  pointer-events:none;z-index:9998;
+  background:repeating-linear-gradient(
+    0deg,
+    transparent 0,transparent 2px,
+    rgba(0,0,0,.06) 2px,rgba(0,0,0,.06) 3px
+  );
+}
+
+/* ── NIGHT MODE TOGGLE ── */
+/* Ocultar en pantalla auth */
+#screen-auth.active ~ .night-toggle{display:none}
+
+.night-toggle{
+  position:fixed;top:12px;right:12px;z-index:9999;
+  background:var(--negro);color:var(--amarillo);
+  border:2px solid var(--amarillo);
+  font-family:'EB Garamond',serif;font-weight:700;
+  font-size:18px;
+  width:38px;height:38px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;box-shadow:3px 3px 0 #000;
+  transition:.15s;
+}
+body.night .night-toggle{
+  background:var(--amarillo);color:var(--negro);
+  border-color:var(--negro);
+  box-shadow:3px 3px 0 rgba(247,226,0,.3);
+}
+.night-toggle:hover{transform:translate(1px,1px);box-shadow:2px 2px 0 #000}
+
+/* ── MOBILE RESPONSIVE ── */
+@media(max-width:480px){
+  #screen-app{padding:0 10px 60px}
+  .card{box-shadow:4px 4px 0 var(--negro)}
+  .card-body{padding:14px}
+  .cd-num{
+    font-size:clamp(36px,10vw,52px);
+    min-width:56px;padding:2px 8px;
+    box-shadow:3px 3px 0 var(--negro);
+  }
+  .cd-sep{font-size:32px;margin-top:-8px}
+  .cd-grid{gap:4px}
+  .hdr-title{-webkit-text-stroke:3px var(--negro)}
+  .hdr-xi{-webkit-text-stroke:2px var(--negro)}
+  .hdr-date{font-size:13px;padding:5px 14px;box-shadow:3px 3px 0 var(--negro)}
+  .tabs{flex-wrap:nowrap}
+  .tb{font-size:11px;padding:9px 2px;letter-spacing:0}
+  .ed-chip{padding:8px 10px;gap:6px}
+  .ed-num{font-size:13px;min-width:28px}
+  .ed-name{font-size:13px}
+  .ed-sub{font-size:12px}
+  .ed-date{font-size:10px}
+  .ed-role{font-size:16px}
+  .msg{padding:8px 10px;gap:6px}
+  .mbadge{font-size:9px;padding:2px 5px}
+  .mtxt{font-size:13px}
+  .car-from{font-size:15px}
+  .car-seats{font-size:14px;padding:3px 8px}
+  .sc-wrap{box-shadow:3px 3px 0 var(--negro)}
+  .xp-bar{height:14px}
+  .locked{padding:20px 14px}
+  .lock-txt{font-size:14px;letter-spacing:1px}
+  .map-btn{padding:8px 20px;font-size:14px}
+  .addr-big{font-size:22px}
+  .artist-img{width:40px;height:40px}
+  .artist-name{font-size:14px}
+  .artist-desc{font-size:12px}
+  .artist-play{width:38px;height:38px;font-size:16px}
+  .admin-title{font-size:36px}
+  .admin-modal-box{padding:20px}
+}
 </style>
 </head>
 <body>
 
 <!-- ══ AUTH ══ -->
 <div id="screen-auth" class="screen active">
-  <div class="auth-img"></div>
-  <div class="auth-form">
-    <div class="auth-eyebrow">Zona privada · Edición XI</div>
-    <div class="auth-title">SAN SONORÍN</div>
-    <div class="auth-xi">XI</div>
-    <hr class="auth-rule"/>
-    <span class="auth-label">Contraseña de acceso</span>
-    <input class="auth-inp" id="inp-pwd" type="password" placeholder="··········"/>
-    <button class="auth-btn" id="btn-login">Entrar</button>
-    <div class="auth-err" id="auth-err"></div>
-    <div class="auth-info">Solo pueden acceder personas invitadas.<br>Si no tienes la contraseña, contacta con el Ayuntamiento.</div>
+  <div class="auth-bg">
+    <div class="auth-tap" id="auth-tap">espera...</div>
+    <div class="auth-form" id="auth-form">
+      <div class="auth-eyebrow">Zona privada · Edición XI</div>
+      <span class="auth-label">Contraseña de acceso</span>
+      <input class="auth-inp" id="inp-pwd" type="password" placeholder="··········"/>
+      <button class="auth-btn" id="btn-login">Entrar</button>
+      <div class="auth-err" id="auth-err"></div>
+      <div class="auth-info">Solo pueden acceder personas invitadas.<br>Si no tienes la contraseña, contacta con el Ayuntamiento.</div>
+    </div>
   </div>
 </div>
 
@@ -476,24 +1153,26 @@ body{
     <div class="hdr-eyebrow">Gran Función · Edición XI</div>
     <div class="hdr-title">SAN SONORÍN</div>
     <div class="hdr-xi">XI</div>
-    <div class="hdr-date">Viernes 29 de mayo de 2026</div>
+    <div class="hdr-date">Del viernes 29 de mayo al domingo 31 de mayo</div>
     <div class="hdr-sub">★ Ubicación por desclasificar ★</div>
   </div>
 
   <div class="tabs">
-    <button class="tb on" id="tab-cd">Cuenta</button>
+    <button class="tb on" id="tab-main">Inicio</button>
     <button class="tb" id="tab-brd">Tablón</button>
     <button class="tb" id="tab-cp">Caravana</button>
-    <button class="tb" id="tab-sc">Señal</button>
+    <button class="tb" id="tab-sc">Menú</button>
     <button class="tb" id="tab-info">Info</button>
   </div>
 
-  <!-- CUENTA ATRÁS -->
-  <div id="tc-cd" class="tc on">
+  <!-- ═══ INICIO (vista principal) ═══ -->
+  <div id="tc-main" class="tc on">
+
+    <!-- CUENTA ATRÁS -->
     <div class="card">
       <div class="card-stripe"></div>
       <div class="card-body">
-        <div class="card-title">Cuenta atrás para pregón</div>
+        <div class="card-title">Cuenta atrás para el pregonazo</div>
         <div class="cd-grid">
           <div class="cd-unit"><span class="cd-num" id="dd">00</span><div class="cd-name">días</div></div>
           <div class="cd-sep">:</div>
@@ -503,66 +1182,139 @@ body{
           <div class="cd-sep">:</div>
           <div class="cd-unit"><span class="cd-num" id="ss">00</span><div class="cd-name">seg</div></div>
         </div>
-        <div class="prog-wrap">
-          <div class="prog-label"><span>Progreso hacia el evento</span><span id="pct">0%</span></div>
-          <div class="prog-bar"><div class="prog-fill" id="pfill" style="width:0%"></div></div>
+        <div class="xp-wrap">
+          <div class="xp-hdr">
+            <span class="xp-level" id="xp-level"></span>
+            <span class="xp-pct" id="pct"></span>
+          </div>
+          <div class="xp-bar"><div class="xp-fill" id="pfill" style="width:0%"></div></div>
+          <div class="xp-rank" id="xp-next"></div>
         </div>
-        <!-- ELIMINA ESTOS DOS BOTONES ANTES DEL EVENTO -->
         <button class="demo-btn" id="btn-demo">[ simular desbloqueo ]</button>
-        <button class="demo-btn" id="btn-fake-loc" style="margin-top:4px">[ simular ubicación ]</button>
-        <div id="fake-loc-box" style="display:none">
-          <div style="font-family:'EB Garamond',serif;font-style:italic;font-size:12px;color:#aaa;margin-bottom:8px;letter-spacing:2px">elige una ubicación de prueba:</div>
-          <div id="fake-loc-list"></div>
-        </div>
         <div class="locked" id="locked-box">
-          <div class="lock-txt">Ubicación cifrada · Espera la señal</div>
-          <div class="lock-squiggles">~ ? ~ ? ~ ? ~</div>
+          <div class="lock-txt">UBICACIÓN CIFRADA... de momento</div>
+          <div class="lock-squiggles">? ~ ? ~ ? ~ ?</div>
         </div>
         <div class="unlocked" id="unlocked-box">
-          <div style="font-family:'EB Garamond',serif;font-style:italic;font-size:12px;color:#888;letter-spacing:3px;margin-bottom:10px">Señal recibida</div>
+          <div style="font-family:'EB Garamond',serif;font-weight:800;font-size:12px;color:var(--verde);letter-spacing:3px;margin-bottom:10px">★ UBICACIÓN DESBLOQUEADA ★</div>
           <div class="addr-big" id="addr-type"></div>
           <div class="addr-sub" id="addr-detail"></div>
           <a class="map-btn" id="map-link" href="#" target="_blank">→ Abrir mapa</a>
+          <button class="copy-btn" id="btn-copy">Copiar dirección</button>
         </div>
       </div>
     </div>
+
+    <!-- HISTORIAL MÉDICO -->
+    <div class="card" style="margin-top:16px">
+      <div class="card-stripe"></div>
+      <div class="card-body">
+        <div class="card-title">Tu historial médico</div>
+        <div class="ed-role" id="ed-role"></div>
+        <div class="ed-grid" id="ed-grid"></div>
+      </div>
+    </div>
+
+    <!-- INFO (solo títulos, click lleva a pestaña) -->
+    <div class="card" id="info-shortcut" style="margin-top:16px;cursor:pointer">
+      <div class="card-stripe"></div>
+      <div class="card-body">
+        <div class="card-title">Información útil</div>
+        <div id="info-list"></div>
+        <div style="text-align:right;font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:var(--rojo);letter-spacing:1px;margin-top:10px">ver más ›</div>
+      </div>
+    </div>
+
+    <!-- TABLÓN PREVIEW (read-only) -->
+    <div class="card" style="margin-top:16px">
+      <div class="card-stripe"></div>
+      <div class="card-body">
+        <div class="card-title">Tablón Municipal</div>
+        <div class="sec-desc">Deja avisos para el resto del vecindario. El Consejo del Festejo puede verificar o tachar mensajes.</div>
+        <div class="msgs" id="mlist-preview"></div>
+      </div>
+    </div>
+
+    <!-- CARPOOL PREVIEW (read-only) -->
+    <div class="card" style="margin-top:16px">
+      <div class="card-stripe"></div>
+      <div class="card-body">
+        <div class="card-title">Caravana </div>
+        <div class="sec-desc">Organízate para los viajes. Conduce con cuidado.</div>
+        <div class="car-list" id="carlist-preview"></div>
+      </div>
+    </div>
+
+    <!-- SINTONIZA (artista aleatorio) -->
+    <div class="card" style="margin-top:16px">
+      <div class="card-stripe"></div>
+      <div class="card-body">
+        <div class="card-title">Sintoniza</div>
+        <div class="sc-wrap">
+          <div class="sc-hdr">
+            <div class="sc-dot"></div>
+            <div class="sc-name" id="sc-rnd-name">Cargando señal...</div>
+            <button class="sc-next" id="btn-rnd-next">Siguiente ›</button>
+          </div>
+          <div class="sc-artist-desc" id="sc-rnd-desc"></div>
+          <div class="sc-cover" id="sc-rnd-cover">
+            <img class="sc-cover-img" id="sc-rnd-img" src="" alt=""/>
+            <button class="sc-play-btn" id="sc-rnd-play">▶ Reproducir</button>
+          </div>
+          <iframe class="sc-frame" id="sc-rnd-frame" height="166" scrolling="no" frameborder="no" allow="autoplay" src="about:blank"></iframe>
+          <div class="sc-links">
+            <a id="sc-rnd-sc" href="#" target="_blank">soundcloud</a>
+            <a id="sc-rnd-ig" href="#" target="_blank">instagram</a>
+          </div>
+        </div>
+        <button id="btn-go-menu" style="
+          display:block;width:100%;margin-top:14px;padding:18px 14px;
+          background:var(--rojo);color:var(--amarillo);
+          border:3px solid var(--negro);
+          box-shadow:5px 5px 0 var(--negro);
+          font-family:'EB Garamond',serif;font-weight:800;
+          font-size:17px;letter-spacing:1px;line-height:1.3;
+          cursor:pointer;transition:.15s;
+        ">Te crujen las tripas.<br>Echa un ojo al resto del menú.</button>
+      </div>
+    </div>
+
   </div>
 
-  <!-- TABLÓN -->
+  <!-- ═══ TAB: TABLÓN (con formulario) ═══ -->
   <div id="tc-brd" class="tc">
     <div class="card">
       <div class="card-stripe"></div>
       <div class="card-body">
-        <div class="card-title">Tablón municipal</div>
-        <div class="sec-desc">Deja avisos para el resto del vecindario. Selecciona una categoría y escribe. El Consejo del Festejo puede verificar o tachar mensajes.</div>
-        <div class="board-hdr">
-          <div class="board-title">Canal en vivo</div>
-          <div class="live-dot">● en directo</div>
-        </div>
-        <div class="tags-row">
-          <button class="tag-btn" data-id="ice" data-label="[Hielo]">Hielo</button>
-          <button class="tag-btn" data-id="beer" data-label="[Birras]">Birras</button>
-          <button class="tag-btn" data-id="gf" data-label="[Sin gluten]">s/Gluten</button>
-          <button class="tag-btn" data-id="allergy" data-label="[Alérgenos]">Alérgenos</button>
-          <button class="tag-btn" data-id="food" data-label="[Comida]">Comida</button>
-          <button class="tag-btn sel" data-id="other" data-label="[Otros]">Otros</button>
-        </div>
-        <div class="inp-row">
-          <input class="msg-inp" id="minp" placeholder="Escribe tu aviso..." maxlength="140"/>
-          <button class="send-btn" id="btn-send">→</button>
+        <div class="card-title">Tablón Municipal</div>
+        <div class="sec-desc" id="board-desc">Selecciona una categoría, pon tu nombre y escribe tu aviso.</div>
+        <div id="board-form">
+          <div class="tags-row">
+            <button class="tag-btn" data-id="ice" data-label="[Hielo]">Hielo</button>
+            <button class="tag-btn" data-id="beer" data-label="[Birras]">Birras</button>
+            <button class="tag-btn" data-id="gf" data-label="[Sin gluten]">s/Gluten</button>
+            <button class="tag-btn" data-id="allergy" data-label="[Alérgenos]">Alérgenos</button>
+            <button class="tag-btn" data-id="food" data-label="[Comida]">Comida</button>
+            <button class="tag-btn sel" data-id="other" data-label="[Otros]">Otros</button>
+          </div>
+          <input class="msg-inp" id="minp-name" placeholder="Tu nombre o aka" maxlength="30" style="width:100%;margin-bottom:6px;font-size:14px;padding:8px"/>
+          <div class="inp-row">
+            <input class="msg-inp" id="minp" placeholder="Escribe tu aviso..." maxlength="140"/>
+            <button class="send-btn" id="btn-send">→</button>
+          </div>
         </div>
         <div class="msgs" id="mlist"></div>
       </div>
     </div>
   </div>
 
-  <!-- CARAVANA -->
+  <!-- ═══ TAB: CARAVANA (con formulario) ═══ -->
   <div id="tc-cp" class="tc">
     <div class="card">
       <div class="card-stripe"></div>
       <div class="card-body">
-        <div class="card-title">carpool</div>
-        <div class="sec-desc">Organízate para los viajes. Si ofreces plaza deja tu contacto. Tu entrada aparece una vez validada por el Consejo del Festejo. Conduce con cuidado.</div>
+        <div class="card-title">Caravana</div>
+        <div class="sec-desc">Si ofreces plaza deja tu contacto. Tu entrada aparece una vez validada por el Consejo del Festejo.</div>
         <div class="cp-form">
           <span class="cp-label">Registrar plaza disponible</span>
           <div class="cp-row">
@@ -580,47 +1332,91 @@ body{
     </div>
   </div>
 
-  <!-- RADIOPATIO -->
+  <!-- ═══ TAB: MENÚ POPULAR ═══ -->
   <div id="tc-sc" class="tc">
     <div class="card">
       <div class="card-stripe"></div>
       <div class="card-body">
-        <div class="card-title">Sintoniza</div>
-        <div class="sec-desc">Música para el camino y el evento. Rota entre artistas. Pulsa siguiente para cambiar.</div>
-        <div class="sc-wrap">
-          <div class="sc-hdr">
-            <div class="sc-dot"></div>
-            <div class="sc-name" id="sc-artist-name">Cargando señal...</div>
-            <button class="sc-next" id="btn-next">Siguiente ›</button>
-          </div>
-          <iframe class="sc-frame" id="sc-frame" height="280" scrolling="no" allow="autoplay" src="about:blank"></iframe>
-          <div class="sc-links">
-            <a id="sc-link-sc" href="https://soundcloud.com" target="_blank">soundcloud</a>
-            <a id="sc-link-ig" href="https://instagram.com" target="_blank">instagram</a>
-          </div>
+        <div class="card-title">Menú Popular</div>
+        <div class="sec-desc" style="font-size:20px;font-weight:700;font-style:italic;color:var(--rojo);letter-spacing:1px">Café y postre incluidos</div>
+        <div class="lineup-player" id="lineup-player">
+          <div class="lineup-player-name" id="lineup-player-name"></div>
+          <iframe class="sc-frame" id="lineup-frame" height="166" scrolling="no" frameborder="no" allow="autoplay" src="about:blank" style="width:100%;display:block"></iframe>
         </div>
+        <div id="lineup-list"></div>
       </div>
     </div>
   </div>
 
-  <!-- INFO -->
+  <!-- ═══ TAB: INFO ═══ -->
   <div id="tc-info" class="tc">
     <div class="card">
       <div class="card-stripe"></div>
       <div class="card-body">
         <div class="card-title">Información útil</div>
-        <div class="sec-desc">Todo lo que necesitas saber. Se irá actualizando antes del evento.</div>
-        <div class="info-item"><div class="info-dot"></div>Normas del espacio</div>
-        <div class="info-item"><div class="info-dot" style="background:var(--azul-dark)"></div>Transporte público</div>
-        <div class="info-item"><div class="info-dot" style="background:var(--verde)"></div>Qué llevar / Qué no llevar</div>
-        <div class="info-item"><div class="info-dot" style="background:var(--amarillo);border:1px solid #ccc"></div>Contacto de emergencia</div>
-        <div class="info-item"><div class="info-dot" style="background:#8833cc"></div>Horarios aproximados</div>
-        <div class="info-placeholder">Contenido próximamente...</div>
+        <div id="info-list2"></div>
       </div>
     </div>
   </div>
 
+  <!-- Admin access (visible en todas las pestañas) -->
+  <div style="text-align:center;margin-top:30px;padding-bottom:20px">
+    <button class="admin-link" id="btn-admin">Consejo del Festejo</button>
+  </div>
+
 </div>
+</div>
+
+<!-- ══ PRIMER SONORA MODAL (edición 0) ══ -->
+<div class="admin-modal" id="primer-modal" style="display:none">
+  <div class="admin-modal-box" style="text-align:center;max-width:420px;background:#fff">
+    <img src="img/primer-sonora.jpg" alt="Ojalá ser tú ahora mismo" style="width:100%;max-width:340px;display:block;margin:0 auto 14px"/>
+    <div style="font-family:'EB Garamond',serif;font-style:italic;font-size:16px;color:var(--negro);margin-bottom:14px">Ojalá ser tú ahora mismo</div>
+    <button class="auth-btn" id="btn-primer-close" style="padding:10px 24px;font-size:14px">Cerrar</button>
+  </div>
+</div>
+
+<!-- ══ MARÍA MODAL (10 ediciones) ══ -->
+<div class="admin-modal" id="maria-modal" style="display:none">
+  <div class="admin-modal-box" style="text-align:center;max-width:380px;background:#fff">
+    <div style="font-family:'EB Garamond',serif;font-weight:800;font-size:20px;letter-spacing:1px;color:var(--rojo);line-height:1.4;margin-bottom:18px">Te llamas María… <span style="font-style:italic;font-weight:700;color:var(--negro)">y no lo sabías</span></div>
+    <button class="auth-btn" id="btn-maria-close" style="padding:10px 24px;font-size:14px">Cerrar</button>
+  </div>
+</div>
+
+<!-- ══ HUELE MODAL (8 ediciones) ══ -->
+<div class="admin-modal" id="huele-modal" style="display:none">
+  <div class="admin-modal-box" style="text-align:center;max-width:420px;background:#fff">
+    <img src="img/a-ver-a-que-huele.png" alt="A ver a qué huele eso" style="width:100%;max-width:340px;display:block;margin:0 auto 14px"/>
+    <button class="auth-btn" id="btn-huele-close" style="padding:10px 24px;font-size:14px">Cerrar</button>
+  </div>
+</div>
+
+<!-- ══ LIGHTBOX (ampliar foto artista) ══ -->
+<div class="lightbox" id="lightbox">
+  <img id="lightbox-img" src="" alt=""/>
+</div>
+
+<!-- ══ CHEF MODAL (artista sin link) ══ -->
+<div class="admin-modal" id="chef-modal" style="display:none">
+  <div class="admin-modal-box" style="text-align:center;max-width:380px">
+    <div style="font-family:'EB Garamond',serif;font-weight:800;font-size:18px;letter-spacing:2px;color:var(--rojo);margin-bottom:14px">★ COMANDA DEL CHEF ★</div>
+    <div style="font-family:'EB Garamond',serif;font-style:italic;font-size:16px;color:var(--negro);line-height:1.5;margin-bottom:18px">Por comanda del chef, este plato se degustará en directo.</div>
+    <button class="auth-btn" id="btn-chef-close" style="padding:10px 24px;font-size:14px">Cerrar</button>
+  </div>
+</div>
+
+<!-- ══ ADMIN LOGIN MODAL ══ -->
+<div class="admin-modal" id="admin-modal" style="display:none">
+  <div class="admin-modal-box">
+    <div style="font-family:'EB Garamond',serif;font-weight:800;font-size:20px;letter-spacing:3px;color:var(--rojo);margin-bottom:12px">ACCESO ADMIN</div>
+    <input class="auth-inp" id="inp-admin-pwd" type="password" placeholder="Contraseña admin" style="margin-bottom:10px"/>
+    <div style="display:flex;gap:8px">
+      <button class="auth-btn" id="btn-admin-login" style="flex:1;font-size:16px;padding:10px">Entrar</button>
+      <button class="admin-back" id="btn-admin-cancel" style="flex:1;padding:10px;font-size:14px">Cancelar</button>
+    </div>
+    <div class="auth-err" id="admin-err"></div>
+  </div>
 </div>
 
 <!-- ══ ADMIN ══ -->
@@ -630,8 +1426,43 @@ body{
     <div class="admin-title">★ Admin ★</div>
     <div class="admin-sub">SAN SONORÍN · panel de control</div>
   </div>
+
+  <!-- Info editable -->
   <div class="admin-section">
-    <div class="admin-sec-title">plazas carpool pendientes</div>
+    <div class="admin-sec-title">Información del evento</div>
+    <div class="admin-info-form">
+      <div class="admin-field">
+        <label class="admin-field-label">Normas del espacio</label>
+        <textarea class="admin-textarea" id="adm-normas" rows="3" placeholder="Escribe las normas..."></textarea>
+      </div>
+      <div class="admin-field">
+        <label class="admin-field-label">Transporte</label>
+        <textarea class="admin-textarea" id="adm-transporte" rows="3" placeholder="Info de transporte público..."></textarea>
+      </div>
+      <div class="admin-field">
+        <label class="admin-field-label">Qué llevar / Qué no llevar</label>
+        <textarea class="admin-textarea" id="adm-llevar" rows="3" placeholder="Lista de cosas..."></textarea>
+      </div>
+      <div class="admin-field">
+        <label class="admin-field-label">Contactos</label>
+        <textarea class="admin-textarea" id="adm-emergencia" rows="2" placeholder="Teléfono, persona..."></textarea>
+      </div>
+      <div class="admin-field">
+        <label class="admin-field-label">Horarios</label>
+        <textarea class="admin-textarea" id="adm-horarios" rows="3" placeholder="Horarios aproximados..."></textarea>
+      </div>
+      <button class="offer-btn" id="btn-save-info" style="margin-top:8px">Guardar información</button>
+    </div>
+  </div>
+
+  <div class="admin-section">
+    <div class="admin-sec-title">Descripciones de artistas</div>
+    <div id="admin-artists"></div>
+    <button class="offer-btn" id="btn-save-artists" style="margin-top:8px">Guardar descripciones</button>
+  </div>
+
+  <div class="admin-section">
+    <div class="admin-sec-title">plazas Caravana</div>
     <div id="admin-cars"></div>
   </div>
   <div class="admin-section">
@@ -642,16 +1473,58 @@ body{
 </div>
 </div>
 
+<button class="night-toggle" id="night-toggle" title="Modo noche">☽</button>
+<div class="toast" id="toast"></div>
+
 <script type="module">
 import { initializeApp }   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc, query, orderBy }
+import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc, query, orderBy, setDoc }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 // ══════════════════════════════════════
 //  ★ CONFIGURACIÓN — edita aquí
 // ══════════════════════════════════════
-const ACCESS_PASSWORD = "sonora2026";
-const ADMIN_PASSWORD  = "sonora2026admin";
+const ACCESS_PASSWORD = "amunt";
+const ADMIN_PASSWORD  = "orgiasonora";
+const BOARD_FROZEN    = true; // Tablón congelado: solo lectura para asistentes
+const TAB_KEY = 'sonora_xi_tab';
+const scUrl = (url) => `https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}&color=%23e8001a&auto_play=true&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=false`;
+const TAG_BC = { ice:'b-ice', beer:'b-beer', gf:'b-gf', allergy:'b-allergy', food:'b-food', other:'b-other' };
+const ED_KEY = 'sonora_xi_editions';
+const EDITIONS = [
+  { id:'0',    name:'Es mi primer Sonora', sub:'Ojalá ser tú ahora mismo', date:'', first:true },
+  { id:'I',    name:'Bicorp',         sub:'El pleistoceno',           date:'Nov 2022' },
+  { id:'II',   name:'Casinos',       sub:'Unos guiris lo cambian todo', date:'Feb 2023' },
+  { id:'III',  name:'Invaders',        sub:'El primer verano del amor', date:'Jun 2023' },
+  { id:'IV',   name:'Dungeons n Dragons',     sub:'Crackhouse y nos cortan el agua', date:'Nov 2023' },
+  { id:'V',    name:'Under the sea',          sub:'Pocas noches mejores verá el porche de don Bosco', date:'Jun 2024' },
+  { id:'VI',   name:'Welcome to the jungle',        sub:'Infierno improvisado bajo la piscina', date:'Sep 2024' },
+  { id:'VII',  name:'Wild Wild West',          sub:'Salvaje oeste y una ceja menos', date:'Feb 2025' },
+  { id:'VIII', name:'The Man the Machine',       sub:'Un camión cisterna abre el pasadizo al submundo', date:'Jun 2025' },
+  { id:'IX',   name:'Age of Empires',sub:'Una vez se superan 100, ya no es un cumpleaños', date:'Sep 2025' },
+  { id:'X',    name:'Noxevieja',     sub:'10 fiestas, 4 días. Se consiguió.', date:'Año nuevo 2026' },
+  { id:'XI',   name:'???',           sub:'No dejéis que los niños se acerquen a San Sonorín', date:'May 2026', locked:true },
+];
+const ED_ROLES = [
+  { min:0,  name:'' },
+  { min:1,  name:'Te quedan cosas espectaculares por descubrir' },
+  { min:2,  name:'Proyecto de duende' },
+  { min:3,  name:'Animal de bafle' },
+  { min:4,  name:'Ya estás preparando el disfraz' },
+  { min:5,  name:'Has pedido días en el curro' },
+  { min:6,  name:'Ya no vas a bodas' },
+  { min:7,  name:'Estás entrenando para los juegos sonoros' },
+  { min:8,  name:'A ver a qué huele eso' },
+  { min:9,  name:'Pum pum pum' },
+  { min:10, name:'Te llamas María' },
+];
+const INFO_FIELDS = [
+  { key:'normas',      label:'Normas del espacio',         color:'var(--rojo)' },
+  { key:'transporte',  label:'Transporte',                 color:'var(--azul-dark)' },
+  { key:'llevar',      label:'Qué llevar / Qué no llevar', color:'var(--verde)' },
+  { key:'emergencia',  label:'Contactos',     color:'var(--amarillo)' },
+  { key:'horarios',    label:'Horarios',                   color:'#8833cc' },
+];
 const ADDRESS_TEXT    = "PASACALLES ACID";
 const ADDRESS_DETAIL  = "Aquí la dirección completa · Valencia";
 const MAP_LINK        = "https://maps.google.com/?q=TU+UBICACION";
@@ -659,19 +1532,36 @@ const TARGET = new Date('2026-05-29T22:00:00');
 const START  = new Date('2026-01-01T00:00:00');
 
 const SC_ARTISTS = [
-  { name:"Francis Espinaco", url:"https://soundcloud.com/user-845235880",              sc:"https://soundcloud.com/user-845235880",              ig:"https://instagram.com/motelxamar" },
-  { name:"Senmeri",          url:"https://soundcloud.com/senmeri/tracks",               sc:"https://soundcloud.com/senmeri",                    ig:"https://instagram.com/senmeri" },
-  { name:"Mireia Cj",  url:"https://soundcloud.com/mireia-camarena/tracks",       sc:"https://soundcloud.com/mireia-camarena",             ig:"https://instagram.com/mireiacj2" },
-  { name:"Apparatchik",    url:"https://soundcloud.com/user901179098/tracks",         sc:"https://soundcloud.com/user901179098",               ig:"https://instagram.com/itsapparatchik" },
-  { name:"Cizette",   url:"https://soundcloud.com/clara-zaragoza-175684940/tracks", sc:"https://soundcloud.com/clara-zaragoza-175684940",ig:"https://instagram.com/cizette.music" },
-  { name:"Toretto",   url:"https://soundcloud.com/toretto-sounds/tracks",       sc:"https://soundcloud.com/toretto-sounds",              ig:"https://instagram.com/torettosounds" },
-  { name:"Deejeya",          url:"https://soundcloud.com/deejeya/tracks",              sc:"https://soundcloud.com/deejeya",                    ig:"https://instagram.com/deejeya" },
-  { name:"Astora",     url:"https://soundcloud.com/juan-carmona-513512584/tracks",sc:"https://soundcloud.com/juan-carmona-513512584",     ig:"https://instagram.com/astoramusic" },
-    { name:"K.I.R.",     url:"https://soundcloud.com/cristian-marcos-288862063/tracks",sc:"https://soundcloud.com/cristian-marcos-288862063",     ig:"https://instagram.com/k.i.rdj" },
-    { name:"KØRE.TEK",     url:"https://soundcloud.com/kore-909668299/tracks",sc:"https://soundcloud.com/kore-909668299",     ig:"https://instagram.com/kore.tek_" },
-    { name:"Cabani",     url:"https://soundcloud.com/cabani-music/tracks",sc:"https://soundcloud.com/cabani-music",     ig:"https://instagram.com/cabani.dj" },
-    
+  { name:"Francis Espinaco", url:"https://soundcloud.com/user-845235880/barman-pongame-un-dyc", sc:"https://soundcloud.com/user-845235880", ig:"https://instagram.com/motelxamar", img:"img/francis-espinaco.png" },
+  { name:"Senmeri", url:"https://soundcloud.com/senmeri", sc:"https://soundcloud.com/senmeri", ig:"https://instagram.com/senmeri", img:"https://i1.sndcdn.com/avatars-zhWKPep86RNQxU3a-PiBRFg-t500x500.jpg", hidden:true },
+  { name:"Mireia Cj", url:"https://soundcloud.com/mireia-camarena", sc:"https://soundcloud.com/mireia-camarena", ig:"https://instagram.com/mireiacj2", img:"img/mireia-cj.jpeg" },
+  { name:"Apparatchik", url:"https://soundcloud.com/user901179098", sc:"https://soundcloud.com/user901179098", ig:"https://instagram.com/itsapparatchik", img:"https://i1.sndcdn.com/avatars-8yzKhifSN7MMxfyG-wHbkwQ-t500x500.jpg" },
+  { name:"Cizette", url:"https://soundcloud.com/clara-zaragoza-175684940", sc:"https://soundcloud.com/clara-zaragoza-175684940", ig:"https://instagram.com/cizette.music", img:"https://i1.sndcdn.com/avatars-RqzQYCENWDtG00cy-RW1gEw-t500x500.jpg" },
+  { name:"Toretto", url:"https://soundcloud.com/toretto-sounds", sc:"https://soundcloud.com/toretto-sounds", ig:"https://instagram.com/torettosounds", img:"https://i1.sndcdn.com/avatars-WCDqTymdagNTBQad-jjYWkA-t500x500.jpg", hidden:true },
+  { name:"Deejeya", url:"https://soundcloud.com/deejeya", sc:"https://soundcloud.com/deejeya", ig:"https://instagram.com/deejeya", img:"https://i1.sndcdn.com/avatars-1xREn6hQsYPaDW2N-MuoJMw-t500x500.jpg" },
+  { name:"Astora", url:"https://soundcloud.com/juan-carmona-513512584", sc:"https://soundcloud.com/juan-carmona-513512584", ig:"https://instagram.com/astoramusic", img:"https://i1.sndcdn.com/avatars-aL7A2KBu8wlPM4Zp-Bcescw-t500x500.jpg" },
+  { name:"K.I.R.", url:"https://soundcloud.com/cristian-marcos-288862063", sc:"https://soundcloud.com/cristian-marcos-288862063", ig:"https://instagram.com/k.i.rdj", img:"https://i1.sndcdn.com/avatars-Sy6S0te4hGHTIziB-nyjDww-t500x500.jpg" },
+  { name:"KØRE.TEK", url:"https://soundcloud.com/kore-909668299", sc:"https://soundcloud.com/kore-909668299", ig:"https://instagram.com/kore.tek_", img:"img/kore.jpg" },
+  { name:"Cabani", url:"https://soundcloud.com/cabani-music", sc:"https://soundcloud.com/cabani-music", ig:"https://instagram.com/cabani.dj", img:"https://i1.sndcdn.com/avatars-uKSNdI8DQ8gGIGzz-8FoDdA-t500x500.jpg" },
+  { name:"Amphetamix" },
+  { name:"Lost Mery", url:"https://soundcloud.com/maria-alfonso-moreno/tracks", sc:"https://soundcloud.com/maria-alfonso-moreno", img:"img/lost-mery.jpg" },
+  { name:"Gurke", img:"img/gurke.png" },
+  { name:"BØHM" },
+  { name:"Droglo", img:"img/droglo.jpg" },
+  { name:"Raso" },
+  { name:"FalsoJudas" },
+  { name:"Ecce Homo", img:"img/ecce-homo.jpg" },
+  { name:"Candel" },
+  { name:"Machete Soundsystem" },
+  { name:"Elena Magdalena", img:"img/elena-magdalena.jpg" },
+  { name:"Llinares" },
+  { name:"D.SastreSonoro" },
+  { name:"D-Bunk" },
+  { name:"Nómada", url:"https://soundcloud.com/nomada-wav/tracks", sc:"https://soundcloud.com/nomada-wav", ig:"https://www.instagram.com/n00mada", img:"img/nomada.jpg" },
+  { name:"SNB", img:"img/snb.jpg" },
+  { name:"Traver", url:"https://soundcloud.com/traver93/tracks", sc:"https://soundcloud.com/traver93", ig:"https://www.instagram.com/traver.music", img:"img/traver.jpeg" },
 ];
+SC_ARTISTS.sort((a, b) => a.name.localeCompare(b.name, 'es', { sensitivity:'base' }));
 
 const FAKE_LOCS = [
   { name:"RAVE EN EL CAMPILLO",      detail:"Nave 7, bajando al pantano · Valencia" },
@@ -694,6 +1584,58 @@ const firebaseConfig = {
 const fbApp = initializeApp(firebaseConfig);
 const db    = getFirestore(fbApp);
 
+// ── DEV MODE (?dev=1 en la URL) ──
+if (new URLSearchParams(location.search).get('dev') === '1') {
+  document.body.classList.add('dev-mode');
+}
+
+// ── DARK MODE (auto nocturno + toggle manual) ──
+const NIGHT_KEY = 'sonora_xi_night';
+function applyNight(on){
+  document.body.classList.toggle('night', on);
+  document.getElementById('night-toggle').textContent = on ? '☀' : '☽';
+  document.querySelector('meta[name="theme-color"]').content = on ? '#0a0e1a' : '#5bb8f5';
+}
+function isNightHour(){
+  const h = new Date().getHours();
+  return h >= 21 || h < 7;
+}
+// Init: manual override > auto
+const savedNight = localStorage.getItem(NIGHT_KEY);
+if (savedNight !== null) applyNight(savedNight === '1');
+else applyNight(isNightHour());
+// Toggle
+document.getElementById('night-toggle').addEventListener('click', () => {
+  const on = !document.body.classList.contains('night');
+  applyNight(on);
+  localStorage.setItem(NIGHT_KEY, on ? '1' : '0');
+});
+
+// ── TOAST ──
+let toastTimer;
+function toast(msg){
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2500);
+}
+
+// ── RPG LEVEL SYSTEM (linked to editions) ──
+function getEdCount(){
+  const saved = JSON.parse(localStorage.getItem('sonora_xi_editions') || '[]');
+  return saved.filter(c => c !== '0').length;
+}
+function updateRank(){
+  const count = getEdCount();
+  const role = getEdRole(count);
+  const pct = Math.round((count / 10) * 100);
+  document.getElementById('xp-level').textContent = `${count}/10 EDICIONES`;
+  document.getElementById('pfill').style.width = pct + '%';
+  document.getElementById('pct').textContent = role;
+  document.getElementById('xp-next').textContent = '';
+}
+
 // ── PANTALLAS ──
 function showScreen(n){
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
@@ -707,7 +1649,7 @@ function doLogin(){
   const err = document.getElementById('auth-err');
   err.textContent = '';
   if (val === ADMIN_PASSWORD){ sessionStorage.setItem(SK,'ok'); showScreen('admin'); initAdmin(); }
-  else if (val === ACCESS_PASSWORD){ sessionStorage.setItem(SK,'ok'); showScreen('app'); initApp(); }
+  else if (val === ACCESS_PASSWORD){ sessionStorage.setItem(SK,'ok'); localStorage.removeItem(ED_KEY); showScreen('app'); initApp(); startWelcomeMusic(); }
   else {
     err.textContent = 'contraseña incorrecta, inténtalo de nuevo.';
     document.getElementById('inp-pwd').value = '';
@@ -716,8 +1658,37 @@ function doLogin(){
 }
 document.getElementById('btn-login').addEventListener('click', doLogin);
 document.getElementById('inp-pwd').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
-document.getElementById('btn-back').addEventListener('click', () => showScreen('app'));
-if (sessionStorage.getItem(SK) === 'ok'){ showScreen('app'); initApp(); }
+document.getElementById('btn-back').addEventListener('click', () => { showScreen('app'); initApp(); });
+
+// ── ADMIN MODAL ──
+document.getElementById('btn-admin').addEventListener('click', () => {
+  document.getElementById('admin-modal').style.display = 'flex';
+  document.getElementById('inp-admin-pwd').value = '';
+  document.getElementById('admin-err').textContent = '';
+  setTimeout(() => document.getElementById('inp-admin-pwd').focus(), 100);
+});
+document.getElementById('btn-admin-cancel').addEventListener('click', () => {
+  document.getElementById('admin-modal').style.display = 'none';
+});
+function doAdminLogin(){
+  const val = document.getElementById('inp-admin-pwd').value;
+  if (val === ADMIN_PASSWORD){
+    document.getElementById('admin-modal').style.display = 'none';
+    showScreen('admin'); initAdmin();
+  } else {
+    document.getElementById('admin-err').textContent = 'contraseña incorrecta';
+    document.getElementById('inp-admin-pwd').value = '';
+    setTimeout(() => document.getElementById('admin-err').textContent = '', 3000);
+  }
+}
+document.getElementById('btn-admin-login').addEventListener('click', doAdminLogin);
+document.getElementById('inp-admin-pwd').addEventListener('keydown', e => { if (e.key === 'Enter') doAdminLogin(); });
+
+// Mostrar form tras 2s contemplando la ilustración
+setTimeout(() => {
+  const f = document.getElementById('auth-form');
+  if (f) { f.classList.add('visible'); f.querySelector('.auth-inp').focus(); }
+}, 2000);
 
 // ── TABS ──
 function sw(id){
@@ -725,15 +1696,19 @@ function sw(id){
   document.querySelectorAll('.tb').forEach(b => b.classList.remove('on'));
   document.getElementById('tc-' + id).classList.add('on');
   document.getElementById('tab-' + id).classList.add('on');
+  if (id !== 'main') localStorage.setItem(TAB_KEY, id);
+  window.scrollTo(0, 0);
 }
-document.getElementById('tab-cd').addEventListener('click',   () => sw('cd'));
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+document.getElementById('tab-main').addEventListener('click', () => sw('main'));
 document.getElementById('tab-brd').addEventListener('click',  () => sw('brd'));
 document.getElementById('tab-cp').addEventListener('click',   () => sw('cp'));
-document.getElementById('tab-sc').addEventListener('click',   () => { sw('sc'); loadSC(scIdx); });
+document.getElementById('tab-sc').addEventListener('click',   () => sw('sc'));
 document.getElementById('tab-info').addEventListener('click', () => sw('info'));
+document.getElementById('info-shortcut').addEventListener('click', () => sw('info'));
+document.getElementById('btn-go-menu').addEventListener('click', () => sw('sc'));
 
 // ── CUENTA ATRÁS ──
-let unlocked = false;
 function updateCD(){
   const now = new Date(), diff = Math.max(0, TARGET - now);
   if (diff === 0 && !unlocked) triggerUnlock();
@@ -745,9 +1720,8 @@ function updateCD(){
   document.getElementById('hh').textContent = String(h).padStart(2,'0');
   document.getElementById('mm').textContent = String(m).padStart(2,'0');
   document.getElementById('ss').textContent = String(s).padStart(2,'0');
-  const pct = Math.min(100, Math.max(0, Math.round(((now-START)/(TARGET-START))*100)));
-  document.getElementById('pct').textContent = pct + '%';
-  document.getElementById('pfill').style.width = pct + '%';
+  // Update rank from editions
+  updateRank();
 }
 
 function typeAddr(txt, el, i=0){
@@ -764,39 +1738,34 @@ function triggerUnlock(){
   document.getElementById('addr-detail').textContent   = ADDRESS_DETAIL;
   document.getElementById('map-link').href             = MAP_LINK;
   typeAddr(ADDRESS_TEXT, document.getElementById('addr-type'));
+  // Vibración para que lo sientan
+  if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200]);
+  toast('★ BOSS DESBLOQUEADO · UBICACIÓN REVELADA');
 }
 
+let demoLocIdx = -1;
 document.getElementById('btn-demo').addEventListener('click', () => {
-  if (unlocked){
-    unlocked = false;
-    document.getElementById('locked-box').style.display = 'block';
-    document.getElementById('unlocked-box').classList.remove('show');
-    document.getElementById('addr-type').textContent = '';
-  } else triggerUnlock();
-});
-
-// Fake locs
-const fakeBox  = document.getElementById('fake-loc-box');
-const fakeList = document.getElementById('fake-loc-list');
-FAKE_LOCS.forEach(loc => {
-  const btn = document.createElement('button');
-  btn.className = 'fake-loc-btn';
-  btn.textContent = '→ ' + loc.name;
-  btn.addEventListener('click', () => {
-    document.getElementById('addr-type').textContent   = loc.name;
-    document.getElementById('addr-detail').textContent = loc.detail;
-    document.getElementById('locked-box').style.display = 'none';
-    document.getElementById('unlocked-box').classList.add('show');
-    fakeBox.style.display = 'none';
-  });
-  fakeList.appendChild(btn);
-});
-document.getElementById('btn-fake-loc').addEventListener('click', () => {
-  fakeBox.style.display = fakeBox.style.display === 'none' ? 'block' : 'none';
+  // Always reset first, then show a new random location
+  unlocked = false;
+  document.getElementById('locked-box').style.display = 'none';
+  document.getElementById('unlocked-box').classList.remove('show');
+  document.getElementById('addr-type').textContent = '';
+  // Pick a different random loc each time
+  let newIdx;
+  do { newIdx = Math.floor(Math.random() * FAKE_LOCS.length); } while (newIdx === demoLocIdx && FAKE_LOCS.length > 1);
+  demoLocIdx = newIdx;
+  const loc = FAKE_LOCS[demoLocIdx];
+  unlocked = true;
+  document.getElementById('locked-box').style.display = 'none';
+  document.getElementById('unlocked-box').classList.add('show');
+  document.getElementById('addr-detail').textContent = loc.detail;
+  document.getElementById('map-link').href = '#';
+  typeAddr(loc.name, document.getElementById('addr-type'));
+  if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200]);
+  toast('★ UBICACIÓN REVELADA');
 });
 
 // ── TABLÓN ──
-const TAG_BC = { ice:'b-ice', beer:'b-beer', gf:'b-gf', allergy:'b-allergy', food:'b-food', other:'b-other' };
 let curTagId = 'other', curTagLabel = '[otros]';
 
 document.querySelectorAll('.tag-btn').forEach(btn => {
@@ -808,125 +1777,594 @@ document.querySelectorAll('.tag-btn').forEach(btn => {
   });
 });
 
+function renderMsg(m){
+  const bc  = TAG_BC[m.tagId] || 'b-other';
+  const ver = m.verified ? '<span class="mverified">✓</span>' : '';
+  const st  = m.struck ? 'text-decoration:line-through;opacity:.4' : '';
+  const reply = m.reply ? `<div class="msg-reply">★ Consejo: ${esc(m.reply)}</div>` : '';
+  const authorHtml = m.author ? `<span class="mauthor">${esc(m.author)}</span>` : '';
+  const d = document.createElement('div');
+  d.className = 'msg';
+  d.innerHTML = `<span class="mbadge ${bc}">${m.tag}</span><span class="mtxt" style="${st}">${authorHtml}${esc(m.txt)}${ver}${reply}</span><span class="mtime">${m.time}</span>`;
+  return d;
+}
 function initMsgs(){
   onSnapshot(query(collection(db,'messages'), orderBy('ts','desc')), snap => {
     const list = document.getElementById('mlist');
-    list.innerHTML = '';
-    if (snap.empty){ list.innerHTML = '<div class="empty-msg">Sin transmisiones todavía...</div>'; return; }
+    const preview = document.getElementById('mlist-preview');
+    list.innerHTML = ''; preview.innerHTML = '';
+    if (snap.empty) {
+      preview.innerHTML = '<div class="empty-msg">Ningún aviso todavía</div>';
+      return;
+    }
+    let count = 0;
     snap.forEach(ds => {
-      const m = ds.data(), d = document.createElement('div');
-      d.className = 'msg';
-      const bc  = TAG_BC[m.tagId] || 'b-other';
-      const ver = m.verified ? '<span class="mverified">✓ verificado</span>' : '<span class="munverified">○ sin verificar</span>';
-      const st  = m.struck ? 'text-decoration:line-through;opacity:.4' : '';
-      d.innerHTML = `<span class="mbadge ${bc}">${m.tag}</span><span class="mtxt" style="${st}">${esc(m.txt)}${ver}</span><span class="mtime">${m.time}</span>`;
-      list.appendChild(d);
+      const m = ds.data();
+      list.appendChild(renderMsg(m));
+      if (count < 3) preview.appendChild(renderMsg(m));
+      count++;
     });
-  });
+    if (count > 3) {
+      const more = document.createElement('div');
+      more.className = 'empty-msg';
+      more.innerHTML = `<a href="#" style="color:var(--rojo);font-weight:700;text-decoration:none;letter-spacing:1px">Ver los ${count} avisos →</a>`;
+      more.querySelector('a').addEventListener('click', e => { e.preventDefault(); sw('brd'); });
+      preview.appendChild(more);
+    }
+  }, err => { console.warn('Messages listener error:', err); });
 }
 
+let msgCooldown = false;
 async function sendMsg(){
   const inp = document.getElementById('minp'), txt = inp.value.trim(); if (!txt) return;
-  const now  = new Date(), time = now.getHours() + ':' + String(now.getMinutes()).padStart(2,'0');
-  await addDoc(collection(db,'messages'), { tagId:curTagId, tag:curTagLabel, txt, time, ts:now.getTime(), verified:false, struck:false });
+  const nameInp = document.getElementById('minp-name'), author = nameInp.value.trim();
+  if (!author) { toast('Pon tu nombre o aka'); nameInp.focus(); return; }
+  if (msgCooldown) { toast('Espera unos segundos...'); return; }
+  const btn = document.getElementById('btn-send');
+  btn.disabled = true; msgCooldown = true;
+  btn.classList.add('sending'); btn.textContent = '···';
+  const now = new Date();
+  const day = now.getDate() + '/' + (now.getMonth()+1);
+  const time = day + ' ' + now.getHours() + ':' + String(now.getMinutes()).padStart(2,'0');
+  await addDoc(collection(db,'messages'), { tagId:curTagId, tag:curTagLabel, txt, time, ts:now.getTime(), verified:false, struck:false, reply:'', author });
   inp.value = '';
+  localStorage.setItem('sonora_xi_name', author);
+  btn.classList.remove('sending'); btn.classList.add('done'); btn.textContent = '✓';
+  toast('★ +1 TRANSMISIÓN ENVIADA');
+  setTimeout(() => { btn.classList.remove('done'); btn.textContent = '→'; btn.disabled = false; msgCooldown = false; }, 15000);
 }
 document.getElementById('btn-send').addEventListener('click', sendMsg);
 document.getElementById('minp').addEventListener('keydown', e => { if (e.key === 'Enter') sendMsg(); });
 
 // ── CARAVANA ──
+function renderCar(c){
+  const d = document.createElement('div');
+  d.className = 'car-item' + (c.approved ? '' : ' pending');
+  const st = c.full
+    ? '<div class="car-status" style="color:var(--rojo)">✗ completo</div>'
+    : c.approved
+      ? '<div class="car-status ok">✓ validado</div>'
+      : '<div class="car-status wait">○ pendiente</div>';
+  d.innerHTML = `<div><div class="car-from">Desde ${esc(c.from)}</div><div class="car-contact">${esc(c.contact||'—')} · ${st.replace(/<[^>]+>/g,'').trim()}</div></div><div class="car-seats">${c.seats}p</div>`;
+  return d;
+}
 function initCars(){
   onSnapshot(query(collection(db,'carpool'), orderBy('ts','desc')), snap => {
     const list = document.getElementById('carlist');
-    list.innerHTML = '';
-    if (snap.empty){ list.innerHTML = '<div class="empty-msg">Sin plazas todavía...</div>'; return; }
+    const preview = document.getElementById('carlist-preview');
+    list.innerHTML = ''; preview.innerHTML = '';
+    if (snap.empty) {
+      list.innerHTML = '<div class="empty-msg">Sin plazas todavía. ¡Ofrece la tuya!</div>';
+      preview.innerHTML = '<div class="empty-msg">Sin plazas todavía</div>';
+      return;
+    }
+    let count = 0;
     snap.forEach(ds => {
-      const c = { id:ds.id, ...ds.data() }, d = document.createElement('div');
-      d.className = 'car-item' + (c.approved ? '' : ' pending');
-      const st = c.full
-        ? '<div class="car-status" style="color:var(--rojo)">✗ completo</div>'
-        : c.approved
-          ? '<div class="car-status ok">✓ validado</div>'
-          : '<div class="car-status wait">○ pendiente de validación</div>';
-      d.innerHTML = `<div><div class="car-from">${esc(c.from)}</div><div class="car-contact">${esc(c.contact||'—')}</div>${st}</div><div class="car-seats">${c.seats}p</div>`;
-      list.appendChild(d);
+      const c = { id:ds.id, ...ds.data() };
+      list.appendChild(renderCar(c));
+      if (count < 3) preview.appendChild(renderCar(c));
+      count++;
     });
-  });
+    if (count > 3) {
+      const more = document.createElement('div');
+      more.className = 'empty-msg';
+      more.innerHTML = `<a href="#" style="color:var(--verde);font-weight:700;text-decoration:none;letter-spacing:1px">Ver las ${count} plazas →</a>`;
+      more.querySelector('a').addEventListener('click', e => { e.preventDefault(); sw('cp'); });
+      preview.appendChild(more);
+    }
+  }, err => { console.warn('Carpool listener error:', err); });
 }
 
 document.getElementById('btn-car').addEventListener('click', async () => {
   const from    = document.getElementById('cpfrom').value.trim();
   const contact = document.getElementById('cpcont').value.trim();
   const seats   = parseInt(document.getElementById('cpseats').value);
-  if (!from) return;
+  if (!from) { toast('Pon desde dónde sales'); return; }
+  if (!contact) { toast('Pon tu contacto'); return; }
+  const btn = document.getElementById('btn-car');
+  btn.disabled = true;
+  btn.classList.add('sending'); btn.textContent = 'Enviando...';
   await addDoc(collection(db,'carpool'), { from, contact, seats, ts:Date.now(), approved:false, full:false });
   document.getElementById('cpfrom').value = '';
   document.getElementById('cpcont').value = '';
+  btn.classList.remove('sending'); btn.classList.add('done'); btn.textContent = '✓ Enviado';
+  toast('★ +1 MIEMBRO · PENDIENTE DE VALIDACIÓN');
+  setTimeout(() => { btn.classList.remove('done'); btn.textContent = '★ Publicar plaza ★'; btn.disabled = false; }, 30000);
 });
 
-// ── SOUNDCLOUD ──
-let scIdx = Math.floor(Math.random() * SC_ARTISTS.length);
-function loadSC(idx){
-  const a   = SC_ARTISTS[idx];
-  const enc = encodeURIComponent(a.url);
-  const rand = Math.floor(Math.random() * 50);
-  document.getElementById('sc-frame').src            = `https://w.soundcloud.com/player/?url=${enc}&color=%23e8001a&auto_play=true&hide_related=false&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=true&start_track=${rand}`;
-  document.getElementById('sc-link-sc').href         = a.sc;
-  document.getElementById('sc-link-ig').href         = a.ig;
-  document.getElementById('sc-artist-name').textContent = a.name;
+// ── LINEUP / SOUNDCLOUD ──
+let playingIdx = -1;
+let appInited = false;
+let unlocked = false;
+let lastRank = '';
+const RND_POOL = SC_ARTISTS.map((a,i) => (a.url && !a.hidden) ? i : -1).filter(i => i >= 0);
+let rndPoolPos = Math.floor(Math.random() * RND_POOL.length);
+let rndIdx = RND_POOL[rndPoolPos] ?? 0;
+
+// ── PLAYER ALEATORIO (Inicio) ──
+function loadRndPlayer(idx){
+  const a = SC_ARTISTS[idx];
+  document.getElementById('sc-rnd-name').textContent = a.name;
+  document.getElementById('sc-rnd-desc').textContent = a.customDesc || a.desc || '';
+  document.getElementById('sc-rnd-img').src = a.img;
+  document.getElementById('sc-rnd-img').alt = a.name;
+  document.getElementById('sc-rnd-cover').style.display = 'block';
+  document.getElementById('sc-rnd-frame').classList.remove('loaded');
+  document.getElementById('sc-rnd-frame').src = 'about:blank';
+  document.getElementById('sc-rnd-sc').href = a.sc;
+  document.getElementById('sc-rnd-ig').href = a.ig;
 }
-document.getElementById('btn-next').addEventListener('click', () => { scIdx = (scIdx+1) % SC_ARTISTS.length; loadSC(scIdx); });
+document.getElementById('sc-rnd-cover').addEventListener('click', () => {
+  const a = SC_ARTISTS[rndIdx];
+  document.getElementById('sc-rnd-cover').style.display = 'none';
+  document.getElementById('sc-rnd-frame').src = scUrl(a.url);
+  document.getElementById('sc-rnd-frame').classList.add('loaded');
+});
+document.getElementById('btn-rnd-next').addEventListener('click', () => {
+  rndPoolPos = (rndPoolPos + 1) % RND_POOL.length;
+  rndIdx = RND_POOL[rndPoolPos];
+  loadRndPlayer(rndIdx);
+});
+
+// ── LINEUP (tab Menú) ──
+function renderLineup(){
+  const list = document.getElementById('lineup-list');
+  // Sacar el player antes de wipear para no perderlo
+  const player = document.getElementById('lineup-player');
+  if (player && player.parentNode === list) list.parentNode.insertBefore(player, list);
+  list.innerHTML = '';
+
+  SC_ARTISTS.forEach((a, i) => {
+    if (a.hidden) return;
+    const hasUrl = !!a.url;
+    list.appendChild(makeArtistItem(a, i, hasUrl, false));
+  });
+
+  // Si hay artista sonando, recolocar el player debajo
+  if (playingIdx >= 0) {
+    const clickedItem = list.querySelector(`.artist-item[data-idx="${playingIdx}"]`);
+    if (clickedItem && player) {
+      clickedItem.classList.add('playing');
+      clickedItem.after(player);
+    }
+  }
+}
+
+function makeArtistItem(a, i, hasUrl, isPreview){
+  const d = document.createElement('div');
+  d.className = 'artist-item';
+  d.dataset.idx = i;
+
+  let imgEl;
+  if (a.img) {
+    imgEl = document.createElement('img');
+    imgEl.className = 'artist-img';
+    imgEl.src = a.img;
+    imgEl.alt = a.name;
+    imgEl.loading = 'lazy';
+    imgEl.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openLightbox(a.img, a.name);
+    });
+  } else {
+    imgEl = document.createElement('div');
+    imgEl.className = 'artist-img-placeholder';
+    imgEl.textContent = a.name.charAt(0).toUpperCase();
+  }
+
+  const info = document.createElement('div');
+  info.className = 'artist-info';
+  const linksHtml = `<div class="artist-links">`
+    + (a.sc ? `<a class="artist-link" href="${a.sc}" target="_blank">soundcloud</a>` : '')
+    + (a.ig ? `<a class="artist-link" href="${a.ig}" target="_blank">instagram</a>` : '')
+    + `</div>`;
+  info.innerHTML = `<div class="artist-head"><div class="artist-name">${esc(a.name)}</div>${linksHtml}</div>`
+    + `<div class="artist-desc">${esc(a.customDesc || a.desc || '')}</div>`;
+
+  d.appendChild(imgEl);
+  d.appendChild(info);
+
+  if (!isPreview) {
+    const btn = document.createElement('button');
+    btn.className = 'artist-play';
+    btn.textContent = '▶';
+    btn.addEventListener('click', () => {
+      if (hasUrl) playArtist(i);
+      else showChefModal();
+    });
+    d.appendChild(btn);
+  }
+
+  return d;
+}
+
+function showChefModal(){
+  document.getElementById('chef-modal').style.display = 'flex';
+}
+document.getElementById('btn-chef-close').addEventListener('click', () => {
+  document.getElementById('chef-modal').style.display = 'none';
+});
+document.getElementById('chef-modal').addEventListener('click', (e) => {
+  if (e.target.id === 'chef-modal') document.getElementById('chef-modal').style.display = 'none';
+});
+document.getElementById('btn-huele-close').addEventListener('click', () => {
+  document.getElementById('huele-modal').style.display = 'none';
+});
+document.getElementById('huele-modal').addEventListener('click', (e) => {
+  if (e.target.id === 'huele-modal') document.getElementById('huele-modal').style.display = 'none';
+});
+document.getElementById('btn-primer-close').addEventListener('click', () => {
+  document.getElementById('primer-modal').style.display = 'none';
+});
+document.getElementById('primer-modal').addEventListener('click', (e) => {
+  if (e.target.id === 'primer-modal') document.getElementById('primer-modal').style.display = 'none';
+});
+document.getElementById('btn-maria-close').addEventListener('click', () => {
+  document.getElementById('maria-modal').style.display = 'none';
+});
+document.getElementById('maria-modal').addEventListener('click', (e) => {
+  if (e.target.id === 'maria-modal') document.getElementById('maria-modal').style.display = 'none';
+});
+
+function openLightbox(src, alt){
+  const lb = document.getElementById('lightbox');
+  document.getElementById('lightbox-img').src = src;
+  document.getElementById('lightbox-img').alt = alt || '';
+  lb.classList.add('open');
+}
+document.getElementById('lightbox').addEventListener('click', () => {
+  document.getElementById('lightbox').classList.remove('open');
+});
+
+function launchConfetti(){
+  const colors = ['#e8001a', '#f4c542', '#2da44e', '#2b7fff', '#ff8c00', '#c850ff'];
+  const N = 80;
+  for (let i = 0; i < N; i++){
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = (Math.random() * 100) + 'vw';
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.animationDuration = (2 + Math.random() * 2) + 's';
+    piece.style.animationDelay = (Math.random() * 0.6) + 's';
+    piece.style.width = (6 + Math.random() * 8) + 'px';
+    piece.style.height = (10 + Math.random() * 10) + 'px';
+    document.body.appendChild(piece);
+    setTimeout(() => piece.remove(), 5000);
+  }
+}
+
+function playArtist(idx){
+  const a = SC_ARTISTS[idx];
+  if (!a.url) return;
+
+  // Highlight playing artist
+  playingIdx = idx;
+  document.querySelectorAll('#lineup-list .artist-item').forEach(el => {
+    el.classList.toggle('playing', parseInt(el.dataset.idx) === idx);
+  });
+
+  // Show and load player
+  const player = document.getElementById('lineup-player');
+  player.classList.add('active');
+  document.getElementById('lineup-player-name').textContent = '♪ ' + a.name;
+  document.getElementById('lineup-frame').src = scUrl(a.url);
+
+  // Mover el player justo debajo del artista pulsado
+  const clickedItem = document.querySelector(`#lineup-list .artist-item[data-idx="${idx}"]`);
+  if (clickedItem) clickedItem.after(player);
+
+  // Sync Sintoniza card en Inicio al mismo artista
+  const poolPos = RND_POOL.indexOf(idx);
+  if (poolPos >= 0) {
+    rndPoolPos = poolPos;
+    rndIdx = idx;
+    loadRndPlayer(idx);
+  }
+
+  // Scroll player into view
+  player.scrollIntoView({ behavior:'smooth', block:'nearest' });
+}
+
+// ── COPIAR DIRECCIÓN ──
+document.getElementById('btn-copy').addEventListener('click', () => {
+  const addr = document.getElementById('addr-type').textContent;
+  const detail = document.getElementById('addr-detail').textContent;
+  navigator.clipboard.writeText(addr + ' — ' + detail).then(() => toast('Dirección copiada'));
+});
 
 // ── ADMIN ──
 function initAdmin(){
+  initAdminArtists();
+  // Load info fields
+  onSnapshot(doc(db,'config','info'), snap => {
+    const data = snap.exists() ? snap.data() : {};
+    INFO_FIELDS.forEach(f => {
+      const el = document.getElementById('adm-' + f.key);
+      if (el && !el._userEditing) el.value = data[f.key] || '';
+    });
+  });
+  // Mark textareas as user-editing while focused
+  INFO_FIELDS.forEach(f => {
+    const el = document.getElementById('adm-' + f.key);
+    if (el) {
+      el.addEventListener('focus', () => el._userEditing = true);
+      el.addEventListener('blur',  () => el._userEditing = false);
+    }
+  });
+
   onSnapshot(query(collection(db,'carpool'), orderBy('ts','asc')), snap => {
     const el = document.getElementById('admin-cars'); el.innerHTML = ''; let n = 0;
     snap.forEach(ds => {
-      const c = { id:ds.id, ...ds.data() }; if (c.approved) return; n++;
+      const c = { id:ds.id, ...ds.data() }; n++;
       const d = document.createElement('div'); d.className = 'admin-item';
-      const bOk   = document.createElement('button'); bOk.className='btn-ok';     bOk.textContent='✓ ok';
-      const bFull = document.createElement('button'); bFull.className='btn-strike';bFull.textContent='lleno';
+      if (c.full) d.style.opacity = '.5';
+      const statusTxt = c.full ? '✗ completo' : c.approved ? '✓ validado' : '○ pendiente';
+      const bOk   = document.createElement('button'); bOk.className='btn-ok';     bOk.textContent = c.approved ? '✓' : '○ validar';
+      const bFull = document.createElement('button'); bFull.className='btn-strike'; bFull.textContent = c.full ? 'abrir' : 'lleno';
       const bKo   = document.createElement('button'); bKo.className='btn-ko';     bKo.textContent='✗';
-      bOk.addEventListener('click',   async () => await updateDoc(doc(db,'carpool',c.id), {approved:true}));
-      bFull.addEventListener('click', async () => await updateDoc(doc(db,'carpool',c.id), {full:true, approved:true}));
+      bOk.addEventListener('click',   async () => await updateDoc(doc(db,'carpool',c.id), {approved:!c.approved}));
+      bFull.addEventListener('click', async () => await updateDoc(doc(db,'carpool',c.id), {full:!c.full, approved:true}));
       bKo.addEventListener('click',   async () => await deleteDoc(doc(db,'carpool',c.id)));
-      d.innerHTML = `<div class="admin-item-info"><div class="admin-item-name">${esc(c.from)} · ${c.seats}p</div><div class="admin-item-meta">${esc(c.contact||'—')}</div></div>`;
+      d.innerHTML = `<div class="admin-item-info"><div class="admin-item-name">${esc(c.from)} · ${c.seats}p</div><div class="admin-item-meta">${esc(c.contact||'—')} · ${statusTxt}</div></div>`;
       const a = document.createElement('div'); a.className = 'admin-actions';
       a.appendChild(bOk); a.appendChild(bFull); a.appendChild(bKo);
       d.appendChild(a); el.appendChild(d);
     });
-    if (!n) el.innerHTML = '<div class="empty-msg">todo validado ✓</div>';
+    if (!n) el.innerHTML = '<div class="empty-msg">sin plazas registradas</div>';
   });
 
   onSnapshot(query(collection(db,'messages'), orderBy('ts','asc')), snap => {
     const el = document.getElementById('admin-msgs'); el.innerHTML = ''; let n = 0;
     snap.forEach(ds => {
-      const m = { id:ds.id, ...ds.data() }; if (m.verified) return; n++;
+      const m = { id:ds.id, ...ds.data() }; n++;
       const d = document.createElement('div'); d.className = 'admin-item';
-      const bOk     = document.createElement('button'); bOk.className='btn-ok';     bOk.textContent='✓ verificar';
-      const bStrike = document.createElement('button'); bStrike.className='btn-strike';bStrike.textContent='~ tachar';
+      if (m.struck) d.style.opacity = '.5';
+      const bOk     = document.createElement('button'); bOk.className='btn-ok';     bOk.textContent = m.verified ? '✓' : '○ verificar';
+      const bStrike = document.createElement('button'); bStrike.className='btn-strike'; bStrike.textContent = m.struck ? '✓ tachado' : '~ tachar';
       const bKo     = document.createElement('button'); bKo.className='btn-ko';     bKo.textContent='✗';
-      bOk.addEventListener('click',     async () => await updateDoc(doc(db,'messages',m.id), {verified:true}));
-      bStrike.addEventListener('click', async () => await updateDoc(doc(db,'messages',m.id), {struck:true}));
+      bOk.addEventListener('click',     async () => await updateDoc(doc(db,'messages',m.id), {verified:!m.verified}));
+      bStrike.addEventListener('click', async () => await updateDoc(doc(db,'messages',m.id), {struck:!m.struck}));
       bKo.addEventListener('click',     async () => await deleteDoc(doc(db,'messages',m.id)));
-      d.innerHTML = `<div class="admin-item-info"><div class="admin-item-name">${m.tag} ${esc(m.txt)}</div><div class="admin-item-meta">${m.time}</div></div>`;
+      const stStyle = m.struck ? 'text-decoration:line-through' : '';
+      d.innerHTML = `<div class="admin-item-info"><div class="admin-item-name" style="${stStyle}">${m.tag} ${esc(m.txt)}</div><div class="admin-item-meta">${m.time}${m.verified ? ' · ✓' : ''}${m.struck ? ' · tachado' : ''}${m.reply ? ' · resp: '+esc(m.reply) : ''}</div></div>`;
+      // Reply input
+      const replyRow = document.createElement('div'); replyRow.style.cssText = 'display:flex;gap:4px;margin-top:6px;width:100%';
+      const replyInp = document.createElement('input'); replyInp.className = 'cp-inp'; replyInp.placeholder = 'Responder...'; replyInp.value = m.reply || ''; replyInp.style.cssText = 'flex:1;font-size:13px;padding:6px';
+      const replyBtn = document.createElement('button'); replyBtn.className = 'btn-ok'; replyBtn.textContent = '↩';
+      replyBtn.addEventListener('click', async () => await updateDoc(doc(db,'messages',m.id), {reply:replyInp.value.trim()}));
+      replyRow.appendChild(replyInp); replyRow.appendChild(replyBtn);
       const a = document.createElement('div'); a.className = 'admin-actions';
       a.appendChild(bOk); a.appendChild(bStrike); a.appendChild(bKo);
-      d.appendChild(a); el.appendChild(d);
+      d.appendChild(a); d.appendChild(replyRow); el.appendChild(d);
     });
-    if (!n) el.innerHTML = '<div class="empty-msg">sin mensajes pendientes ✓</div>';
+    if (!n) el.innerHTML = '<div class="empty-msg">sin mensajes ✓</div>';
   });
 }
 
+// ── EDICIONES ASISTIDAS ──
+function getEdRole(count){
+  let role = ED_ROLES[0];
+  for (let i = ED_ROLES.length - 1; i >= 0; i--){
+    if (count >= ED_ROLES[i].min){ role = ED_ROLES[i]; break; }
+  }
+  return role.name;
+}
+function getEdRoleText(saved){
+  if (saved.includes('0')) return 'Ojalá ser tú ahora mismo';
+  const count = saved.filter(c => c !== '0').length;
+  return getEdRole(count);
+}
+function initEditions(){
+  const saved = JSON.parse(localStorage.getItem(ED_KEY) || '[]');
+  const grid = document.getElementById('ed-grid');
+  grid.innerHTML = '';
+  EDITIONS.forEach(ed => {
+    const chip = document.createElement('button');
+    chip.className = 'ed-chip' + (saved.includes(ed.id) ? ' on' : '') + (ed.locked ? ' locked-ed' : '');
+    chip.innerHTML = `<span class="ed-num">${ed.id}</span><span class="ed-name">${ed.name}</span><span class="ed-sub">${ed.sub}</span><span class="ed-date">${ed.date}</span>`;
+    if (!ed.locked) {
+      chip.addEventListener('click', () => {
+        let justMarkedFirst = false;
+        if (ed.first) {
+          // "Es mi primer Sonora" — desmarca todas las demás
+          const wasOn = chip.classList.contains('on');
+          grid.querySelectorAll('.ed-chip').forEach(c => c.classList.remove('on'));
+          if (!wasOn) { chip.classList.add('on'); justMarkedFirst = true; }
+        } else {
+          // Edición normal — desmarca la 0 si estaba marcada
+          const zeroChip = grid.querySelector('.ed-chip:first-child');
+          if (zeroChip) zeroChip.classList.remove('on');
+          chip.classList.toggle('on');
+        }
+        const prevCount = getEdCount();
+        const checked = [...grid.querySelectorAll('.ed-chip.on .ed-num')].map(c => c.textContent);
+        localStorage.setItem(ED_KEY, JSON.stringify(checked));
+        document.getElementById('ed-role').textContent = getEdRoleText(checked);
+        updateRank();
+        const newCount = checked.filter(c => c !== '0').length;
+        if (newCount === 8 && prevCount !== 8) {
+          document.getElementById('huele-modal').style.display = 'flex';
+        }
+        if (newCount === 10 && prevCount !== 10) {
+          launchConfetti();
+          document.getElementById('maria-modal').style.display = 'flex';
+        }
+        if (justMarkedFirst) {
+          document.getElementById('primer-modal').style.display = 'flex';
+        }
+      });
+    }
+    grid.appendChild(chip);
+  });
+  document.getElementById('ed-role').textContent = getEdRoleText(saved);
+}
+
+// ── INFO DINÁMICA ──
+function renderInfoTo(el, data){
+  el.innerHTML = '';
+  INFO_FIELDS.forEach(f => {
+    const sec = document.createElement('div');
+    sec.className = 'info-section';
+    sec.id = 'info-sec-' + f.key;
+    const content = data[f.key] || '';
+    sec.innerHTML = `<div class="info-section-title"><div class="info-dot" style="background:${f.color}"></div>${f.label}</div><div class="info-section-content">${content ? esc(content) : ''}</div>`;
+    el.appendChild(sec);
+  });
+}
+function renderInfoTitlesTo(el){
+  el.innerHTML = '';
+  INFO_FIELDS.forEach(f => {
+    const row = document.createElement('div');
+    row.className = 'info-item';
+    row.style.cursor = 'pointer';
+    row.innerHTML = `<div class="info-dot" style="background:${f.color}"></div>${f.label}`;
+    row.addEventListener('click', (e) => {
+      e.stopPropagation();
+      sw('info');
+      setTimeout(() => {
+        const target = document.getElementById('info-sec-' + f.key);
+        if (target) target.scrollIntoView({ behavior:'smooth', block:'start' });
+      }, 50);
+    });
+    el.appendChild(row);
+  });
+}
+function initInfo(){
+  try { renderInfoTitlesTo(document.getElementById('info-list')); } catch(e){}
+  onSnapshot(doc(db,'config','info'), snap => {
+    const data = snap.exists() ? snap.data() : {};
+    renderInfoTo(document.getElementById('info-list2'), data);
+  }, err => {
+    console.warn('Info listener error:', err);
+    document.getElementById('info-list2').innerHTML = '<div class="info-placeholder">Información no disponible todavía</div>';
+  });
+}
+
+// ── ADMIN INFO SAVE ──
+document.getElementById('btn-save-info').addEventListener('click', async () => {
+  const data = {};
+  INFO_FIELDS.forEach(f => {
+    data[f.key] = document.getElementById('adm-' + f.key).value;
+  });
+  await setDoc(doc(db,'config','info'), data);
+  toast('Información guardada');
+});
+
+// ── ADMIN ARTIST DESCRIPTIONS ──
+function initAdminArtists(){
+  const el = document.getElementById('admin-artists');
+  el.innerHTML = '';
+  SC_ARTISTS.forEach((a, i) => {
+    const field = document.createElement('div');
+    field.className = 'admin-field';
+    field.innerHTML = `<label class="admin-field-label">${a.name}</label><input class="cp-inp" id="adm-artist-${i}" value="${esc(a.customDesc || a.desc || '')}" placeholder="Descripción breve..." style="font-size:13px;padding:8px"/>`;
+    el.appendChild(field);
+  });
+  // Load saved from Firestore
+  onSnapshot(doc(db,'config','artists'), snap => {
+    if (!snap.exists()) return;
+    const data = snap.data();
+    SC_ARTISTS.forEach((a, i) => {
+      if (data[a.name]) {
+        a.customDesc = data[a.name];
+        const inp = document.getElementById('adm-artist-' + i);
+        if (inp && !inp._editing) inp.value = data[a.name];
+      }
+    });
+  }, err => console.warn('Artists config error:', err));
+}
+document.getElementById('btn-save-artists').addEventListener('click', async () => {
+  const data = {};
+  SC_ARTISTS.forEach((a, i) => {
+    const val = document.getElementById('adm-artist-' + i).value.trim();
+    if (val) { data[a.name] = val; a.customDesc = val; }
+  });
+  await setDoc(doc(db,'config','artists'), data);
+  renderLineup();
+  toast('Descripciones guardadas');
+});
+
 // ── APP INIT ──
-let appInited = false;
 function initApp(){
   if (appInited) return; appInited = true;
+  // Restaurar nombre guardado
+  const savedName = localStorage.getItem('sonora_xi_name');
+  if (savedName) document.getElementById('minp-name').value = savedName;
+  // Siempre arrancar en Inicio
+  sw('main');
+  // Congelar tablón si está activado
+  if (BOARD_FROZEN) {
+    const bf = document.getElementById('board-form');
+    const bd = document.getElementById('board-desc');
+    if (bf) bf.style.display = 'none';
+    if (bd) bd.textContent = 'El tablón está cerrado por el momento. Solo lectura.';
+  }
+  // Local first (no Firestore)
+  initEditions();
+  updateRank();
   setInterval(updateCD, 1000); updateCD();
-  initMsgs(); initCars(); loadSC(scIdx);
+  loadRndPlayer(rndIdx);
+  renderLineup();
+  // Firestore (may fail on permissions)
+  try { initMsgs(); } catch(e) { console.warn('initMsgs:', e); }
+  try { initCars(); } catch(e) { console.warn('initCars:', e); }
+  try { initInfo(); } catch(e) { console.warn('initInfo:', e); }
+  // Load artist custom descriptions
+  try {
+    onSnapshot(doc(db,'config','artists'), snap => {
+      if (!snap.exists()) return;
+      const data = snap.data();
+      SC_ARTISTS.forEach(a => { if (data[a.name]) a.customDesc = data[a.name]; });
+      loadRndPlayer(rndIdx);
+      renderLineup();
+    }, err => console.warn('Artists config:', err));
+  } catch(e) {}
 }
 
 function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// ── WELCOME MUSIC (arranca el reproductor SINTONIZA tras el login) ──
+function startWelcomeMusic(){
+  if (!RND_POOL.length) return;
+  // Reintentar hasta que el DOM del reproductor esté listo (initApp puede tardar)
+  const tryPlay = (attempts = 0) => {
+    const cover = document.getElementById('sc-rnd-cover');
+    const frame = document.getElementById('sc-rnd-frame');
+    if (!cover || !frame) {
+      if (attempts < 20) setTimeout(() => tryPlay(attempts + 1), 100);
+      return;
+    }
+    const a = SC_ARTISTS[rndIdx];
+    if (!a || !a.url) return;
+    cover.style.display = 'none';
+    frame.src = scUrl(a.url);
+    frame.classList.add('loaded');
+  };
+  tryPlay();
+}
+
+// ── AUTO-LOGIN (al final para que todas las variables estén declaradas) ──
+if (sessionStorage.getItem(SK) === 'ok'){ showScreen('app'); initApp(); }
 </script>
 </body>
 </html>
