@@ -1317,11 +1317,20 @@ body.night .night-toggle{
         <div class="sec-desc">Si ofreces plaza deja tu contacto. Tu entrada aparece una vez validada por el Consejo del Festejo.</div>
         <div class="cp-form">
           <span class="cp-label">Registrar plaza disponible</span>
+          <input class="cp-inp" id="cpname" placeholder="Tu nombre" style="width:100%;margin-bottom:10px"/>
           <div class="cp-row">
             <input class="cp-inp" id="cpfrom" placeholder="Salgo desde..."/>
             <select class="cp-sel" id="cpseats">
               <option>1</option><option>2</option><option selected>3</option><option>4</option>
             </select>
+          </div>
+          <div class="cp-row">
+            <select class="cp-sel" id="cpday" style="flex:1">
+              <option value="">Día de salida…</option>
+              <option value="viernes 29">viernes 29</option>
+              <option value="sábado 30">sábado 30</option>
+            </select>
+            <input class="cp-inp" id="cptime" type="time" style="flex:1"/>
           </div>
           <input class="cp-inp" id="cpcont" placeholder="@telegram o WhatsApp" style="width:100%;margin-bottom:10px"/>
           <button class="offer-btn" id="btn-car">★ Publicar plaza ★</button>
@@ -1528,7 +1537,7 @@ const INFO_FIELDS = [
 const ADDRESS_TEXT    = "PASACALLES ACID";
 const ADDRESS_DETAIL  = "Aquí la dirección completa · Valencia";
 const MAP_LINK        = "https://maps.google.com/?q=TU+UBICACION";
-const TARGET = new Date('2026-05-29T22:00:00');
+const TARGET = new Date('2026-05-29T21:00:00+02:00');
 const START  = new Date('2026-01-01T00:00:00');
 
 const SC_ARTISTS = [
@@ -1845,7 +1854,10 @@ function renderCar(c){
     : c.approved
       ? '<div class="car-status ok">✓ validado</div>'
       : '<div class="car-status wait">○ pendiente</div>';
-  d.innerHTML = `<div><div class="car-from">Desde ${esc(c.from)}</div><div class="car-contact">${esc(c.contact||'—')} · ${st.replace(/<[^>]+>/g,'').trim()}</div></div><div class="car-seats">${c.seats}p</div>`;
+  const when = [c.day, c.time].filter(Boolean).join(' · ');
+  const title = c.name ? `${esc(c.name)} · desde ${esc(c.from)}` : `Desde ${esc(c.from)}`;
+  const sub = [when, c.contact || '—', st.replace(/<[^>]+>/g,'').trim()].filter(Boolean).join(' · ');
+  d.innerHTML = `<div><div class="car-from">${title}</div><div class="car-contact">${esc(sub)}</div></div><div class="car-seats">${c.seats}p</div>`;
   return d;
 }
 function initCars(){
@@ -1876,17 +1888,24 @@ function initCars(){
 }
 
 document.getElementById('btn-car').addEventListener('click', async () => {
+  const name    = document.getElementById('cpname').value.trim();
   const from    = document.getElementById('cpfrom').value.trim();
   const contact = document.getElementById('cpcont').value.trim();
   const seats   = parseInt(document.getElementById('cpseats').value);
+  const day     = document.getElementById('cpday').value;
+  const time    = document.getElementById('cptime').value;
+  if (!name) { toast('Pon tu nombre'); return; }
   if (!from) { toast('Pon desde dónde sales'); return; }
   if (!contact) { toast('Pon tu contacto'); return; }
   const btn = document.getElementById('btn-car');
   btn.disabled = true;
   btn.classList.add('sending'); btn.textContent = 'Enviando...';
-  await addDoc(collection(db,'carpool'), { from, contact, seats, ts:Date.now(), approved:false, full:false });
+  await addDoc(collection(db,'carpool'), { name, from, contact, seats, day, time, ts:Date.now(), approved:false, full:false });
+  document.getElementById('cpname').value = '';
   document.getElementById('cpfrom').value = '';
   document.getElementById('cpcont').value = '';
+  document.getElementById('cpday').value = '';
+  document.getElementById('cptime').value = '';
   btn.classList.remove('sending'); btn.classList.add('done'); btn.textContent = '✓ Enviado';
   toast('★ +1 MIEMBRO · PENDIENTE DE VALIDACIÓN');
   setTimeout(() => { btn.classList.remove('done'); btn.textContent = '★ Publicar plaza ★'; btn.disabled = false; }, 30000);
@@ -2113,21 +2132,47 @@ function initAdmin(){
   });
 
   onSnapshot(query(collection(db,'carpool'), orderBy('ts','asc')), snap => {
-    const el = document.getElementById('admin-cars'); el.innerHTML = ''; let n = 0;
+    const el = document.getElementById('admin-cars');
+    if (el.querySelector(':focus')) return;
+    el.innerHTML = ''; let n = 0;
     snap.forEach(ds => {
       const c = { id:ds.id, ...ds.data() }; n++;
       const d = document.createElement('div'); d.className = 'admin-item';
       if (c.full) d.style.opacity = '.5';
       const statusTxt = c.full ? '✗ completo' : c.approved ? '✓ validado' : '○ pendiente';
+      const dayOpts = ['viernes 29','sábado 30']
+        .map(x => `<option value="${x}" ${c.day===x?'selected':''}>${x}</option>`).join('');
+      const seatOpts = [1,2,3,4]
+        .map(x => `<option value="${x}" ${Number(c.seats)===x?'selected':''}>${x}p</option>`).join('');
+      d.innerHTML = `<div class="admin-item-info" style="width:100%">
+        <div class="admin-item-meta" style="margin-bottom:6px">${statusTxt}</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px">
+          <input class="cp-inp" data-f="name"    placeholder="Nombre"   value="${esc(c.name||'')}"/>
+          <input class="cp-inp" data-f="from"    placeholder="Desde"    value="${esc(c.from||'')}"/>
+          <select class="cp-sel" data-f="day"><option value="">Día…</option>${dayOpts}</select>
+          <input class="cp-inp" data-f="time"    type="time" value="${esc(c.time||'')}"/>
+          <input class="cp-inp" data-f="contact" placeholder="Contacto" value="${esc(c.contact||'')}"/>
+          <select class="cp-sel" data-f="seats">${seatOpts}</select>
+        </div>
+      </div>`;
+      const bSave = document.createElement('button'); bSave.className='btn-ok'; bSave.textContent='💾';
+      bSave.addEventListener('click', async () => {
+        const patch = {};
+        d.querySelectorAll('[data-f]').forEach(inp => {
+          const f = inp.dataset.f;
+          patch[f] = f === 'seats' ? parseInt(inp.value) : inp.value.trim();
+        });
+        await updateDoc(doc(db,'carpool',c.id), patch);
+        toast('Plaza actualizada');
+      });
       const bOk   = document.createElement('button'); bOk.className='btn-ok';     bOk.textContent = c.approved ? '✓' : '○ validar';
       const bFull = document.createElement('button'); bFull.className='btn-strike'; bFull.textContent = c.full ? 'abrir' : 'lleno';
       const bKo   = document.createElement('button'); bKo.className='btn-ko';     bKo.textContent='✗';
       bOk.addEventListener('click',   async () => await updateDoc(doc(db,'carpool',c.id), {approved:!c.approved}));
       bFull.addEventListener('click', async () => await updateDoc(doc(db,'carpool',c.id), {full:!c.full, approved:true}));
       bKo.addEventListener('click',   async () => await deleteDoc(doc(db,'carpool',c.id)));
-      d.innerHTML = `<div class="admin-item-info"><div class="admin-item-name">${esc(c.from)} · ${c.seats}p</div><div class="admin-item-meta">${esc(c.contact||'—')} · ${statusTxt}</div></div>`;
       const a = document.createElement('div'); a.className = 'admin-actions';
-      a.appendChild(bOk); a.appendChild(bFull); a.appendChild(bKo);
+      a.appendChild(bSave); a.appendChild(bOk); a.appendChild(bFull); a.appendChild(bKo);
       d.appendChild(a); el.appendChild(d);
     });
     if (!n) el.innerHTML = '<div class="empty-msg">sin plazas registradas</div>';
