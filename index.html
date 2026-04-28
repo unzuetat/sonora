@@ -1419,7 +1419,6 @@ body.night .night-toggle{
 <div class="admin-modal" id="admin-modal" style="display:none">
   <div class="admin-modal-box">
     <div style="font-family:'EB Garamond',serif;font-weight:800;font-size:20px;letter-spacing:3px;color:var(--rojo);margin-bottom:12px">ACCESO ADMIN</div>
-    <input class="auth-inp" id="inp-admin-email" type="email" autocomplete="email" placeholder="Email admin" style="margin-bottom:10px"/>
     <input class="auth-inp" id="inp-admin-pwd" type="password" autocomplete="current-password" placeholder="Contraseña admin" style="margin-bottom:10px"/>
     <div style="display:flex;gap:8px">
       <button class="auth-btn" id="btn-admin-login" style="flex:1;font-size:16px;padding:10px">Entrar</button>
@@ -1498,6 +1497,8 @@ import { getAuth, setPersistence, browserSessionPersistence, signInAnonymously, 
 // ══════════════════════════════════════
 // Portón social cosmético. La protección real son las reglas de Firestore + Firebase Auth.
 const ACCESS_PASSWORD = "amunt";
+// Email fijo de la cuenta admin compartida (la password se gestiona en Firebase Console).
+const ADMIN_EMAIL     = "welcome.to.sonora@hotmail.com";
 const BOARD_FROZEN    = true; // Tablón congelado: solo lectura para asistentes
 const TAB_KEY = 'sonora_xi_tab';
 const scUrl = (url) => `https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}&color=%23e8001a&auto_play=true&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=false`;
@@ -1687,22 +1688,20 @@ document.getElementById('btn-back').addEventListener('click', async () => {
 // ── ADMIN MODAL ──
 document.getElementById('btn-admin').addEventListener('click', () => {
   document.getElementById('admin-modal').style.display = 'flex';
-  document.getElementById('inp-admin-email').value = '';
   document.getElementById('inp-admin-pwd').value = '';
   document.getElementById('admin-err').textContent = '';
-  setTimeout(() => document.getElementById('inp-admin-email').focus(), 100);
+  setTimeout(() => document.getElementById('inp-admin-pwd').focus(), 100);
 });
 document.getElementById('btn-admin-cancel').addEventListener('click', () => {
   document.getElementById('admin-modal').style.display = 'none';
 });
 async function doAdminLogin(){
-  const email = document.getElementById('inp-admin-email').value.trim();
   const pwd   = document.getElementById('inp-admin-pwd').value;
   const errEl = document.getElementById('admin-err');
   errEl.textContent = '';
-  if (!email || !pwd) { errEl.textContent = 'introduce email y contraseña'; return; }
+  if (!pwd) { errEl.textContent = 'introduce la contraseña'; return; }
   try {
-    await signInWithEmailAndPassword(auth, email, pwd);
+    await signInWithEmailAndPassword(auth, ADMIN_EMAIL, pwd);
     // Verificar pertenencia a la lista de admins. Si no es admin, getDoc lanza permission-denied.
     const snap = await getDoc(doc(db, 'admins', auth.currentUser.uid));
     if (!snap.exists()) throw new Error('no autorizado');
@@ -1710,14 +1709,13 @@ async function doAdminLogin(){
     showScreen('admin'); initAdmin();
   } catch(e) {
     try { await signOut(auth); } catch(_) {}
-    errEl.textContent = 'credenciales incorrectas';
+    errEl.textContent = 'contraseña incorrecta';
     document.getElementById('inp-admin-pwd').value = '';
     setTimeout(() => errEl.textContent = '', 3000);
   }
 }
 document.getElementById('btn-admin-login').addEventListener('click', doAdminLogin);
 document.getElementById('inp-admin-pwd').addEventListener('keydown', e => { if (e.key === 'Enter') doAdminLogin(); });
-document.getElementById('inp-admin-email').addEventListener('keydown', e => { if (e.key === 'Enter') doAdminLogin(); });
 
 // Mostrar form tras 2s contemplando la ilustración
 setTimeout(() => {
