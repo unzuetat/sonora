@@ -2335,9 +2335,12 @@ function initInfo(){
 document.getElementById('btn-save-info').addEventListener('click', async () => {
   const data = {};
   INFO_FIELDS.forEach(f => {
-    data[f.key] = document.getElementById('adm-' + f.key).value;
+    const v = document.getElementById('adm-' + f.key).value;
+    if (v && v.trim()) data[f.key] = v;
   });
-  await setDoc(doc(db,'config','info'), data);
+  // merge:true → solo actualiza los campos rellenos. Evita borrar el resto si
+  // algún textarea no se llenó por una lectura fallida.
+  await setDoc(doc(db,'config','info'), data, { merge: true });
   toast('Información guardada');
 });
 
