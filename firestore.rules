@@ -1,0 +1,49 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAuth() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuth()
+        && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    // Lista de admins. Solo admins pueden ver/modificar la lista.
+    // Para añadir un admin: crear el doc /admins/{uid} desde la consola Firestore.
+    match /admins/{uid} {
+      allow read, write: if isAdmin();
+    }
+
+    // Tablón. Asistentes leen y crean. Solo admin actualiza/borra
+    // (verificar, tachar, responder, eliminar).
+    match /messages/{id} {
+      allow read:   if isAuth();
+      allow create: if isAuth();
+      allow update, delete: if isAdmin();
+    }
+
+    // Caravana. Asistentes leen y crean su plaza.
+    // Admin valida (approved), marca llena (full), edita campos y borra.
+    match /carpool/{id} {
+      allow read:   if isAuth();
+      allow create: if isAuth();
+      allow update, delete: if isAdmin();
+    }
+
+    // Config del evento (info dinámica + descripciones de artistas).
+    // Asistentes leen, solo admin escribe.
+    match /config/{doc} {
+      allow read:  if isAuth();
+      allow write: if isAdmin();
+    }
+
+    // Por defecto: nada más es accesible.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

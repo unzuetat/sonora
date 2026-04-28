@@ -1419,7 +1419,8 @@ body.night .night-toggle{
 <div class="admin-modal" id="admin-modal" style="display:none">
   <div class="admin-modal-box">
     <div style="font-family:'EB Garamond',serif;font-weight:800;font-size:20px;letter-spacing:3px;color:var(--rojo);margin-bottom:12px">ACCESO ADMIN</div>
-    <input class="auth-inp" id="inp-admin-pwd" type="password" placeholder="Contraseña admin" style="margin-bottom:10px"/>
+    <input class="auth-inp" id="inp-admin-email" type="email" autocomplete="email" placeholder="Email admin" style="margin-bottom:10px"/>
+    <input class="auth-inp" id="inp-admin-pwd" type="password" autocomplete="current-password" placeholder="Contraseña admin" style="margin-bottom:10px"/>
     <div style="display:flex;gap:8px">
       <button class="auth-btn" id="btn-admin-login" style="flex:1;font-size:16px;padding:10px">Entrar</button>
       <button class="admin-back" id="btn-admin-cancel" style="flex:1;padding:10px;font-size:14px">Cancelar</button>
@@ -1487,14 +1488,16 @@ body.night .night-toggle{
 
 <script type="module">
 import { initializeApp }   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, addDoc, onSnapshot, doc, updateDoc, deleteDoc, query, orderBy, setDoc }
+import { getFirestore, collection, addDoc, onSnapshot, doc, getDoc, updateDoc, deleteDoc, query, orderBy, setDoc }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getAuth, setPersistence, browserSessionPersistence, signInAnonymously, signInWithEmailAndPassword, onAuthStateChanged, signOut }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
 // ══════════════════════════════════════
 //  ★ CONFIGURACIÓN — edita aquí
 // ══════════════════════════════════════
+// Portón social cosmético. La protección real son las reglas de Firestore + Firebase Auth.
 const ACCESS_PASSWORD = "amunt";
-const ADMIN_PASSWORD  = "orgiasonora";
 const BOARD_FROZEN    = true; // Tablón congelado: solo lectura para asistentes
 const TAB_KEY = 'sonora_xi_tab';
 const scUrl = (url) => `https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}&color=%23e8001a&auto_play=true&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=false`;
@@ -1592,6 +1595,8 @@ const firebaseConfig = {
 
 const fbApp = initializeApp(firebaseConfig);
 const db    = getFirestore(fbApp);
+const auth  = getAuth(fbApp);
+await setPersistence(auth, browserSessionPersistence);
 
 // ── DEV MODE (?dev=1 en la URL) ──
 if (new URLSearchParams(location.search).get('dev') === '1') {
@@ -1652,46 +1657,67 @@ function showScreen(n){
 }
 
 // ── AUTH ──
-const SK = 'sonora_xi_auth';
-function doLogin(){
+async function doLogin(){
   const val = document.getElementById('inp-pwd').value;
   const err = document.getElementById('auth-err');
   err.textContent = '';
-  if (val === ADMIN_PASSWORD){ sessionStorage.setItem(SK,'ok'); showScreen('admin'); initAdmin(); }
-  else if (val === ACCESS_PASSWORD){ sessionStorage.setItem(SK,'ok'); localStorage.removeItem(ED_KEY); showScreen('app'); initApp(); startWelcomeMusic(); }
-  else {
+  if (val !== ACCESS_PASSWORD){
     err.textContent = 'contraseña incorrecta, inténtalo de nuevo.';
     document.getElementById('inp-pwd').value = '';
+    setTimeout(() => { err.textContent = ''; }, 3000);
+    return;
+  }
+  try {
+    await signInAnonymously(auth);
+    localStorage.removeItem(ED_KEY);
+    showScreen('app'); initApp(); startWelcomeMusic();
+  } catch(e) {
+    err.textContent = 'no se pudo conectar, prueba de nuevo';
     setTimeout(() => { err.textContent = ''; }, 3000);
   }
 }
 document.getElementById('btn-login').addEventListener('click', doLogin);
 document.getElementById('inp-pwd').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
-document.getElementById('btn-back').addEventListener('click', () => { showScreen('app'); initApp(); });
+document.getElementById('btn-back').addEventListener('click', async () => {
+  // Volver del admin: cerrar sesión admin y reabrir como asistente anónimo
+  try { await signOut(auth); await signInAnonymously(auth); } catch(e) {}
+  showScreen('app'); initApp();
+});
 
 // ── ADMIN MODAL ──
 document.getElementById('btn-admin').addEventListener('click', () => {
   document.getElementById('admin-modal').style.display = 'flex';
+  document.getElementById('inp-admin-email').value = '';
   document.getElementById('inp-admin-pwd').value = '';
   document.getElementById('admin-err').textContent = '';
-  setTimeout(() => document.getElementById('inp-admin-pwd').focus(), 100);
+  setTimeout(() => document.getElementById('inp-admin-email').focus(), 100);
 });
 document.getElementById('btn-admin-cancel').addEventListener('click', () => {
   document.getElementById('admin-modal').style.display = 'none';
 });
-function doAdminLogin(){
-  const val = document.getElementById('inp-admin-pwd').value;
-  if (val === ADMIN_PASSWORD){
+async function doAdminLogin(){
+  const email = document.getElementById('inp-admin-email').value.trim();
+  const pwd   = document.getElementById('inp-admin-pwd').value;
+  const errEl = document.getElementById('admin-err');
+  errEl.textContent = '';
+  if (!email || !pwd) { errEl.textContent = 'introduce email y contraseña'; return; }
+  try {
+    await signInWithEmailAndPassword(auth, email, pwd);
+    // Verificar pertenencia a la lista de admins. Si no es admin, getDoc lanza permission-denied.
+    const snap = await getDoc(doc(db, 'admins', auth.currentUser.uid));
+    if (!snap.exists()) throw new Error('no autorizado');
     document.getElementById('admin-modal').style.display = 'none';
     showScreen('admin'); initAdmin();
-  } else {
-    document.getElementById('admin-err').textContent = 'contraseña incorrecta';
+  } catch(e) {
+    try { await signOut(auth); } catch(_) {}
+    errEl.textContent = 'credenciales incorrectas';
     document.getElementById('inp-admin-pwd').value = '';
-    setTimeout(() => document.getElementById('admin-err').textContent = '', 3000);
+    setTimeout(() => errEl.textContent = '', 3000);
   }
 }
 document.getElementById('btn-admin-login').addEventListener('click', doAdminLogin);
 document.getElementById('inp-admin-pwd').addEventListener('keydown', e => { if (e.key === 'Enter') doAdminLogin(); });
+document.getElementById('inp-admin-email').addEventListener('keydown', e => { if (e.key === 'Enter') doAdminLogin(); });
 
 // Mostrar form tras 2s contemplando la ilustración
 setTimeout(() => {
@@ -2112,7 +2138,9 @@ document.getElementById('btn-copy').addEventListener('click', () => {
 });
 
 // ── ADMIN ──
+let adminInited = false;
 function initAdmin(){
+  if (adminInited) return; adminInited = true;
   initAdminArtists();
   // Load info fields
   onSnapshot(doc(db,'config','info'), snap => {
@@ -2409,7 +2437,20 @@ function startWelcomeMusic(){
 }
 
 // ── AUTO-LOGIN (al final para que todas las variables estén declaradas) ──
-if (sessionStorage.getItem(SK) === 'ok'){ showScreen('app'); initApp(); }
+// Auto-login: la persistencia es browserSessionPersistence, así que solo dura
+// hasta cerrar la pestaña. Los anónimos van directos al app; los admins al panel.
+onAuthStateChanged(auth, async (user) => {
+  if (!user) return;
+  if (user.isAnonymous) { showScreen('app'); initApp(); return; }
+  try {
+    const snap = await getDoc(doc(db, 'admins', user.uid));
+    if (snap.exists()) { showScreen('admin'); initAdmin(); }
+    else { await signOut(auth); }
+  } catch(e) {
+    // permission-denied: el user no está en admins
+    try { await signOut(auth); } catch(_) {}
+  }
+});
 </script>
 </body>
 </html>
