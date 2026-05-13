@@ -1491,6 +1491,8 @@ import { getFirestore, collection, addDoc, onSnapshot, doc, getDoc, updateDoc, d
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 import { getAuth, setPersistence, browserSessionPersistence, signInAnonymously, signInWithEmailAndPassword, onAuthStateChanged, signOut }
   from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { initializeAppCheck, ReCaptchaV3Provider }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app-check.js";
 
 // ══════════════════════════════════════
 //  ★ CONFIGURACIÓN — edita aquí
@@ -1499,6 +1501,9 @@ import { getAuth, setPersistence, browserSessionPersistence, signInAnonymously, 
 const ACCESS_PASSWORD = "amunt";
 // Email fijo de la cuenta admin compartida (la password se gestiona en Firebase Console).
 const ADMIN_EMAIL     = "welcome.to.sonora@hotmail.com";
+// App Check site key (reCAPTCHA v3). Si está vacía, no se inicializa App Check.
+// Sacarla de: https://console.firebase.google.com/project/sonora-xi/appcheck → Apps → Web → reCAPTCHA v3.
+const APPCHECK_SITE_KEY = "6LcDYegsAAAAAHMA8gFpNUmx6hw8Vyly1UBIu87I";
 const BOARD_FROZEN    = true; // Tablón congelado: solo lectura para asistentes
 const TAB_KEY = 'sonora_xi_tab';
 const scUrl = (url) => `https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}&color=%23e8001a&auto_play=true&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=false`;
@@ -1595,6 +1600,20 @@ const firebaseConfig = {
 };
 
 const fbApp = initializeApp(firebaseConfig);
+
+// App Check antes de getFirestore/getAuth para que cubra todas las llamadas.
+// Debug token en localhost: pegar el token de la consola Firebase como string para tu navegador,
+// o dejar true y leerlo de DevTools cuando aparezca el error.
+if (APPCHECK_SITE_KEY) {
+  if (location.hostname === 'localhost') {
+    self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
+  }
+  initializeAppCheck(fbApp, {
+    provider: new ReCaptchaV3Provider(APPCHECK_SITE_KEY),
+    isTokenAutoRefreshEnabled: true,
+  });
+}
+
 const db    = getFirestore(fbApp);
 const auth  = getAuth(fbApp);
 await setPersistence(auth, browserSessionPersistence);
