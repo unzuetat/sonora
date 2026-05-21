@@ -781,8 +781,22 @@ body.night .lineup-player-name{color:var(--amarillo)}
 .btn-ok{background:var(--verde);color:#fff;border:2px solid var(--negro);font-family:'EB Garamond',serif;font-weight:700;font-size:12px;padding:4px 8px;cursor:pointer;letter-spacing:1px}
 .btn-ko{background:var(--rojo);color:#fff;border:2px solid var(--negro);font-family:'EB Garamond',serif;font-weight:700;font-size:12px;padding:4px 8px;cursor:pointer;letter-spacing:1px}
 .btn-strike{background:#e67e22;color:#fff;border:2px solid var(--negro);font-family:'EB Garamond',serif;font-weight:700;font-size:12px;padding:4px 8px;cursor:pointer;letter-spacing:1px}
-.admin-back{display:block;margin:0 auto;background:none;border:2px solid var(--negro);color:var(--negro);font-family:'EB Garamond',serif;font-style:italic;font-size:15px;letter-spacing:2px;padding:10px 28px;cursor:pointer;box-shadow:3px 3px 0 var(--negro)}
+.admin-back{display:block;margin:24px auto 0;background:none;border:2px solid var(--negro);color:var(--negro);font-family:'EB Garamond',serif;font-style:italic;font-size:15px;letter-spacing:2px;padding:10px 28px;cursor:pointer;box-shadow:3px 3px 0 var(--negro);transition:transform .12s ease}
 .admin-back:hover{background:rgba(0,0,0,.05)}
+.admin-back:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--negro)}
+
+.btn-discreto{
+  display:block;margin:10px auto 0;background:none;border:none;
+  color:#999;font-family:'EB Garamond',serif;font-style:italic;font-size:12px;
+  letter-spacing:1px;cursor:pointer;padding:6px 10px;text-decoration:underline;
+}
+.btn-discreto:hover{color:var(--rojo)}
+
+/* Feedback al pulsar botones de acción del admin */
+.btn-ok, .btn-strike, .btn-ko, .offer-btn{transition:transform .12s ease, filter .12s ease}
+.btn-ok:active, .btn-strike:active, .btn-ko:active, .offer-btn:active{transform:scale(.94);filter:brightness(.88)}
+.btn-ok.flash, .btn-strike.flash, .btn-ko.flash{animation:btnFlash .5s ease}
+@keyframes btnFlash{0%{filter:brightness(1.6)}100%{filter:brightness(1)}}
 
 /* EDICIONES ASISTIDAS */
 .ed-role{
@@ -1646,29 +1660,33 @@ body.night .night-toggle{
       </div>
       <button class="offer-btn" id="btn-save-info" style="margin-top:8px">Guardar información</button>
     </div>
+    <button class="admin-back">← volver a la web</button>
   </div>
 
   <div class="admin-section">
     <div class="admin-sec-title">Descripciones de artistas</div>
     <div id="admin-artists"></div>
     <button class="offer-btn" id="btn-save-artists" style="margin-top:8px">Guardar descripciones</button>
+    <button class="admin-back">← volver a la web</button>
   </div>
 
   <div class="admin-section">
     <div class="admin-sec-title">setlist en vivo</div>
     <div id="admin-setlist"></div>
-    <button class="offer-btn" id="btn-setlist-reset" style="margin-top:10px;background:#888">resetear setlist</button>
+    <button class="admin-back">← volver a la web</button>
+    <button class="btn-discreto" id="btn-setlist-reset">resetear setlist</button>
   </div>
 
   <div class="admin-section">
     <div class="admin-sec-title">plazas Caravana</div>
     <div id="admin-cars"></div>
+    <button class="admin-back">← volver a la web</button>
   </div>
   <div class="admin-section">
     <div class="admin-sec-title">mensajes tablón pendientes</div>
     <div id="admin-msgs"></div>
+    <button class="admin-back">← volver a la web</button>
   </div>
-  <button class="admin-back" id="btn-back">← volver a la web</button>
 </div>
 </div>
 
@@ -1889,10 +1907,12 @@ async function doLogin(){
 }
 document.getElementById('btn-login').addEventListener('click', doLogin);
 document.getElementById('inp-pwd').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
-document.getElementById('btn-back').addEventListener('click', async () => {
-  // Volver del admin: cerrar sesión admin y reabrir como asistente anónimo
-  try { await signOut(auth); await signInAnonymously(auth); } catch(e) {}
-  showScreen('app'); initApp();
+document.querySelectorAll('.admin-back:not(#btn-admin-cancel)').forEach(btn => {
+  btn.addEventListener('click', async () => {
+    // Volver del admin: cerrar sesión admin y reabrir como asistente anónimo
+    try { await signOut(auth); await signInAnonymously(auth); } catch(e) {}
+    showScreen('app'); initApp();
+  });
 });
 
 // ── ADMIN MODAL ──
@@ -2737,32 +2757,43 @@ function initSetlist(){
 
 async function markSetlistNow(id){
   const ref = doc(db,'setlist','state');
-  const snap = await getDoc(ref);
-  const data = snap.exists() ? snap.data() : {};
-  const patch = {};
-  // El anterior 'now' pasa a 'done'
-  Object.entries(data).forEach(([k,v]) => {
-    if (v === 'now' && k !== id) patch[k] = 'done';
-  });
-  patch[id] = 'now';
-  await setDoc(ref, patch, {merge: true});
+  try {
+    const snap = await getDoc(ref);
+    const data = snap.exists() ? snap.data() : {};
+    const patch = {};
+    Object.entries(data).forEach(([k,v]) => {
+      if (v === 'now' && k !== id) patch[k] = 'done';
+    });
+    patch[id] = 'now';
+    await setDoc(ref, patch, {merge: true});
+    toast('▶ marcado como sonando');
+  } catch(e) { toast('error: ' + (e.code || e.message)); }
 }
 
 async function markSetlistDone(id){
-  await setDoc(doc(db,'setlist','state'), {[id]:'done'}, {merge:true});
+  try {
+    await setDoc(doc(db,'setlist','state'), {[id]:'done'}, {merge:true});
+    toast('✓ marcado como ya pasó');
+  } catch(e) { toast('error: ' + (e.code || e.message)); }
 }
 
 async function clearSetlistState(id){
   const ref = doc(db,'setlist','state');
-  const snap = await getDoc(ref);
-  const data = snap.exists() ? snap.data() : {};
-  delete data[id];
-  await setDoc(ref, data); // sobrescribir entero
+  try {
+    const snap = await getDoc(ref);
+    const data = snap.exists() ? snap.data() : {};
+    delete data[id];
+    await setDoc(ref, data);
+    toast('↺ vuelto a pendiente');
+  } catch(e) { toast('error: ' + (e.code || e.message)); }
 }
 
 async function resetSetlist(){
   if (!confirm('¿Resetear setlist? Esto borra el estado de todos los sets.')) return;
-  await setDoc(doc(db,'setlist','state'), {});
+  try {
+    await setDoc(doc(db,'setlist','state'), {});
+    toast('setlist reseteado');
+  } catch(e) { toast('error: ' + (e.code || e.message)); }
 }
 
 function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
