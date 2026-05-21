@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Mockup integración cartel — Sonora XI</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --azul:#5bb8f5;
+  --azul-dark:#1a5a8a;
+  --rojo:#e8001a;
+  --amarillo:#f7e200;
+  --negro:#1a1a1a;
+  --crema:#f5f0e0;
+  --verde:#2da44e;
+}
+*{box-sizing:border-box}
+body{
+  background:var(--azul);
+  font-family:'EB Garamond',serif;
+  margin:0;color:var(--negro);
+}
+.nav{
+  position:sticky;top:0;z-index:100;background:var(--negro);color:var(--crema);
+  padding:12px 16px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;
+  border-bottom:3px solid var(--rojo);
+}
+.nav h1{margin:0;font-size:16px;font-weight:800;letter-spacing:1px;text-transform:uppercase;flex:1}
+.nav button{
+  background:var(--crema);color:var(--negro);border:none;padding:8px 14px;
+  font-family:'EB Garamond',serif;font-weight:700;font-size:13px;cursor:pointer;
+  text-transform:uppercase;letter-spacing:1px;
+}
+.nav button.active{background:var(--rojo);color:var(--crema)}
+.variant{display:none;max-width:480px;margin:0 auto;padding:18px 14px 40px}
+.variant.active{display:block}
+.variant-label{
+  background:var(--amarillo);color:var(--negro);padding:6px 10px;
+  font-style:italic;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  font-size:12px;margin-bottom:12px;display:inline-block;
+}
+
+/* ── Estructura sonora-like ── */
+.card{
+  background:var(--crema);border-radius:6px;overflow:hidden;
+  position:relative;margin-bottom:14px;
+}
+.card-stripe{height:6px;background:var(--rojo)}
+.card-body{padding:18px 18px 22px}
+.card-title{
+  font-family:'EB Garamond',serif;font-weight:800;font-style:italic;
+  font-size:28px;letter-spacing:1px;text-transform:uppercase;
+  margin:0 0 4px;line-height:1;
+}
+.sec-desc{
+  font-size:15px;font-style:italic;color:var(--azul-dark);
+  margin-bottom:14px;line-height:1.35;
+}
+
+/* Countdown placeholder */
+.countdown{
+  display:flex;justify-content:space-around;text-align:center;
+  margin:14px 0;
+}
+.countdown .num{font-weight:800;font-size:34px;line-height:1;color:var(--rojo)}
+.countdown .lbl{font-size:11px;letter-spacing:2px;text-transform:uppercase;opacity:.7}
+
+/* Cartel block — A: en Inicio destacado */
+.cartel-block{
+  background:var(--crema);border-radius:6px;overflow:hidden;
+  margin-bottom:14px;position:relative;
+}
+.cartel-block .card-stripe{background:var(--amarillo)}
+.cartel-block .card-body{padding:14px}
+.cartel-block .cartel-img{
+  width:100%;display:block;border-radius:4px;cursor:zoom-in;
+  box-shadow:0 4px 12px rgba(0,0,0,.15);
+}
+.cartel-block .cartel-cta{
+  display:block;text-align:center;font-size:13px;font-style:italic;
+  letter-spacing:2px;text-transform:uppercase;margin-top:10px;color:var(--azul-dark);
+  font-weight:700;
+}
+
+/* Variante mini (Inicio en C) */
+.cartel-mini{
+  background:var(--crema);border-radius:6px;overflow:hidden;
+  margin-bottom:14px;display:flex;align-items:stretch;
+}
+.cartel-mini .thumb{width:90px;flex:none}
+.cartel-mini .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.cartel-mini .body{flex:1;padding:12px 14px;display:flex;flex-direction:column;justify-content:center}
+.cartel-mini .body .t{font-weight:800;font-style:italic;font-size:18px;letter-spacing:1px;text-transform:uppercase;color:var(--rojo);line-height:1}
+.cartel-mini .body .d{font-size:13px;font-style:italic;color:var(--azul-dark);margin-top:4px}
+.cartel-mini .body .a{font-size:11px;letter-spacing:2px;text-transform:uppercase;margin-top:8px;color:var(--negro);font-weight:700;align-self:flex-start;border-bottom:2px solid var(--rojo);padding-bottom:1px}
+
+/* Lineup placeholder (Menú) */
+.lineup-item{
+  display:flex;align-items:center;padding:10px 0;
+  border-top:1px solid rgba(0,0,0,.08);gap:12px;
+}
+.lineup-item:first-of-type{border-top:none}
+.lineup-item .pic{width:54px;height:54px;border-radius:6px;background:var(--azul-dark);flex:none}
+.lineup-item .meta{flex:1}
+.lineup-item .meta .n{font-weight:700;font-size:20px;line-height:1.1}
+.lineup-item .meta .l{font-size:12px;color:var(--azul-dark);font-style:italic}
+.lineup-item .play{
+  width:42px;height:42px;border-radius:50%;background:var(--rojo);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-weight:700;flex:none;
+}
+
+.tabs{
+  background:var(--negro);color:var(--crema);padding:10px 14px;
+  display:flex;gap:6px;font-size:12px;letter-spacing:2px;text-transform:uppercase;
+  font-style:italic;font-weight:700;margin-bottom:14px;
+}
+.tabs .tab{padding:4px 8px;opacity:.6}
+.tabs .tab.on{background:var(--rojo);opacity:1;color:var(--crema)}
+
+/* Modal lightbox preview */
+.modal{
+  position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:200;display:none;
+  align-items:center;justify-content:center;padding:20px;cursor:zoom-out;
+}
+.modal.on{display:flex}
+.modal img{max-width:100%;max-height:100%;display:block}
+.modal-close{position:fixed;top:14px;right:14px;color:#fff;font-size:30px;cursor:pointer;background:none;border:none}
+
+.foot{text-align:center;padding:20px;font-style:italic;font-size:12px;color:var(--crema);opacity:.8}
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <h1>Integración cartel · Sonora XI</h1>
+  <button data-v="a" class="active">A · Inicio</button>
+  <button data-v="b">B · Menú</button>
+  <button data-v="c">C · Ambos</button>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     A — CARTEL DESTACADO EN INICIO
+═══════════════════════════════════════════ -->
+<div class="variant active" id="va">
+  <span class="variant-label">A · cartel destacado en Inicio</span>
+
+  <div class="tabs">
+    <span class="tab on">Inicio</span>
+    <span class="tab">Tablón</span>
+    <span class="tab">Caravana</span>
+    <span class="tab">Menú</span>
+    <span class="tab">Info</span>
+  </div>
+
+  <div class="card">
+    <div class="card-stripe"></div>
+    <div class="card-body">
+      <div class="card-title">Cuenta atrás</div>
+      <div class="sec-desc">para el pregonazo</div>
+      <div class="countdown">
+        <div><div class="num">8</div><div class="lbl">días</div></div>
+        <div><div class="num">14</div><div class="lbl">horas</div></div>
+        <div><div class="num">23</div><div class="lbl">min</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bloque cartel destacado -->
+  <div class="cartel-block">
+    <div class="card-stripe"></div>
+    <div class="card-body">
+      <div class="card-title" style="color:var(--rojo);margin-bottom:10px">Cartel</div>
+      <img class="cartel-img" src="img/cartel-lineup-thumb.jpg" alt="Cartel San Sonorín XI" onclick="openModal()">
+      <a class="cartel-cta" href="#" onclick="openModal();return false">★ Ver a tamaño completo ★</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-stripe"></div>
+    <div class="card-body">
+      <div class="card-title">Historial médico</div>
+      <div class="sec-desc">tu legado en las ediciones pasadas…</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-stripe"></div>
+    <div class="card-body">
+      <div class="card-title">Sintoniza</div>
+      <div class="sec-desc">artista aleatorio del menú…</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     B — CARTEL DESTACADO EN MENÚ
+═══════════════════════════════════════════ -->
+<div class="variant" id="vb">
+  <span class="variant-label">B · cartel destacado en Menú</span>
+
+  <div class="tabs">
+    <span class="tab">Inicio</span>
+    <span class="tab">Tablón</span>
+    <span class="tab">Caravana</span>
+    <span class="tab on">Menú</span>
+    <span class="tab">Info</span>
+  </div>
+
+  <div class="card">
+    <div class="card-stripe"></div>
+    <div class="card-body">
+      <div class="card-title">Menú popular</div>
+      <div class="sec-desc" style="color:var(--rojo);font-weight:700">Café y postre incluidos</div>
+
+      <img class="cartel-img" src="img/cartel-lineup-thumb.jpg" alt="Cartel San Sonorín XI" onclick="openModal()" style="margin-top:6px;border:2px solid var(--negro)">
+      <a class="cartel-cta" href="#" onclick="openModal();return false">★ Ver cartel completo ★</a>
+
+      <div style="margin-top:18px">
+        <div class="lineup-item">
+          <div class="pic"></div>
+          <div class="meta"><div class="n">Amphetamix</div><div class="l">soundcloud · ig</div></div>
+          <div class="play">▶</div>
+        </div>
+        <div class="lineup-item">
+          <div class="pic" style="background:var(--rojo)"></div>
+          <div class="meta"><div class="n">Apparatchik</div><div class="l">soundcloud · ig</div></div>
+          <div class="play">▶</div>
+        </div>
+        <div class="lineup-item">
+          <div class="pic" style="background:var(--amarillo)"></div>
+          <div class="meta"><div class="n">Astora</div><div class="l">soundcloud · ig</div></div>
+          <div class="play">▶</div>
+        </div>
+        <div class="lineup-item">
+          <div class="pic" style="background:var(--verde)"></div>
+          <div class="meta"><div class="n">BØHM</div><div class="l">soundcloud · ig</div></div>
+          <div class="play">▶</div>
+        </div>
+        <div style="text-align:center;font-style:italic;opacity:.5;margin-top:14px;font-size:12px;letter-spacing:1px">… resto del lineup interactivo …</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     C — AMBOS (mini en Inicio + grande en Menú)
+═══════════════════════════════════════════ -->
+<div class="variant" id="vc">
+  <span class="variant-label">C · ambos sitios (mini Inicio + grande Menú)</span>
+
+  <div class="tabs">
+    <span class="tab on">Inicio</span>
+    <span class="tab">Tablón</span>
+    <span class="tab">Caravana</span>
+    <span class="tab">Menú</span>
+    <span class="tab">Info</span>
+  </div>
+
+  <div class="card">
+    <div class="card-stripe"></div>
+    <div class="card-body">
+      <div class="card-title">Cuenta atrás</div>
+      <div class="sec-desc">para el pregonazo</div>
+      <div class="countdown">
+        <div><div class="num">8</div><div class="lbl">días</div></div>
+        <div><div class="num">14</div><div class="lbl">horas</div></div>
+        <div><div class="num">23</div><div class="lbl">min</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mini cartel en Inicio -->
+  <div class="cartel-mini" onclick="openModal()">
+    <div class="thumb"><img src="img/cartel-lineup-thumb.jpg" alt="Cartel mini"></div>
+    <div class="body">
+      <div class="t">Cartel</div>
+      <div class="d">San Sonorín XI completo</div>
+      <div class="a">Tocar para abrir →</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-stripe"></div>
+    <div class="card-body">
+      <div class="card-title">Historial médico</div>
+      <div class="sec-desc">tu legado en las ediciones pasadas…</div>
+    </div>
+  </div>
+
+  <div style="margin:28px 0 12px;padding:0 4px">
+    <span class="variant-label" style="background:var(--negro);color:var(--crema)">↓ Pestaña Menú ↓</span>
+  </div>
+
+  <div class="tabs">
+    <span class="tab">Inicio</span>
+    <span class="tab">Tablón</span>
+    <span class="tab">Caravana</span>
+    <span class="tab on">Menú</span>
+    <span class="tab">Info</span>
+  </div>
+
+  <div class="card">
+    <div class="card-stripe"></div>
+    <div class="card-body">
+      <div class="card-title">Menú popular</div>
+      <div class="sec-desc" style="color:var(--rojo);font-weight:700">Café y postre incluidos</div>
+
+      <img class="cartel-img" src="img/cartel-lineup-thumb.jpg" alt="Cartel grande" onclick="openModal()" style="margin-top:6px;border:2px solid var(--negro)">
+      <a class="cartel-cta" href="#" onclick="openModal();return false">★ Ver cartel completo ★</a>
+
+      <div style="margin-top:18px">
+        <div class="lineup-item">
+          <div class="pic"></div>
+          <div class="meta"><div class="n">Amphetamix</div><div class="l">soundcloud · ig</div></div>
+          <div class="play">▶</div>
+        </div>
+        <div class="lineup-item">
+          <div class="pic" style="background:var(--rojo)"></div>
+          <div class="meta"><div class="n">Apparatchik</div><div class="l">soundcloud · ig</div></div>
+          <div class="play">▶</div>
+        </div>
+        <div style="text-align:center;font-style:italic;opacity:.5;margin-top:14px;font-size:12px;letter-spacing:1px">… resto del lineup interactivo …</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="foot">3 variantes · pulsa arriba para alternar · click en cartel = abrir fullscreen</div>
+
+<!-- Modal fullscreen -->
+<div class="modal" id="modal" onclick="closeModal()">
+  <button class="modal-close" onclick="closeModal()">✕</button>
+  <img src="img/cartel-lineup.jpg" alt="Cartel completo">
+</div>
+
+<script>
+document.querySelectorAll('.nav button').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.nav button').forEach(x => x.classList.remove('active'));
+    document.querySelectorAll('.variant').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    document.getElementById('v'+b.dataset.v).classList.add('active');
+    window.scrollTo(0,0);
+  });
+});
+function openModal(){document.getElementById('modal').classList.add('on')}
+function closeModal(){document.getElementById('modal').classList.remove('on')}
+</script>
+</body>
+</html>
