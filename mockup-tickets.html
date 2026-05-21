@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Tickets — 10 paletas</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --azul:#5bb8f5; --azul-dark:#1a5a8a; --rojo:#e8001a;
+  --amarillo:#f7e200; --negro:#1a1a1a; --crema:#f5f0e0; --verde:#2da44e;
+}
+*{box-sizing:border-box}
+body{font-family:'EB Garamond',serif;margin:0;color:var(--negro);background:#222}
+
+/* ── nav ── */
+.nav{
+  position:sticky;top:0;z-index:100;background:var(--negro);color:var(--crema);
+  padding:12px 14px;border-bottom:3px solid var(--rojo);
+}
+.nav h1{margin:0 0 8px;font-size:16px;font-weight:800;letter-spacing:1px;text-transform:uppercase}
+.palettes{display:flex;flex-wrap:wrap;gap:6px}
+.palettes button{
+  background:var(--crema);color:var(--negro);border:none;
+  font-family:'EB Garamond',serif;font-weight:700;font-size:12px;cursor:pointer;
+  text-transform:uppercase;letter-spacing:1px;padding:6px 10px;
+}
+.palettes button.active{background:var(--rojo);color:var(--crema)}
+
+/* ── canvas ── */
+.canvas{
+  padding:24px 14px 40px;max-width:520px;margin:0 auto;
+  background:var(--p-bg);min-height:100vh;transition:background .2s;
+}
+
+/* ── layout tríptico ── */
+.canvas.trip{max-width:1280px;padding:24px 0 40px}
+.canvas.trip .label{margin-left:14px}
+@media (min-width: 900px){
+  .canvas.trip .columns{
+    display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;
+    padding:0 14px;
+  }
+  .canvas.trip .block{
+    margin-bottom:0;padding:0 14px;
+    border-left:2px dashed rgba(0,0,0,.25);
+  }
+  .canvas.trip .block:first-child{border-left:none}
+}
+@media (max-width: 899px){
+  .canvas.trip .columns{
+    display:flex;overflow-x:auto;scroll-snap-type:x mandatory;
+    scroll-behavior:smooth;
+    -webkit-overflow-scrolling:touch;
+  }
+  .canvas.trip .block{
+    flex:0 0 100%;scroll-snap-align:start;padding:0 14px;margin-bottom:0;
+  }
+  .canvas.trip .swipe-hint{
+    text-align:center;font-size:11px;letter-spacing:2px;text-transform:uppercase;
+    font-style:italic;opacity:.6;margin:0 14px 12px;color:var(--p-ticket-fg);
+  }
+}
+.canvas:not(.trip) .swipe-hint{display:none}
+.canvas.trip .block-title{display:block;text-align:center}
+.label{
+  background:var(--amarillo);color:var(--negro);padding:6px 10px;
+  font-style:italic;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  font-size:12px;margin-bottom:14px;display:inline-block;
+}
+
+/* ── block ── */
+.block{margin-bottom:30px}
+.block-title{
+  font-family:'EB Garamond',serif;font-weight:800;font-style:italic;
+  font-size:24px;letter-spacing:3px;text-transform:uppercase;
+  color:var(--p-title-fg);background:var(--p-title-bg);padding:6px 14px;
+  display:inline-block;margin-bottom:12px;
+}
+
+/* ── ticket ── */
+.ticket{
+  background:var(--p-ticket);position:relative;display:flex;align-items:stretch;
+  margin-bottom:10px;min-height:56px;
+  filter:drop-shadow(2px 3px 0 rgba(0,0,0,.25));
+  color:var(--p-ticket-fg);
+}
+.ticket::before,.ticket::after{
+  content:'';position:absolute;width:14px;height:14px;border-radius:50%;
+  background:var(--p-bg);left:84px;
+}
+.ticket::before{top:-7px}
+.ticket::after{bottom:-7px}
+.stub{
+  width:84px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-family:'EB Garamond',serif;font-style:italic;font-weight:700;
+  border-right:2px dashed var(--p-bg);
+}
+.stub .num{font-size:24px;line-height:1}
+.stub .lbl{display:none}
+.b-n1  .stub{background:var(--p-stub-n1);  color:var(--p-stub-n1-fg)}
+.b-day .stub{background:var(--p-stub-day); color:var(--p-stub-day-fg)}
+.b-n2  .stub{background:var(--p-stub-n2);  color:var(--p-stub-n2-fg)}
+.b-n1 .ticket.first .stub{background:var(--p-first); color:var(--p-first-fg)}
+.info{flex:1;padding:10px 14px;display:flex;flex-direction:column;justify-content:center}
+.name{font-weight:700;font-size:19px;line-height:1.15}
+.when{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--p-when);font-weight:800;margin-top:3px}
+.b2b{font-style:italic}
+
+/* ════════════════════════════════════════
+   PALETAS — cada `.p-N` redefine variables
+════════════════════════════════════════ */
+.p-1{
+  --p-bg:#5bb8f5; --p-ticket:#f5f0e0; --p-ticket-fg:#1a1a1a;
+  --p-title-bg:#1a1a1a; --p-title-fg:#f5f0e0;
+  --p-stub-n1:#e8001a;  --p-stub-n1-fg:#f5f0e0;
+  --p-stub-day:#5bb8f5; --p-stub-day-fg:#1a1a1a;
+  --p-stub-n2:#e8001a;  --p-stub-n2-fg:#f5f0e0;
+  --p-first:#f7e200; --p-first-fg:#1a1a1a;
+  --p-when:#e8001a;
+}
+.p-2{ /* crema cálida */
+  --p-bg:#f5f0e0; --p-ticket:#ffffff; --p-ticket-fg:#1a1a1a;
+  --p-title-bg:#1a5a8a; --p-title-fg:#f5f0e0;
+  --p-stub-n1:#e8001a;  --p-stub-n1-fg:#f5f0e0;
+  --p-stub-day:#f7e200; --p-stub-day-fg:#1a1a1a;
+  --p-stub-n2:#1a5a8a;  --p-stub-n2-fg:#f5f0e0;
+  --p-first:#2da44e; --p-first-fg:#f5f0e0;
+  --p-when:#1a5a8a;
+}
+.p-3{ /* negro nocturno */
+  --p-bg:#1a1a1a; --p-ticket:#f5f0e0; --p-ticket-fg:#1a1a1a;
+  --p-title-bg:#f7e200; --p-title-fg:#1a1a1a;
+  --p-stub-n1:#e8001a;  --p-stub-n1-fg:#f5f0e0;
+  --p-stub-day:#f7e200; --p-stub-day-fg:#1a1a1a;
+  --p-stub-n2:#5bb8f5;  --p-stub-n2-fg:#1a1a1a;
+  --p-first:#2da44e; --p-first-fg:#f5f0e0;
+  --p-when:#e8001a;
+}
+.p-4{ /* rojo intenso */
+  --p-bg:#e8001a; --p-ticket:#f5f0e0; --p-ticket-fg:#1a1a1a;
+  --p-title-bg:#f5f0e0; --p-title-fg:#e8001a;
+  --p-stub-n1:#1a1a1a;  --p-stub-n1-fg:#f5f0e0;
+  --p-stub-day:#f7e200; --p-stub-day-fg:#1a1a1a;
+  --p-stub-n2:#1a5a8a;  --p-stub-n2-fg:#f5f0e0;
+  --p-first:#2da44e; --p-first-fg:#f5f0e0;
+  --p-when:#e8001a;
+}
+.p-5{ /* verde naturaleza */
+  --p-bg:#2da44e; --p-ticket:#f5f0e0; --p-ticket-fg:#1a1a1a;
+  --p-title-bg:#1a1a1a; --p-title-fg:#f7e200;
+  --p-stub-n1:#1a1a1a;  --p-stub-n1-fg:#f7e200;
+  --p-stub-day:#f7e200; --p-stub-day-fg:#1a1a1a;
+  --p-stub-n2:#e8001a;  --p-stub-n2-fg:#f5f0e0;
+  --p-first:#5bb8f5; --p-first-fg:#1a1a1a;
+  --p-when:#1a5a8a;
+}
+.p-6{ /* amarillo verbena */
+  --p-bg:#f7e200; --p-ticket:#f5f0e0; --p-ticket-fg:#1a1a1a;
+  --p-title-bg:#e8001a; --p-title-fg:#f5f0e0;
+  --p-stub-n1:#e8001a;  --p-stub-n1-fg:#f5f0e0;
+  --p-stub-day:#1a1a1a; --p-stub-day-fg:#f7e200;
+  --p-stub-n2:#1a5a8a;  --p-stub-n2-fg:#f5f0e0;
+  --p-first:#2da44e; --p-first-fg:#f5f0e0;
+  --p-when:#e8001a;
+}
+.p-7{ /* azul oscuro mar */
+  --p-bg:#1a5a8a; --p-ticket:#f5f0e0; --p-ticket-fg:#1a1a1a;
+  --p-title-bg:#f7e200; --p-title-fg:#1a5a8a;
+  --p-stub-n1:#e8001a;  --p-stub-n1-fg:#f5f0e0;
+  --p-stub-day:#f7e200; --p-stub-day-fg:#1a5a8a;
+  --p-stub-n2:#5bb8f5;  --p-stub-n2-fg:#1a1a1a;
+  --p-first:#2da44e; --p-first-fg:#f5f0e0;
+  --p-when:#1a5a8a;
+}
+.p-8{ /* tres tonos rojos */
+  --p-bg:#f5f0e0; --p-ticket:#ffffff; --p-ticket-fg:#1a1a1a;
+  --p-title-bg:#1a1a1a; --p-title-fg:#f5f0e0;
+  --p-stub-n1:#ff6b6b;  --p-stub-n1-fg:#1a1a1a;
+  --p-stub-day:#e8001a; --p-stub-day-fg:#f5f0e0;
+  --p-stub-n2:#8b0010;  --p-stub-n2-fg:#f5f0e0;
+  --p-first:#f7e200; --p-first-fg:#e8001a;
+  --p-when:#e8001a;
+}
+.p-9{ /* mono blanco-negro */
+  --p-bg:#ffffff; --p-ticket:#f5f0e0; --p-ticket-fg:#1a1a1a;
+  --p-title-bg:#1a1a1a; --p-title-fg:#ffffff;
+  --p-stub-n1:#1a1a1a;  --p-stub-n1-fg:#ffffff;
+  --p-stub-day:#999;    --p-stub-day-fg:#1a1a1a;
+  --p-stub-n2:#1a1a1a;  --p-stub-n2-fg:#ffffff;
+  --p-first:#e8001a; --p-first-fg:#ffffff;
+  --p-when:#1a1a1a;
+}
+.p-10{ /* confeti */
+  --p-bg:#f5f0e0; --p-ticket:#ffffff; --p-ticket-fg:#1a1a1a;
+  --p-title-bg:#1a1a1a; --p-title-fg:#f7e200;
+  --p-stub-n1:#e8001a;  --p-stub-n1-fg:#f5f0e0;
+  --p-stub-day:#f7e200; --p-stub-day-fg:#1a1a1a;
+  --p-stub-n2:#5bb8f5;  --p-stub-n2-fg:#1a1a1a;
+  --p-first:#2da44e; --p-first-fg:#f5f0e0;
+  --p-when:#e8001a;
+}
+/* extra tinte para confeti: cada ticket alternando un color en stub */
+.p-10 .b-n1 .ticket:nth-child(even) .stub{background:#1a5a8a;color:#f7e200}
+.p-10 .b-day .ticket:nth-child(odd) .stub{background:#e8001a;color:#f5f0e0}
+.p-10 .b-n2 .ticket:nth-child(even) .stub{background:#2da44e;color:#f5f0e0}
+
+.p-11{ /* amarillo confeti */
+  --p-bg:#f7e200; --p-ticket:#ffffff; --p-ticket-fg:#1a1a1a;
+  --p-title-bg:#1a1a1a; --p-title-fg:#f7e200;
+  --p-stub-n1:#e8001a;  --p-stub-n1-fg:#f5f0e0;
+  --p-stub-day:#1a5a8a; --p-stub-day-fg:#f7e200;
+  --p-stub-n2:#5bb8f5;  --p-stub-n2-fg:#1a1a1a;
+  --p-first:#2da44e; --p-first-fg:#f5f0e0;
+  --p-when:#e8001a;
+}
+.p-11 .b-n1 .ticket:nth-child(even) .stub{background:#1a1a1a;color:#f7e200}
+.p-11 .b-day .ticket:nth-child(odd) .stub{background:#e8001a;color:#f5f0e0}
+.p-11 .b-n2 .ticket:nth-child(even) .stub{background:#2da44e;color:#f5f0e0}
+
+/* ════════════════════════════════════════
+   P-12 — Noches negras (fondo por bloque)
+════════════════════════════════════════ */
+.p-12{
+  --p-bg:#f5f0e0; --p-ticket:#f5f0e0; --p-ticket-fg:#1a1a1a;
+  --p-title-bg:#1a1a1a; --p-title-fg:#f7e200;
+  --p-stub-n1:#e8001a;  --p-stub-n1-fg:#f5f0e0;
+  --p-stub-day:#2da44e; --p-stub-day-fg:#f5f0e0;
+  --p-stub-n2:#f7e200;  --p-stub-n2-fg:#1a1a1a;
+  --p-first:#f7e200; --p-first-fg:#e8001a;
+  --p-when:#e8001a;
+}
+/* fondos por bloque */
+.p-12 .b-n1, .p-12 .b-n2{
+  background-color:#1a1a1a;
+  background-image:
+    radial-gradient(1.5px 1.5px at 8px 12px,   #fff 50%, transparent 100%),
+    radial-gradient(1px 1px     at 30px 6px,   rgba(255,255,255,.7) 50%, transparent 100%),
+    radial-gradient(2px 2px     at 55px 22px,  rgba(255,255,255,.95) 50%, transparent 100%),
+    radial-gradient(1px 1px     at 75px 8px,   rgba(255,255,255,.5) 50%, transparent 100%),
+    radial-gradient(1px 1px     at 95px 35px,  rgba(255,255,255,.8) 50%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 115px 14px, rgba(255,255,255,.9) 50%, transparent 100%),
+    radial-gradient(1px 1px     at 18px 45px,  rgba(255,255,255,.6) 50%, transparent 100%),
+    radial-gradient(2px 2px     at 45px 55px,  rgba(255,255,255,1)  50%, transparent 100%),
+    radial-gradient(1px 1px     at 70px 70px,  rgba(255,255,255,.7) 50%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 105px 65px, rgba(255,255,255,.85) 50%, transparent 100%),
+    radial-gradient(1px 1px     at 12px 80px,  rgba(255,255,255,.55) 50%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 35px 95px,  rgba(255,255,255,.9) 50%, transparent 100%),
+    radial-gradient(1px 1px     at 60px 100px, rgba(255,255,255,.65) 50%, transparent 100%),
+    radial-gradient(2px 2px     at 90px 88px,  rgba(255,255,255,1)  50%, transparent 100%),
+    radial-gradient(1px 1px     at 115px 105px,rgba(255,255,255,.75) 50%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 50px 115px, rgba(255,255,255,.85) 50%, transparent 100%);
+  background-size:130px 130px;
+  background-repeat:repeat;
+  padding:18px 14px 4px;margin:0 -14px 14px;
+}
+.p-12 .b-day{
+  background:#5bb8f5;
+  padding:18px 14px 4px;margin:0 -14px 14px;
+}
+/* los troqueles y el dashed adoptan el color del bloque */
+.p-12 .b-n1 .ticket::before,.p-12 .b-n1 .ticket::after,
+.p-12 .b-n2 .ticket::before,.p-12 .b-n2 .ticket::after{background:#1a1a1a}
+.p-12 .b-day .ticket::before,.p-12 .b-day .ticket::after{background:#5bb8f5}
+.p-12 .b-n1 .stub,.p-12 .b-n2 .stub{border-right-color:#1a1a1a}
+.p-12 .b-day .stub{border-right-color:#5bb8f5}
+/* títulos contrastan con fondo del bloque */
+.p-12 .b-n1 .block-title,.p-12 .b-n2 .block-title{background:#e8001a;color:#f5f0e0}
+.p-12 .b-day .block-title{background:#1a1a1a;color:#f7e200}
+/* tríptico: en desktop, los bordes discontinuos sobran porque ya hay separación de color */
+.canvas.trip.p-12 .block{border-left:none}
+
+.foot{text-align:center;padding:18px;font-style:italic;font-size:12px;color:#888}
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <h1>Tickets · paletas + layout</h1>
+  <div class="palettes" style="margin-bottom:6px">
+    <button data-layout="vert" class="active layout-btn" style="background:var(--amarillo)">▼ vertical</button>
+    <button data-layout="trip" class="layout-btn" style="background:var(--amarillo)">▶ tríptico</button>
+  </div>
+  <div class="palettes">
+    <button data-p="1" class="active">1 · original</button>
+    <button data-p="2">2 · crema</button>
+    <button data-p="3">3 · nocturno</button>
+    <button data-p="4">4 · rojo</button>
+    <button data-p="5">5 · verde</button>
+    <button data-p="6">6 · verbena</button>
+    <button data-p="7">7 · mar</button>
+    <button data-p="8">8 · tres rojos</button>
+    <button data-p="9">9 · mono</button>
+    <button data-p="10">10 · confeti</button>
+    <button data-p="11">11 · amarillo confeti</button>
+    <button data-p="12">12 · noches negras + día azul</button>
+  </div>
+</div>
+
+<div class="canvas p-1" id="canvas">
+  <span class="label" id="label">paleta 1 · original</span>
+  <div class="swipe-hint">↤ desliza entre bloques ↦</div>
+  <div class="columns">
+
+  <div class="block b-n1">
+    <div class="block-title">Noche I</div>
+    <div class="ticket"><div class="stub"><div class="num">01</div><div class="lbl">N · I</div></div><div class="info"><div class="name">Amphetamix</div><div class="when">vie 21:00 · primer set</div></div></div>
+    <div class="ticket"><div class="stub"><div class="num">02</div><div class="lbl">N · I</div></div><div class="info"><div class="name">Lost Mery</div></div></div>
+    <div class="ticket"><div class="stub"><div class="num">03</div><div class="lbl">N · I</div></div><div class="info"><div class="name">Deejeya</div></div></div>
+    <div class="ticket"><div class="stub"><div class="num">04</div><div class="lbl">N · I</div></div><div class="info"><div class="name">BØHM</div></div></div>
+    <div class="ticket"><div class="stub"><div class="num">05</div><div class="lbl">N · I</div></div><div class="info"><div class="name">Ecce Homo</div></div></div>
+    <div class="ticket"><div class="stub"><div class="num">06</div><div class="lbl">N · I</div></div><div class="info"><div class="name">Astora</div></div></div>
+    <div class="ticket"><div class="stub"><div class="num">07</div><div class="lbl">N · I</div></div><div class="info"><div class="name b2b">Mireia Cj b2b Cabani</div></div></div>
+    <div class="ticket"><div class="stub"><div class="num">08</div><div class="lbl">N · I</div></div><div class="info"><div class="name">Droglo</div></div></div>
+  </div>
+
+  <div class="block b-day">
+    <div class="block-title">Día</div>
+    <div class="ticket"><div class="stub"><div class="num">09</div><div class="lbl">DÍA</div></div><div class="info"><div class="name b2b">Raso b2b FalsoJudas</div></div></div>
+    <div class="ticket"><div class="stub"><div class="num">10</div><div class="lbl">DÍA</div></div><div class="info"><div class="name">Candel</div></div></div>
+    <div class="ticket"><div class="stub"><div class="num">11</div><div class="lbl">DÍA</div></div><div class="info"><div class="name">Machete Soundsystem</div></div></div>
+    <div class="ticket"><div class="stub"><div class="num">12</div><div class="lbl">DÍA</div></div><div class="info"><div class="name">Elena Magdalena</div></div></div>
+    <div class="ticket"><div class="stub"><div class="num">13</div><div class="lbl">DÍA</div></div><div class="info"><div class="name">SNB</div></div></div>
+    <div class="ticket"><div class="stub"><div class="num">14</div><div class="lbl">DÍA</div></div><div class="info"><div class="name">Dj Celestino</div></div></div>
+    <div class="ticket"><div class="stub"><div class="num">15</div><div class="lbl">DÍA</div></div><div class="info"><div class="name">Francis Espinaco</div></div></div>
+    <div class="ticket"><div class="stub"><div class="num">16</div><div class="lbl">DÍA</div></div><div class="info"><div class="name">Traver</div></div></div>
+  </div>
+
+  <div class="block b-n2">
+    <div class="block-title">Noche II</div>
+    <div class="ticket"><div class="stub"><div class="num">17</div><div class="lbl">N · II</div></div><div class="info"><div class="name">Apparatchik</div></div></div>
+    <div class="ticket"><div class="stub"><div class="num">18</div><div class="lbl">N · II</div></div><div class="info"><div class="name">D.SastreSonoro</div></div></div>
+    <div class="ticket"><div class="stub"><div class="num">19</div><div class="lbl">N · II</div></div><div class="info"><div class="name">Cizette</div></div></div>
+    <div class="ticket"><div class="stub"><div class="num">20</div><div class="lbl">N · II</div></div><div class="info"><div class="name">SeR0</div></div></div>
+    <div class="ticket"><div class="stub"><div class="num">21</div><div class="lbl">N · II</div></div><div class="info"><div class="name">D-Bunk</div></div></div>
+    <div class="ticket"><div class="stub"><div class="num">22</div><div class="lbl">N · II</div></div><div class="info"><div class="name">K.Î.R.</div></div></div>
+    <div class="ticket"><div class="stub"><div class="num">23</div><div class="lbl">N · II</div></div><div class="info"><div class="name">Nómada</div></div></div>
+    <div class="ticket"><div class="stub"><div class="num">24</div><div class="lbl">N · II</div></div><div class="info"><div class="name">Llinares</div></div></div>
+  </div>
+
+  </div><!-- /.columns -->
+</div>
+
+<div class="foot">11 paletas · 2 layouts · pulsa arriba para alternar</div>
+
+<script>
+const NAMES = {
+  1:'original', 2:'crema', 3:'nocturno', 4:'rojo',
+  5:'verde', 6:'verbena', 7:'mar', 8:'tres rojos', 9:'mono', 10:'confeti', 11:'amarillo confeti', 12:'noches negras + día azul'
+};
+let currentP = '1', currentLayout = 'vert';
+function applyState(){
+  const canvas = document.getElementById('canvas');
+  canvas.className = 'canvas p-' + currentP + (currentLayout === 'trip' ? ' trip' : '');
+  document.getElementById('label').textContent = 'paleta ' + currentP + ' · ' + NAMES[currentP] + ' · ' + (currentLayout === 'trip' ? 'tríptico' : 'vertical');
+}
+document.querySelectorAll('.palettes button[data-p]').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.palettes button[data-p]').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    currentP = b.dataset.p;
+    applyState();
+  });
+});
+document.querySelectorAll('.layout-btn').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.layout-btn').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    currentLayout = b.dataset.layout;
+    applyState();
+  });
+});
+</script>
+</body>
+</html>

@@ -60,7 +60,7 @@ body{
 .auth-bg{
   width:100%;
   min-height:100vh;
-  background-image:url('sonorin.jpg');
+  background-image:url('img/cartel-lineup.jpg');
   background-size:contain;
   background-repeat:no-repeat;
   background-position:center center;
@@ -581,6 +581,71 @@ body.night .artist-img-placeholder{background:var(--bg-card);border-color:var(--
   letter-spacing:2px;text-transform:uppercase;margin-top:12px;color:var(--azul-dark);
   font-weight:700;cursor:pointer;
 }
+
+/* ════════════════════════════════════════
+   PESTAÑA HORARIOS — tickets perforados
+════════════════════════════════════════ */
+#tc-hor{padding:0;margin:0 -14px}
+.hor-block{padding:20px 14px 6px}
+.hor-n1, .hor-n2{
+  background-color:#1a1a1a;
+  background-image:
+    radial-gradient(1.5px 1.5px at 8px 12px,   #fff 50%, transparent 100%),
+    radial-gradient(1px 1px     at 30px 6px,   rgba(255,255,255,.7) 50%, transparent 100%),
+    radial-gradient(2px 2px     at 55px 22px,  rgba(255,255,255,.95) 50%, transparent 100%),
+    radial-gradient(1px 1px     at 75px 8px,   rgba(255,255,255,.5) 50%, transparent 100%),
+    radial-gradient(1px 1px     at 95px 35px,  rgba(255,255,255,.8) 50%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 115px 14px, rgba(255,255,255,.9) 50%, transparent 100%),
+    radial-gradient(1px 1px     at 18px 45px,  rgba(255,255,255,.6) 50%, transparent 100%),
+    radial-gradient(2px 2px     at 45px 55px,  rgba(255,255,255,1)  50%, transparent 100%),
+    radial-gradient(1px 1px     at 70px 70px,  rgba(255,255,255,.7) 50%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 105px 65px, rgba(255,255,255,.85) 50%, transparent 100%),
+    radial-gradient(1px 1px     at 12px 80px,  rgba(255,255,255,.55) 50%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 35px 95px,  rgba(255,255,255,.9) 50%, transparent 100%),
+    radial-gradient(1px 1px     at 60px 100px, rgba(255,255,255,.65) 50%, transparent 100%),
+    radial-gradient(2px 2px     at 90px 88px,  rgba(255,255,255,1)  50%, transparent 100%),
+    radial-gradient(1px 1px     at 115px 105px,rgba(255,255,255,.75) 50%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 50px 115px, rgba(255,255,255,.85) 50%, transparent 100%);
+  background-size:130px 130px;
+  background-repeat:repeat;
+}
+.hor-day{background:#5bb8f5}
+.hor-title{
+  font-family:'EB Garamond',serif;font-weight:800;font-style:italic;
+  font-size:24px;letter-spacing:3px;text-transform:uppercase;
+  padding:6px 14px;display:inline-block;margin-bottom:12px;
+}
+.hor-n1 .hor-title, .hor-n2 .hor-title{background:var(--rojo);color:var(--crema)}
+.hor-day .hor-title{background:var(--negro);color:var(--amarillo)}
+.hor-ticket{
+  background:var(--crema);color:var(--negro);
+  position:relative;display:flex;align-items:stretch;
+  margin-bottom:10px;min-height:56px;
+  filter:drop-shadow(2px 3px 0 rgba(0,0,0,.25));
+}
+.hor-ticket::before,.hor-ticket::after{
+  content:'';position:absolute;width:14px;height:14px;border-radius:50%;left:84px;
+}
+.hor-ticket::before{top:-7px}
+.hor-ticket::after{bottom:-7px}
+.hor-n1 .hor-ticket::before, .hor-n1 .hor-ticket::after,
+.hor-n2 .hor-ticket::before, .hor-n2 .hor-ticket::after{background:#1a1a1a}
+.hor-day .hor-ticket::before, .hor-day .hor-ticket::after{background:#5bb8f5}
+.hor-stub{
+  width:84px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'EB Garamond',serif;font-style:italic;font-weight:700;
+  border-right:2px dashed #1a1a1a;
+}
+.hor-day .hor-stub{border-right-color:#5bb8f5}
+.hor-num{font-size:26px;line-height:1}
+.hor-n1 .hor-stub{background:var(--rojo);color:var(--crema)}
+.hor-day .hor-stub{background:var(--verde);color:var(--crema)}
+.hor-n2 .hor-stub{background:var(--amarillo);color:var(--negro)}
+.hor-info{flex:1;padding:10px 14px;display:flex;flex-direction:column;justify-content:center}
+.hor-name{font-weight:700;font-size:19px;line-height:1.15}
+.hor-when{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--rojo);font-weight:800;margin-top:3px}
+.hor-b2b{font-style:italic}
 
 /* CONFETTI */
 .confetti-piece{
@@ -1171,9 +1236,10 @@ body.night .night-toggle{
 
   <div class="tabs">
     <button class="tb on" id="tab-main">Inicio</button>
-    <button class="tb" id="tab-brd">Tablón</button>
-    <button class="tb" id="tab-cp">Caravana</button>
     <button class="tb" id="tab-sc">Menú</button>
+    <button class="tb" id="tab-hor">Horarios</button>
+    <button class="tb" id="tab-cp">Caravana</button>
+    <button class="tb" id="tab-brd">Tablón</button>
     <button class="tb" id="tab-info">Info</button>
   </div>
 
@@ -1222,7 +1288,7 @@ body.night .night-toggle{
       <div class="card-stripe" style="background:var(--amarillo)"></div>
       <div class="card-body">
         <div class="card-title" style="color:var(--rojo)">Cartel</div>
-        <img class="cartel-img" id="cartel-lineup-img" src="img/cartel-lineup-thumb.jpg" alt="Cartel San Sonorín XI" loading="lazy">
+        <img class="cartel-img" id="cartel-lineup-img" src="img/cartel-lineup.jpg" alt="Cartel San Sonorín XI" loading="lazy">
         <div class="cartel-cta" id="cartel-lineup-cta">★ Ver a tamaño completo ★</div>
       </div>
     </div>
@@ -1376,6 +1442,43 @@ body.night .night-toggle{
         </div>
         <div id="lineup-list"></div>
       </div>
+    </div>
+  </div>
+
+  <!-- ═══ TAB: HORARIOS ═══ -->
+  <div id="tc-hor" class="tc">
+    <div class="hor-block hor-n1">
+      <div class="hor-title">Noche I</div>
+      <div class="hor-ticket"><div class="hor-stub"><div class="hor-num">01</div></div><div class="hor-info"><div class="hor-name">Amphetamix</div><div class="hor-when">vie 21:00 · primer set</div></div></div>
+      <div class="hor-ticket"><div class="hor-stub"><div class="hor-num">02</div></div><div class="hor-info"><div class="hor-name">Lost Mery</div></div></div>
+      <div class="hor-ticket"><div class="hor-stub"><div class="hor-num">03</div></div><div class="hor-info"><div class="hor-name">Deejeya</div></div></div>
+      <div class="hor-ticket"><div class="hor-stub"><div class="hor-num">04</div></div><div class="hor-info"><div class="hor-name">BØHM</div></div></div>
+      <div class="hor-ticket"><div class="hor-stub"><div class="hor-num">05</div></div><div class="hor-info"><div class="hor-name">Ecce Homo</div></div></div>
+      <div class="hor-ticket"><div class="hor-stub"><div class="hor-num">06</div></div><div class="hor-info"><div class="hor-name">Astora</div></div></div>
+      <div class="hor-ticket"><div class="hor-stub"><div class="hor-num">07</div></div><div class="hor-info"><div class="hor-name hor-b2b">Mireia Cj b2b Cabani</div></div></div>
+      <div class="hor-ticket"><div class="hor-stub"><div class="hor-num">08</div></div><div class="hor-info"><div class="hor-name">Droglo</div></div></div>
+    </div>
+    <div class="hor-block hor-day">
+      <div class="hor-title">Día</div>
+      <div class="hor-ticket"><div class="hor-stub"><div class="hor-num">09</div></div><div class="hor-info"><div class="hor-name hor-b2b">Raso b2b FalsoJudas</div></div></div>
+      <div class="hor-ticket"><div class="hor-stub"><div class="hor-num">10</div></div><div class="hor-info"><div class="hor-name">Candel</div></div></div>
+      <div class="hor-ticket"><div class="hor-stub"><div class="hor-num">11</div></div><div class="hor-info"><div class="hor-name">Machete Soundsystem</div></div></div>
+      <div class="hor-ticket"><div class="hor-stub"><div class="hor-num">12</div></div><div class="hor-info"><div class="hor-name">Elena Magdalena</div></div></div>
+      <div class="hor-ticket"><div class="hor-stub"><div class="hor-num">13</div></div><div class="hor-info"><div class="hor-name">SNB</div></div></div>
+      <div class="hor-ticket"><div class="hor-stub"><div class="hor-num">14</div></div><div class="hor-info"><div class="hor-name">Dj Celestino</div></div></div>
+      <div class="hor-ticket"><div class="hor-stub"><div class="hor-num">15</div></div><div class="hor-info"><div class="hor-name">Francis Espinaco</div></div></div>
+      <div class="hor-ticket"><div class="hor-stub"><div class="hor-num">16</div></div><div class="hor-info"><div class="hor-name">Traver</div></div></div>
+    </div>
+    <div class="hor-block hor-n2">
+      <div class="hor-title">Noche II</div>
+      <div class="hor-ticket"><div class="hor-stub"><div class="hor-num">17</div></div><div class="hor-info"><div class="hor-name">Apparatchik</div></div></div>
+      <div class="hor-ticket"><div class="hor-stub"><div class="hor-num">18</div></div><div class="hor-info"><div class="hor-name">D.SastreSonoro</div></div></div>
+      <div class="hor-ticket"><div class="hor-stub"><div class="hor-num">19</div></div><div class="hor-info"><div class="hor-name">Cizette</div></div></div>
+      <div class="hor-ticket"><div class="hor-stub"><div class="hor-num">20</div></div><div class="hor-info"><div class="hor-name">SeR0</div></div></div>
+      <div class="hor-ticket"><div class="hor-stub"><div class="hor-num">21</div></div><div class="hor-info"><div class="hor-name">D-Bunk</div></div></div>
+      <div class="hor-ticket"><div class="hor-stub"><div class="hor-num">22</div></div><div class="hor-info"><div class="hor-name">K.Î.R.</div></div></div>
+      <div class="hor-ticket"><div class="hor-stub"><div class="hor-num">23</div></div><div class="hor-info"><div class="hor-name">Nómada</div></div></div>
+      <div class="hor-ticket"><div class="hor-stub"><div class="hor-num">24</div></div><div class="hor-info"><div class="hor-name">Llinares</div></div></div>
     </div>
   </div>
 
@@ -1780,6 +1883,7 @@ document.getElementById('tab-brd').addEventListener('click',  () => sw('brd'));
 document.getElementById('tab-cp').addEventListener('click',   () => sw('cp'));
 document.getElementById('tab-sc').addEventListener('click',   () => sw('sc'));
 document.getElementById('tab-info').addEventListener('click', () => sw('info'));
+document.getElementById('tab-hor').addEventListener('click', () => sw('hor'));
 document.getElementById('info-shortcut').addEventListener('click', () => sw('info'));
 document.getElementById('btn-go-menu').addEventListener('click', () => sw('sc'));
 

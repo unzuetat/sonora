@@ -184,6 +184,137 @@ body{
   font-size:13px;font-weight:800;letter-spacing:2px;text-transform:uppercase;
   background:var(--amarillo);color:var(--rojo);padding:2px 8px;
 }
+
+/* ════════════════════════════════════════
+   V6 — Carta de restaurante (elegante)
+════════════════════════════════════════ */
+.v6{background:#fffaee;padding:30px 18px 40px}
+.v6 .block{margin-bottom:42px;text-align:center}
+.v6 .block-title{
+  font-family:'EB Garamond',serif;font-weight:400;font-style:italic;
+  font-size:30px;letter-spacing:1px;margin:0;color:var(--rojo);
+}
+.v6 .ornament{
+  font-size:18px;letter-spacing:6px;opacity:.4;margin:6px 0 4px;
+  color:var(--negro);
+}
+.v6 .block-sub{
+  font-size:12px;letter-spacing:3px;text-transform:uppercase;
+  font-style:italic;margin-bottom:24px;opacity:.6;color:var(--negro);
+}
+.v6 .row{margin-bottom:18px}
+.v6 .name{
+  font-size:22px;font-weight:500;color:var(--negro);font-style:italic;
+  line-height:1.2;
+}
+.v6 .row.first .name{font-weight:700;color:var(--rojo)}
+.v6 .when{
+  display:block;font-size:11px;letter-spacing:3px;
+  text-transform:uppercase;opacity:.7;margin-top:2px;font-style:normal;
+}
+.v6 .row.first .when{color:var(--rojo);opacity:1;font-weight:700}
+.v6 .b2b::after{content:' ‧'}
+.v6 hr{border:none;border-top:1px dashed rgba(0,0,0,.15);margin:28px 0;width:60%;margin-left:auto;margin-right:auto}
+
+/* ════════════════════════════════════════
+   V7 — Tracklist de vinilo
+════════════════════════════════════════ */
+.v7{background:var(--negro);color:var(--crema);padding:24px 16px 40px}
+.v7 .block{margin-bottom:36px}
+.v7 .block-head{
+  display:flex;align-items:baseline;gap:12px;
+  border-bottom:1px solid var(--crema);padding-bottom:8px;margin-bottom:14px;
+}
+.v7 .side{
+  font-family:'EB Garamond',serif;font-weight:800;font-style:italic;
+  font-size:13px;letter-spacing:4px;text-transform:uppercase;
+  background:var(--rojo);color:var(--crema);padding:3px 10px;
+}
+.v7 .block-title{
+  font-family:'EB Garamond',serif;font-weight:800;font-style:italic;
+  font-size:24px;letter-spacing:1px;text-transform:uppercase;flex:1;
+}
+.v7 .block-sub{
+  font-size:11px;letter-spacing:2px;text-transform:uppercase;
+  font-style:italic;opacity:.7;
+}
+.v7 .row{
+  display:flex;align-items:baseline;gap:14px;padding:8px 4px;
+  border-bottom:1px solid rgba(245,240,224,.1);
+}
+.v7 .num{
+  font-family:'EB Garamond',serif;font-weight:400;font-style:italic;
+  font-size:14px;opacity:.5;min-width:30px;
+}
+.v7 .name{font-weight:700;font-size:18px;flex:1;letter-spacing:.5px}
+.v7 .when{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--amarillo);font-weight:700}
+.v7 .b2b{font-style:italic;font-weight:600}
+
+/* ════════════════════════════════════════
+   V8 — Tickets perforados
+════════════════════════════════════════ */
+.v8{background:var(--azul);padding:24px 14px 40px}
+.v8 .block{margin-bottom:30px}
+.v8 .block-title{
+  font-family:'EB Garamond',serif;font-weight:800;font-style:italic;
+  font-size:24px;letter-spacing:3px;text-transform:uppercase;
+  color:var(--crema);background:var(--negro);padding:6px 14px;
+  display:inline-block;margin-bottom:12px;
+}
+.v8 .ticket{
+  background:var(--crema);position:relative;display:flex;align-items:stretch;
+  margin-bottom:10px;min-height:56px;
+  filter:drop-shadow(2px 3px 0 rgba(0,0,0,.25));
+}
+.v8 .ticket::before, .v8 .ticket::after{
+  content:'';position:absolute;width:14px;height:14px;border-radius:50%;
+  background:var(--azul);left:84px;
+}
+.v8 .ticket::before{top:-7px}
+.v8 .ticket::after{bottom:-7px}
+.v8 .stub{
+  width:84px;background:var(--rojo);color:var(--crema);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-family:'EB Garamond',serif;font-style:italic;font-weight:700;
+  border-right:2px dashed var(--azul);position:relative;
+}
+.v8 .stub .num{font-size:24px;line-height:1}
+.v8 .stub .lbl{font-size:9px;letter-spacing:2px;text-transform:uppercase;opacity:.8;margin-top:2px}
+.v8 .ticket.first .stub{background:var(--amarillo);color:var(--negro)}
+.v8 .info{flex:1;padding:10px 14px;display:flex;flex-direction:column;justify-content:center}
+.v8 .name{font-weight:700;font-size:19px;color:var(--negro);line-height:1.15}
+.v8 .when{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--rojo);font-weight:800;margin-top:3px}
+.v8 .b2b{font-style:italic}
+
+/* ════════════════════════════════════════
+   V9 — Periódico antiguo
+════════════════════════════════════════ */
+.v9{background:#f0e6d2;padding:30px 18px 40px;color:#2a1a0a}
+.v9 .block{margin-bottom:36px;border-top:3px double #2a1a0a;border-bottom:3px double #2a1a0a;padding:14px 4px}
+.v9 .block-title{
+  font-family:'EB Garamond',serif;font-weight:800;
+  font-size:38px;letter-spacing:2px;text-transform:uppercase;
+  text-align:center;margin:0;line-height:1;
+}
+.v9 .block-sub{
+  text-align:center;font-size:11px;letter-spacing:3px;text-transform:uppercase;
+  font-style:italic;margin:4px 0 14px;opacity:.65;
+}
+.v9 .columns{
+  column-count:2;column-gap:18px;column-rule:1px solid rgba(42,26,10,.3);
+}
+.v9 .row{
+  break-inside:avoid;padding:6px 0;border-bottom:1px dotted rgba(42,26,10,.3);
+}
+.v9 .row:last-child{border-bottom:none}
+.v9 .num{
+  font-family:'EB Garamond',serif;font-weight:800;font-style:italic;
+  font-size:11px;opacity:.55;margin-right:4px;
+}
+.v9 .name{font-weight:700;font-size:16px;line-height:1.2}
+.v9 .row.first .name{color:var(--rojo);text-decoration:underline}
+.v9 .when{display:block;font-size:10px;letter-spacing:1px;text-transform:uppercase;opacity:.7;font-style:italic;margin-top:1px}
+.v9 .b2b{font-style:italic;font-weight:600}
 .v3 .block-title{
   font-family:'EB Garamond',serif;font-weight:800;font-style:italic;
   font-size:30px;letter-spacing:2px;text-transform:uppercase;margin:0 0 2px;
@@ -223,6 +354,10 @@ body{
   <button data-v="v3">V3 pósters</button>
   <button data-v="v4">V4 rojo/azul/amarillo</button>
   <button data-v="v5">V5 rojo/azul/verde</button>
+  <button data-v="v6">V6 carta</button>
+  <button data-v="v7">V7 vinilo</button>
+  <button data-v="v8">V8 tickets</button>
+  <button data-v="v9">V9 periódico</button>
 </div>
 
 <!-- ═══ V1 ═══ -->
@@ -467,7 +602,207 @@ body{
   </div>
 </div>
 
-<div class="foot">cinco variantes · pulsa arriba para alternar</div>
+<!-- ═══ V6 — Carta de restaurante ═══ -->
+<div class="variant v6" id="v6">
+
+  <div class="block">
+    <div class="block-title">Noche I</div>
+    <div class="ornament">∼ ❦ ∼</div>
+    <div class="block-sub">viernes 29</div>
+    <div class="row first"><div class="name">Amphetamix</div><span class="when">21:00 · primer set</span></div>
+    <div class="row"><div class="name">Lost Mery</div></div>
+    <div class="row"><div class="name">Deejeya</div></div>
+    <div class="row"><div class="name">BØHM</div></div>
+    <div class="row"><div class="name">Ecce Homo</div></div>
+    <div class="row"><div class="name">Astora</div></div>
+    <div class="row"><div class="name b2b">Mireia Cj b2b Cabani</div></div>
+    <div class="row"><div class="name">Droglo</div></div>
+  </div>
+
+  <hr>
+
+  <div class="block">
+    <div class="block-title">Día</div>
+    <div class="ornament">∼ ❦ ∼</div>
+    <div class="block-sub">sábado 30</div>
+    <div class="row"><div class="name b2b">Raso b2b FalsoJudas</div></div>
+    <div class="row"><div class="name">Candel</div></div>
+    <div class="row"><div class="name">Machete Soundsystem</div></div>
+    <div class="row"><div class="name">Elena Magdalena</div></div>
+    <div class="row"><div class="name">SNB</div></div>
+    <div class="row"><div class="name">Dj Celestino</div></div>
+    <div class="row"><div class="name">Francis Espinaco</div></div>
+    <div class="row"><div class="name">Traver</div></div>
+  </div>
+
+  <hr>
+
+  <div class="block">
+    <div class="block-title">Noche II</div>
+    <div class="ornament">∼ ❦ ∼</div>
+    <div class="block-sub">sábado 30 → domingo 31</div>
+    <div class="row"><div class="name">Apparatchik</div></div>
+    <div class="row"><div class="name">D.SastreSonoro</div></div>
+    <div class="row"><div class="name">Cizette</div></div>
+    <div class="row"><div class="name">SeR0</div></div>
+    <div class="row"><div class="name">D-Bunk</div></div>
+    <div class="row"><div class="name">K.Î.R.</div></div>
+    <div class="row"><div class="name">Nómada</div></div>
+    <div class="row"><div class="name">Llinares</div></div>
+  </div>
+</div>
+
+<!-- ═══ V7 — Tracklist de vinilo ═══ -->
+<div class="variant v7" id="v7">
+
+  <div class="block">
+    <div class="block-head">
+      <span class="side">A</span>
+      <div>
+        <div class="block-title">Noche I</div>
+        <div class="block-sub">viernes 29 · 21:00</div>
+      </div>
+    </div>
+    <div class="row first"><span class="num">A1</span><span class="name">Amphetamix</span><span class="when">21:00</span></div>
+    <div class="row"><span class="num">A2</span><span class="name">Lost Mery</span></div>
+    <div class="row"><span class="num">A3</span><span class="name">Deejeya</span></div>
+    <div class="row"><span class="num">A4</span><span class="name">BØHM</span></div>
+    <div class="row"><span class="num">A5</span><span class="name">Ecce Homo</span></div>
+    <div class="row"><span class="num">A6</span><span class="name">Astora</span></div>
+    <div class="row"><span class="num">A7</span><span class="name b2b">Mireia Cj b2b Cabani</span></div>
+    <div class="row"><span class="num">A8</span><span class="name">Droglo</span></div>
+  </div>
+
+  <div class="block">
+    <div class="block-head">
+      <span class="side" style="background:var(--amarillo);color:var(--negro)">B</span>
+      <div>
+        <div class="block-title">Día</div>
+        <div class="block-sub">sábado 30</div>
+      </div>
+    </div>
+    <div class="row"><span class="num">B1</span><span class="name b2b">Raso b2b FalsoJudas</span></div>
+    <div class="row"><span class="num">B2</span><span class="name">Candel</span></div>
+    <div class="row"><span class="num">B3</span><span class="name">Machete Soundsystem</span></div>
+    <div class="row"><span class="num">B4</span><span class="name">Elena Magdalena</span></div>
+    <div class="row"><span class="num">B5</span><span class="name">SNB</span></div>
+    <div class="row"><span class="num">B6</span><span class="name">Dj Celestino</span></div>
+    <div class="row"><span class="num">B7</span><span class="name">Francis Espinaco</span></div>
+    <div class="row"><span class="num">B8</span><span class="name">Traver</span></div>
+  </div>
+
+  <div class="block">
+    <div class="block-head">
+      <span class="side" style="background:var(--azul);color:var(--negro)">C</span>
+      <div>
+        <div class="block-title">Noche II</div>
+        <div class="block-sub">sábado 30 → domingo 31</div>
+      </div>
+    </div>
+    <div class="row"><span class="num">C1</span><span class="name">Apparatchik</span></div>
+    <div class="row"><span class="num">C2</span><span class="name">D.SastreSonoro</span></div>
+    <div class="row"><span class="num">C3</span><span class="name">Cizette</span></div>
+    <div class="row"><span class="num">C4</span><span class="name">SeR0</span></div>
+    <div class="row"><span class="num">C5</span><span class="name">D-Bunk</span></div>
+    <div class="row"><span class="num">C6</span><span class="name">K.Î.R.</span></div>
+    <div class="row"><span class="num">C7</span><span class="name">Nómada</span></div>
+    <div class="row"><span class="num">C8</span><span class="name">Llinares</span></div>
+  </div>
+</div>
+
+<!-- ═══ V8 — Tickets perforados ═══ -->
+<div class="variant v8" id="v8">
+
+  <div class="block">
+    <div class="block-title">Noche I</div>
+    <div class="ticket first">
+      <div class="stub"><div class="num">01</div><div class="lbl">N · I</div></div>
+      <div class="info"><div class="name">Amphetamix</div><div class="when">vie 21:00 · primer set</div></div>
+    </div>
+    <div class="ticket"><div class="stub"><div class="num">02</div><div class="lbl">N · I</div></div><div class="info"><div class="name">Lost Mery</div></div></div>
+    <div class="ticket"><div class="stub"><div class="num">03</div><div class="lbl">N · I</div></div><div class="info"><div class="name">Deejeya</div></div></div>
+    <div class="ticket"><div class="stub"><div class="num">04</div><div class="lbl">N · I</div></div><div class="info"><div class="name">BØHM</div></div></div>
+    <div class="ticket"><div class="stub"><div class="num">05</div><div class="lbl">N · I</div></div><div class="info"><div class="name">Ecce Homo</div></div></div>
+    <div class="ticket"><div class="stub"><div class="num">06</div><div class="lbl">N · I</div></div><div class="info"><div class="name">Astora</div></div></div>
+    <div class="ticket"><div class="stub"><div class="num">07</div><div class="lbl">N · I</div></div><div class="info"><div class="name b2b">Mireia Cj b2b Cabani</div></div></div>
+    <div class="ticket"><div class="stub"><div class="num">08</div><div class="lbl">N · I</div></div><div class="info"><div class="name">Droglo</div></div></div>
+  </div>
+
+  <div class="block">
+    <div class="block-title">Día</div>
+    <div class="ticket"><div class="stub" style="background:var(--azul);color:var(--negro)"><div class="num">01</div><div class="lbl">DÍA</div></div><div class="info"><div class="name b2b">Raso b2b FalsoJudas</div></div></div>
+    <div class="ticket"><div class="stub" style="background:var(--azul);color:var(--negro)"><div class="num">02</div><div class="lbl">DÍA</div></div><div class="info"><div class="name">Candel</div></div></div>
+    <div class="ticket"><div class="stub" style="background:var(--azul);color:var(--negro)"><div class="num">03</div><div class="lbl">DÍA</div></div><div class="info"><div class="name">Machete Soundsystem</div></div></div>
+    <div class="ticket"><div class="stub" style="background:var(--azul);color:var(--negro)"><div class="num">04</div><div class="lbl">DÍA</div></div><div class="info"><div class="name">Elena Magdalena</div></div></div>
+    <div class="ticket"><div class="stub" style="background:var(--azul);color:var(--negro)"><div class="num">05</div><div class="lbl">DÍA</div></div><div class="info"><div class="name">SNB</div></div></div>
+    <div class="ticket"><div class="stub" style="background:var(--azul);color:var(--negro)"><div class="num">06</div><div class="lbl">DÍA</div></div><div class="info"><div class="name">Dj Celestino</div></div></div>
+    <div class="ticket"><div class="stub" style="background:var(--azul);color:var(--negro)"><div class="num">07</div><div class="lbl">DÍA</div></div><div class="info"><div class="name">Francis Espinaco</div></div></div>
+    <div class="ticket"><div class="stub" style="background:var(--azul);color:var(--negro)"><div class="num">08</div><div class="lbl">DÍA</div></div><div class="info"><div class="name">Traver</div></div></div>
+  </div>
+
+  <div class="block">
+    <div class="block-title">Noche II</div>
+    <div class="ticket"><div class="stub"><div class="num">01</div><div class="lbl">N · II</div></div><div class="info"><div class="name">Apparatchik</div></div></div>
+    <div class="ticket"><div class="stub"><div class="num">02</div><div class="lbl">N · II</div></div><div class="info"><div class="name">D.SastreSonoro</div></div></div>
+    <div class="ticket"><div class="stub"><div class="num">03</div><div class="lbl">N · II</div></div><div class="info"><div class="name">Cizette</div></div></div>
+    <div class="ticket"><div class="stub"><div class="num">04</div><div class="lbl">N · II</div></div><div class="info"><div class="name">SeR0</div></div></div>
+    <div class="ticket"><div class="stub"><div class="num">05</div><div class="lbl">N · II</div></div><div class="info"><div class="name">D-Bunk</div></div></div>
+    <div class="ticket"><div class="stub"><div class="num">06</div><div class="lbl">N · II</div></div><div class="info"><div class="name">K.Î.R.</div></div></div>
+    <div class="ticket"><div class="stub"><div class="num">07</div><div class="lbl">N · II</div></div><div class="info"><div class="name">Nómada</div></div></div>
+    <div class="ticket"><div class="stub"><div class="num">08</div><div class="lbl">N · II</div></div><div class="info"><div class="name">Llinares</div></div></div>
+  </div>
+</div>
+
+<!-- ═══ V9 — Periódico antiguo ═══ -->
+<div class="variant v9" id="v9">
+
+  <div class="block">
+    <div class="block-title">Noche I</div>
+    <div class="block-sub">viernes 29 · arranque 21:00</div>
+    <div class="columns">
+      <div class="row first"><span class="num">I.</span><span class="name">Amphetamix</span><span class="when">21:00 · primer set</span></div>
+      <div class="row"><span class="num">II.</span><span class="name">Lost Mery</span></div>
+      <div class="row"><span class="num">III.</span><span class="name">Deejeya</span></div>
+      <div class="row"><span class="num">IV.</span><span class="name">BØHM</span></div>
+      <div class="row"><span class="num">V.</span><span class="name">Ecce Homo</span></div>
+      <div class="row"><span class="num">VI.</span><span class="name">Astora</span></div>
+      <div class="row"><span class="num">VII.</span><span class="name b2b">Mireia Cj b2b Cabani</span></div>
+      <div class="row"><span class="num">VIII.</span><span class="name">Droglo</span></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-title">Día</div>
+    <div class="block-sub">sábado 30</div>
+    <div class="columns">
+      <div class="row"><span class="num">I.</span><span class="name b2b">Raso b2b FalsoJudas</span></div>
+      <div class="row"><span class="num">II.</span><span class="name">Candel</span></div>
+      <div class="row"><span class="num">III.</span><span class="name">Machete Soundsystem</span></div>
+      <div class="row"><span class="num">IV.</span><span class="name">Elena Magdalena</span></div>
+      <div class="row"><span class="num">V.</span><span class="name">SNB</span></div>
+      <div class="row"><span class="num">VI.</span><span class="name">Dj Celestino</span></div>
+      <div class="row"><span class="num">VII.</span><span class="name">Francis Espinaco</span></div>
+      <div class="row"><span class="num">VIII.</span><span class="name">Traver</span></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <div class="block-title">Noche II</div>
+    <div class="block-sub">sábado 30 → domingo 31</div>
+    <div class="columns">
+      <div class="row"><span class="num">I.</span><span class="name">Apparatchik</span></div>
+      <div class="row"><span class="num">II.</span><span class="name">D.SastreSonoro</span></div>
+      <div class="row"><span class="num">III.</span><span class="name">Cizette</span></div>
+      <div class="row"><span class="num">IV.</span><span class="name">SeR0</span></div>
+      <div class="row"><span class="num">V.</span><span class="name">D-Bunk</span></div>
+      <div class="row"><span class="num">VI.</span><span class="name">K.Î.R.</span></div>
+      <div class="row"><span class="num">VII.</span><span class="name">Nómada</span></div>
+      <div class="row"><span class="num">VIII.</span><span class="name">Llinares</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="foot">nueve variantes · pulsa arriba para alternar</div>
 
 <script>
 document.querySelectorAll('.nav button').forEach(b => {
