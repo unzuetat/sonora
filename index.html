@@ -570,6 +570,18 @@ body.night .artist-img-placeholder{background:var(--bg-card);border-color:var(--
 }
 .artist-img{cursor:zoom-in}
 
+/* Cartel destacado en Inicio */
+.cartel-img{
+  width:100%;display:block;border-radius:4px;cursor:zoom-in;
+  box-shadow:0 4px 14px rgba(0,0,0,.18);
+  margin-top:4px;
+}
+.cartel-cta{
+  display:block;text-align:center;font-size:13px;font-style:italic;
+  letter-spacing:2px;text-transform:uppercase;margin-top:12px;color:var(--azul-dark);
+  font-weight:700;cursor:pointer;
+}
+
 /* CONFETTI */
 .confetti-piece{
   position:fixed;top:-20px;
@@ -1205,6 +1217,16 @@ body.night .night-toggle{
       </div>
     </div>
 
+    <!-- CARTEL -->
+    <div class="card" style="margin-top:16px">
+      <div class="card-stripe" style="background:var(--amarillo)"></div>
+      <div class="card-body">
+        <div class="card-title" style="color:var(--rojo)">Cartel</div>
+        <img class="cartel-img" id="cartel-lineup-img" src="img/cartel-lineup-thumb.jpg" alt="Cartel San Sonorín XI" loading="lazy">
+        <div class="cartel-cta" id="cartel-lineup-cta">★ Ver a tamaño completo ★</div>
+      </div>
+    </div>
+
     <!-- HISTORIAL MÉDICO -->
     <div class="card" style="margin-top:16px">
       <div class="card-stripe"></div>
@@ -1558,7 +1580,7 @@ const SC_ARTISTS = [
   { name:"Cabani", url:"https://soundcloud.com/cabani-music", sc:"https://soundcloud.com/cabani-music", ig:"https://instagram.com/cabani.dj", img:"https://i1.sndcdn.com/avatars-uKSNdI8DQ8gGIGzz-8FoDdA-t500x500.jpg" },
   { name:"Amphetamix" },
   { name:"Lost Mery", url:"https://soundcloud.com/maria-alfonso-moreno/tracks", sc:"https://soundcloud.com/maria-alfonso-moreno", img:"img/lost-mery.jpg" },
-  { name:"Gurke", img:"img/gurke.png" },
+  { name:"Dj Celestino", img:"img/gurke.png" },
   { name:"BØHM" },
   { name:"Droglo", img:"img/droglo.jpg" },
   { name:"Raso", url:"https://soundcloud.com/rasorvso/tracks", sc:"https://soundcloud.com/rasorvso", ig:"https://www.instagram.com/raso.rvso", img:"img/raso.jpeg" },
@@ -1572,6 +1594,7 @@ const SC_ARTISTS = [
   { name:"D-Bunk" },
   { name:"Nómada", url:"https://soundcloud.com/nomada-wav/tracks", sc:"https://soundcloud.com/nomada-wav", ig:"https://www.instagram.com/n00mada", img:"img/nomada.jpg" },
   { name:"SNB", img:"img/snb.jpg" },
+  { name:"SeR0" },
   { name:"Traver", url:"https://soundcloud.com/traver93/tracks", sc:"https://soundcloud.com/traver93", ig:"https://www.instagram.com/traver.music", img:"img/traver.jpeg" },
 ];
 SC_ARTISTS.sort((a, b) => a.name.localeCompare(b.name, 'es', { sensitivity:'base' }));
@@ -2078,6 +2101,9 @@ function openLightbox(src, alt){
 document.getElementById('lightbox').addEventListener('click', () => {
   document.getElementById('lightbox').classList.remove('open');
 });
+
+document.getElementById('cartel-lineup-img').addEventListener('click', () => openLightbox('img/cartel-lineup.jpg','Cartel San Sonorín XI'));
+document.getElementById('cartel-lineup-cta').addEventListener('click', () => openLightbox('img/cartel-lineup.jpg','Cartel San Sonorín XI'));
 
 function launchConfetti(){
   const colors = ['#e8001a', '#f4c542', '#2da44e', '#2b7fff', '#ff8c00', '#c850ff'];
