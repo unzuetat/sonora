@@ -2125,20 +2125,11 @@ function initCars(){
       preview.innerHTML = '<div class="empty-msg">Sin plazas todavía</div>';
       return;
     }
-    let count = 0;
     snap.forEach(ds => {
       const c = { id:ds.id, ...ds.data() };
       list.appendChild(renderCar(c));
-      if (count < 3) preview.appendChild(renderCar(c));
-      count++;
+      preview.appendChild(renderCar(c));
     });
-    if (count > 3) {
-      const more = document.createElement('div');
-      more.className = 'empty-msg';
-      more.innerHTML = `<a href="#" style="color:var(--verde);font-weight:700;text-decoration:none;letter-spacing:1px">Ver las ${count} plazas →</a>`;
-      more.querySelector('a').addEventListener('click', e => { e.preventDefault(); sw('cp'); });
-      preview.appendChild(more);
-    }
   }, err => { console.warn('Carpool listener error:', err); });
 }
 
