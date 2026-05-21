@@ -2594,48 +2594,53 @@ document.getElementById('btn-save-artists').addEventListener('click', async () =
 });
 
 // ── APP INIT ──
-function initAdminSetlist(){
+function renderAdminSetlist(data){
   const box = document.getElementById('admin-setlist');
   if (!box) return;
-  onSnapshot(doc(db,'setlist','state'), snap => {
-    const data = snap.exists() ? snap.data() : {};
-    let lastBlock = '';
-    box.innerHTML = '';
-    SETLIST_ORDER.forEach(s => {
-      if (s.block !== lastBlock) {
-        const h = document.createElement('div');
-        h.className = 'admin-sub-title';
-        h.textContent = s.block;
-        box.appendChild(h);
-        lastBlock = s.block;
-      }
-      const state = data[s.id];
-      const row = document.createElement('div');
-      row.className = 'sl-row sl-' + (state || 'pending');
-      row.innerHTML = `<div class="sl-name">${esc(s.name)}</div>`;
-      const btnNow = document.createElement('button');
-      btnNow.className = 'btn-ok';
-      btnNow.textContent = state === 'now' ? '● sonando' : '▶ ahora';
-      btnNow.disabled = state === 'now';
-      btnNow.addEventListener('click', () => markSetlistNow(s.id));
-      const btnDone = document.createElement('button');
-      btnDone.className = 'btn-strike';
-      btnDone.textContent = '✓ ya pasó';
-      btnDone.addEventListener('click', () => markSetlistDone(s.id));
-      const btnClear = document.createElement('button');
-      btnClear.className = 'btn-ko';
-      btnClear.textContent = '↺';
-      btnClear.title = 'volver a pendiente';
-      btnClear.addEventListener('click', () => clearSetlistState(s.id));
-      const acts = document.createElement('div');
-      acts.className = 'sl-actions';
-      acts.appendChild(btnNow); acts.appendChild(btnDone); acts.appendChild(btnClear);
-      row.appendChild(acts);
-      box.appendChild(row);
-    });
-  }, err => console.warn('Admin setlist:', err));
+  let lastBlock = '';
+  box.innerHTML = '';
+  SETLIST_ORDER.forEach(s => {
+    if (s.block !== lastBlock) {
+      const h = document.createElement('div');
+      h.className = 'admin-sub-title';
+      h.textContent = s.block;
+      box.appendChild(h);
+      lastBlock = s.block;
+    }
+    const state = data[s.id];
+    const row = document.createElement('div');
+    row.className = 'sl-row sl-' + (state || 'pending');
+    row.innerHTML = `<div class="sl-name">${esc(s.name)}</div>`;
+    const btnNow = document.createElement('button');
+    btnNow.className = 'btn-ok';
+    btnNow.textContent = state === 'now' ? '● sonando' : '▶ ahora';
+    btnNow.disabled = state === 'now';
+    btnNow.addEventListener('click', () => markSetlistNow(s.id));
+    const btnDone = document.createElement('button');
+    btnDone.className = 'btn-strike';
+    btnDone.textContent = '✓ ya pasó';
+    btnDone.addEventListener('click', () => markSetlistDone(s.id));
+    const btnClear = document.createElement('button');
+    btnClear.className = 'btn-ko';
+    btnClear.textContent = '↺';
+    btnClear.title = 'volver a pendiente';
+    btnClear.addEventListener('click', () => clearSetlistState(s.id));
+    const acts = document.createElement('div');
+    acts.className = 'sl-actions';
+    acts.appendChild(btnNow); acts.appendChild(btnDone); acts.appendChild(btnClear);
+    row.appendChild(acts);
+    box.appendChild(row);
+  });
+}
 
+function initAdminSetlist(){
+  // Render inicial (sin esperar a Firestore) para que la lista se vea siempre
+  renderAdminSetlist({});
   document.getElementById('btn-setlist-reset').addEventListener('click', resetSetlist);
+  // Suscribirse a cambios; si falla por reglas, al menos la lista ya está visible
+  onSnapshot(doc(db,'setlist','state'), snap => {
+    renderAdminSetlist(snap.exists() ? snap.data() : {});
+  }, err => console.warn('Admin setlist:', err));
 }
 
 function initApp(){
