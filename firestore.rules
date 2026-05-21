@@ -12,17 +12,45 @@ service cloud.firestore {
         && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
     }
 
+    // Ventana de tiempo razonable para el timestamp cliente: ±5 min respecto al server.
+    function tsRecent(ts) {
+      return ts is int
+        && ts >= request.time.toMillis() - 300000
+        && ts <= request.time.toMillis() + 300000;
+    }
+
+    // ===== Sonora XI (web pública sonora.community) =====
+
     // Lista de admins. Solo admins pueden ver/modificar la lista.
     // Para añadir un admin: crear el doc /admins/{uid} desde la consola Firestore.
     match /admins/{uid} {
       allow read, write: if isAdmin();
     }
 
-    // Tablón. Asistentes leen y crean. Solo admin actualiza/borra
-    // (verificar, tachar, responder, eliminar).
+    // Tablón. Asistentes leen y crean. Solo admin actualiza/borra.
     match /messages/{id} {
       allow read:   if isAuth();
-      allow create: if isAuth();
+      allow create: if isAuth()
+        && request.resource.data.keys().hasOnly(
+             ['tagId','tag','txt','time','ts','verified','struck','reply','author'])
+        && request.resource.data.keys().hasAll(
+             ['tagId','tag','txt','time','ts','verified','struck','reply','author'])
+        && request.resource.data.txt is string
+        && request.resource.data.txt.size() >= 1
+        && request.resource.data.txt.size() <= 500
+        && request.resource.data.author is string
+        && request.resource.data.author.size() >= 1
+        && request.resource.data.author.size() <= 40
+        && request.resource.data.tagId is string
+        && request.resource.data.tagId.size() <= 40
+        && request.resource.data.tag is string
+        && request.resource.data.tag.size() <= 40
+        && request.resource.data.time is string
+        && request.resource.data.time.size() <= 20
+        && request.resource.data.reply == ''
+        && request.resource.data.verified == false
+        && request.resource.data.struck == false
+        && tsRecent(request.resource.data.ts);
       allow update, delete: if isAdmin();
     }
 
@@ -30,7 +58,30 @@ service cloud.firestore {
     // Admin valida (approved), marca llena (full), edita campos y borra.
     match /carpool/{id} {
       allow read:   if isAuth();
-      allow create: if isAuth();
+      allow create: if isAuth()
+        && request.resource.data.keys().hasOnly(
+             ['name','from','contact','seats','day','time','ts','approved','full'])
+        && request.resource.data.keys().hasAll(
+             ['name','from','contact','seats','day','time','ts','approved','full'])
+        && request.resource.data.name is string
+        && request.resource.data.name.size() >= 1
+        && request.resource.data.name.size() <= 60
+        && request.resource.data.from is string
+        && request.resource.data.from.size() >= 1
+        && request.resource.data.from.size() <= 80
+        && request.resource.data.contact is string
+        && request.resource.data.contact.size() >= 1
+        && request.resource.data.contact.size() <= 80
+        && request.resource.data.day is string
+        && request.resource.data.day.size() <= 30
+        && request.resource.data.time is string
+        && request.resource.data.time.size() <= 20
+        && request.resource.data.seats is int
+        && request.resource.data.seats >= 1
+        && request.resource.data.seats <= 8
+        && request.resource.data.approved == false
+        && request.resource.data.full == false
+        && tsRecent(request.resource.data.ts);
       allow update, delete: if isAdmin();
     }
 
@@ -39,6 +90,16 @@ service cloud.firestore {
     match /config/{doc} {
       allow read:  if isAuth();
       allow write: if isAdmin();
+    }
+
+    // ===== Sonora Crew (app interna, auth a nivel UI) =====
+
+    match /sonora_editions/{doc} {
+      allow read, write: if true;
+    }
+
+    match /{collection}/{doc} {
+      allow read, write: if collection.matches('.+_(payments|expenses|tasks|decisions|polls|lineup_config|lineup_djs|lineup_proposals|settings)');
     }
 
     // Por defecto: nada más es accesible.
