@@ -648,6 +648,55 @@ body.night .artist-img-placeholder{background:var(--bg-card);border-color:var(--
 .hor-when{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--rojo);font-weight:800;margin-top:3px}
 .hor-b2b{font-style:italic}
 
+/* Estado: sonando ahora */
+.hor-ticket.now{
+  outline:3px solid var(--amarillo);
+  box-shadow:0 0 22px rgba(247,226,0,.65), inset 0 0 0 2px var(--amarillo);
+  position:relative;z-index:5;
+}
+.hor-badge-now{
+  position:absolute;top:-12px;right:8px;z-index:10;
+  background:var(--amarillo);color:var(--negro);
+  font-family:'EB Garamond',serif;font-weight:800;font-style:italic;
+  font-size:12px;letter-spacing:3px;text-transform:uppercase;
+  padding:3px 10px;
+  animation:hor-blink 1.4s ease-in-out infinite;
+}
+@keyframes hor-blink{0%,100%{opacity:1}50%{opacity:.55}}
+
+/* Estado: ya pasó (troqueles arrancados) */
+.hor-ticket.done{background:transparent;filter:none}
+.hor-ticket.done::before, .hor-ticket.done::after{display:none}
+.hor-ticket.done .hor-stub{
+  border-right:none;
+  margin-right:14px;
+  filter:drop-shadow(2px 3px 0 rgba(0,0,0,.4));
+  clip-path:polygon(
+    0% 0%, 100% 0%,
+    calc(100% - 7px) 7%, 100% 14%, calc(100% - 7px) 21%, 100% 28%,
+    calc(100% - 7px) 35%, 100% 42%, calc(100% - 7px) 50%, 100% 57%,
+    calc(100% - 7px) 64%, 100% 71%, calc(100% - 7px) 78%, 100% 85%,
+    calc(100% - 7px) 92%, 100% 100%,
+    0% 100%
+  );
+}
+.hor-ticket.done .hor-info{
+  margin-left:14px;
+  background:#bdb4a3;
+  filter:drop-shadow(2px 3px 0 rgba(0,0,0,.4));
+  clip-path:polygon(
+    7px 0%,
+    0px 7%, 7px 14%, 0px 21%, 7px 28%,
+    0px 35%, 7px 42%, 0px 50%, 7px 57%,
+    0px 64%, 7px 71%, 0px 78%, 7px 85%,
+    0px 92%, 7px 100%,
+    100% 100%, 100% 0%
+  );
+  padding-left:24px;
+}
+.hor-ticket.done .hor-name{color:#3a3a3a;font-style:italic}
+.hor-ticket.done .hor-when{display:none}
+
 /* CONFETTI */
 .confetti-piece{
   position:fixed;top:-20px;
@@ -715,6 +764,15 @@ body.night .lineup-player-name{color:var(--amarillo)}
 .admin-sub{font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:#888;letter-spacing:2px;margin-top:4px}
 .admin-section{margin-bottom:28px}
 .admin-sec-title{font-family:'EB Garamond',serif;font-weight:700;font-size:13px;letter-spacing:2px;color:#888;text-transform:uppercase;margin-bottom:12px;padding-bottom:6px;border-bottom:2px dashed #ccc}
+.admin-sub-title{font-family:'EB Garamond',serif;font-weight:700;font-style:italic;font-size:14px;color:#444;margin:14px 0 6px;letter-spacing:1px}
+.sl-row{display:flex;align-items:center;gap:8px;padding:8px 6px;border-bottom:1px dotted #ddd;flex-wrap:wrap}
+.sl-row:last-child{border-bottom:none}
+.sl-name{flex:1;font-weight:700;font-size:15px;min-width:140px}
+.sl-row.sl-now{background:rgba(247,226,0,.25);outline:1px solid var(--amarillo)}
+.sl-row.sl-done{opacity:.55}
+.sl-row.sl-done .sl-name{text-decoration:line-through;font-style:italic}
+.sl-actions{display:flex;gap:4px;flex-wrap:wrap}
+.sl-actions button{font-size:11px;padding:5px 8px}
 .admin-item{background:#fff8e7;border:2px solid var(--negro);padding:10px 14px;margin-bottom:8px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px}
 .admin-item-info{flex:1;min-width:0}
 .admin-item-name{font-family:'EB Garamond',serif;font-weight:800;font-size:15px;color:var(--negro);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -1450,36 +1508,36 @@ body.night .night-toggle{
   <div id="tc-hor" class="tc">
     <div class="hor-block hor-n1">
       <div class="hor-title">Noche I</div>
-      <div class="hor-ticket"><div class="hor-stub"><div class="hor-num">01</div></div><div class="hor-info"><div class="hor-name">Amphetamix</div><div class="hor-when">vie 21:00 · primer set</div></div></div>
-      <div class="hor-ticket"><div class="hor-stub"><div class="hor-num">02</div></div><div class="hor-info"><div class="hor-name">Lost Mery</div></div></div>
-      <div class="hor-ticket"><div class="hor-stub"><div class="hor-num">03</div></div><div class="hor-info"><div class="hor-name">Deejeya</div></div></div>
-      <div class="hor-ticket"><div class="hor-stub"><div class="hor-num">04</div></div><div class="hor-info"><div class="hor-name">BØHM</div></div></div>
-      <div class="hor-ticket"><div class="hor-stub"><div class="hor-num">05</div></div><div class="hor-info"><div class="hor-name">Ecce Homo</div></div></div>
-      <div class="hor-ticket"><div class="hor-stub"><div class="hor-num">06</div></div><div class="hor-info"><div class="hor-name">Astora</div></div></div>
-      <div class="hor-ticket"><div class="hor-stub"><div class="hor-num">07</div></div><div class="hor-info"><div class="hor-name hor-b2b">Mireia Cj b2b Cabani</div></div></div>
-      <div class="hor-ticket"><div class="hor-stub"><div class="hor-num">08</div></div><div class="hor-info"><div class="hor-name">Droglo</div></div></div>
+      <div class="hor-ticket" data-id="amphetamix"><div class="hor-stub"><div class="hor-num">01</div></div><div class="hor-info"><div class="hor-name">Amphetamix</div><div class="hor-when">vie 21:00 · primer set</div></div></div>
+      <div class="hor-ticket" data-id="lost-mery"><div class="hor-stub"><div class="hor-num">02</div></div><div class="hor-info"><div class="hor-name">Lost Mery</div></div></div>
+      <div class="hor-ticket" data-id="deejeya"><div class="hor-stub"><div class="hor-num">03</div></div><div class="hor-info"><div class="hor-name">Deejeya</div></div></div>
+      <div class="hor-ticket" data-id="bohm"><div class="hor-stub"><div class="hor-num">04</div></div><div class="hor-info"><div class="hor-name">BØHM</div></div></div>
+      <div class="hor-ticket" data-id="ecce-homo"><div class="hor-stub"><div class="hor-num">05</div></div><div class="hor-info"><div class="hor-name">Ecce Homo</div></div></div>
+      <div class="hor-ticket" data-id="astora"><div class="hor-stub"><div class="hor-num">06</div></div><div class="hor-info"><div class="hor-name">Astora</div></div></div>
+      <div class="hor-ticket" data-id="mireia-cabani"><div class="hor-stub"><div class="hor-num">07</div></div><div class="hor-info"><div class="hor-name hor-b2b">Mireia Cj b2b Cabani</div></div></div>
+      <div class="hor-ticket" data-id="droglo"><div class="hor-stub"><div class="hor-num">08</div></div><div class="hor-info"><div class="hor-name">Droglo</div></div></div>
     </div>
     <div class="hor-block hor-day">
       <div class="hor-title">Día</div>
-      <div class="hor-ticket"><div class="hor-stub"><div class="hor-num">09</div></div><div class="hor-info"><div class="hor-name hor-b2b">Raso b2b FalsoJudas</div></div></div>
-      <div class="hor-ticket"><div class="hor-stub"><div class="hor-num">10</div></div><div class="hor-info"><div class="hor-name">Candel</div></div></div>
-      <div class="hor-ticket"><div class="hor-stub"><div class="hor-num">11</div></div><div class="hor-info"><div class="hor-name">Machete Soundsystem</div></div></div>
-      <div class="hor-ticket"><div class="hor-stub"><div class="hor-num">12</div></div><div class="hor-info"><div class="hor-name">Elena Magdalena</div></div></div>
-      <div class="hor-ticket"><div class="hor-stub"><div class="hor-num">13</div></div><div class="hor-info"><div class="hor-name">SNB</div></div></div>
-      <div class="hor-ticket"><div class="hor-stub"><div class="hor-num">14</div></div><div class="hor-info"><div class="hor-name">Dj Celestino</div></div></div>
-      <div class="hor-ticket"><div class="hor-stub"><div class="hor-num">15</div></div><div class="hor-info"><div class="hor-name">Francis Espinaco</div></div></div>
-      <div class="hor-ticket"><div class="hor-stub"><div class="hor-num">16</div></div><div class="hor-info"><div class="hor-name">Traver</div></div></div>
+      <div class="hor-ticket" data-id="raso-falsojudas"><div class="hor-stub"><div class="hor-num">09</div></div><div class="hor-info"><div class="hor-name hor-b2b">Raso b2b FalsoJudas</div></div></div>
+      <div class="hor-ticket" data-id="candel"><div class="hor-stub"><div class="hor-num">10</div></div><div class="hor-info"><div class="hor-name">Candel</div></div></div>
+      <div class="hor-ticket" data-id="machete"><div class="hor-stub"><div class="hor-num">11</div></div><div class="hor-info"><div class="hor-name">Machete Soundsystem</div></div></div>
+      <div class="hor-ticket" data-id="elena-magdalena"><div class="hor-stub"><div class="hor-num">12</div></div><div class="hor-info"><div class="hor-name">Elena Magdalena</div></div></div>
+      <div class="hor-ticket" data-id="snb"><div class="hor-stub"><div class="hor-num">13</div></div><div class="hor-info"><div class="hor-name">SNB</div></div></div>
+      <div class="hor-ticket" data-id="dj-celestino"><div class="hor-stub"><div class="hor-num">14</div></div><div class="hor-info"><div class="hor-name">Dj Celestino</div></div></div>
+      <div class="hor-ticket" data-id="francis-espinaco"><div class="hor-stub"><div class="hor-num">15</div></div><div class="hor-info"><div class="hor-name">Francis Espinaco</div></div></div>
+      <div class="hor-ticket" data-id="traver"><div class="hor-stub"><div class="hor-num">16</div></div><div class="hor-info"><div class="hor-name">Traver</div></div></div>
     </div>
     <div class="hor-block hor-n2">
       <div class="hor-title">Noche II</div>
-      <div class="hor-ticket"><div class="hor-stub"><div class="hor-num">17</div></div><div class="hor-info"><div class="hor-name">Apparatchik</div></div></div>
-      <div class="hor-ticket"><div class="hor-stub"><div class="hor-num">18</div></div><div class="hor-info"><div class="hor-name">D.SastreSonoro</div></div></div>
-      <div class="hor-ticket"><div class="hor-stub"><div class="hor-num">19</div></div><div class="hor-info"><div class="hor-name">Cizette</div></div></div>
-      <div class="hor-ticket"><div class="hor-stub"><div class="hor-num">20</div></div><div class="hor-info"><div class="hor-name">SeR0</div></div></div>
-      <div class="hor-ticket"><div class="hor-stub"><div class="hor-num">21</div></div><div class="hor-info"><div class="hor-name">D-Bunk</div></div></div>
-      <div class="hor-ticket"><div class="hor-stub"><div class="hor-num">22</div></div><div class="hor-info"><div class="hor-name">K.Î.R.</div></div></div>
-      <div class="hor-ticket"><div class="hor-stub"><div class="hor-num">23</div></div><div class="hor-info"><div class="hor-name">Nómada</div></div></div>
-      <div class="hor-ticket"><div class="hor-stub"><div class="hor-num">24</div></div><div class="hor-info"><div class="hor-name">Llinares</div></div></div>
+      <div class="hor-ticket" data-id="apparatchik"><div class="hor-stub"><div class="hor-num">17</div></div><div class="hor-info"><div class="hor-name">Apparatchik</div></div></div>
+      <div class="hor-ticket" data-id="sastresonoro"><div class="hor-stub"><div class="hor-num">18</div></div><div class="hor-info"><div class="hor-name">D.SastreSonoro</div></div></div>
+      <div class="hor-ticket" data-id="cizette"><div class="hor-stub"><div class="hor-num">19</div></div><div class="hor-info"><div class="hor-name">Cizette</div></div></div>
+      <div class="hor-ticket" data-id="sero"><div class="hor-stub"><div class="hor-num">20</div></div><div class="hor-info"><div class="hor-name">SeR0</div></div></div>
+      <div class="hor-ticket" data-id="d-bunk"><div class="hor-stub"><div class="hor-num">21</div></div><div class="hor-info"><div class="hor-name">D-Bunk</div></div></div>
+      <div class="hor-ticket" data-id="kir"><div class="hor-stub"><div class="hor-num">22</div></div><div class="hor-info"><div class="hor-name">K.Î.R.</div></div></div>
+      <div class="hor-ticket" data-id="nomada"><div class="hor-stub"><div class="hor-num">23</div></div><div class="hor-info"><div class="hor-name">Nómada</div></div></div>
+      <div class="hor-ticket" data-id="llinares"><div class="hor-stub"><div class="hor-num">24</div></div><div class="hor-info"><div class="hor-name">Llinares</div></div></div>
     </div>
   </div>
 
@@ -1594,6 +1652,12 @@ body.night .night-toggle{
     <div class="admin-sec-title">Descripciones de artistas</div>
     <div id="admin-artists"></div>
     <button class="offer-btn" id="btn-save-artists" style="margin-top:8px">Guardar descripciones</button>
+  </div>
+
+  <div class="admin-section">
+    <div class="admin-sec-title">setlist en vivo</div>
+    <div id="admin-setlist"></div>
+    <button class="offer-btn" id="btn-setlist-reset" style="margin-top:10px;background:#888">resetear setlist</button>
   </div>
 
   <div class="admin-section">
@@ -2290,6 +2354,7 @@ let adminInited = false;
 function initAdmin(){
   if (adminInited) return; adminInited = true;
   initAdminArtists();
+  initAdminSetlist();
   // Load info fields
   onSnapshot(doc(db,'config','info'), snap => {
     const data = snap.exists() ? snap.data() : {};
@@ -2529,6 +2594,50 @@ document.getElementById('btn-save-artists').addEventListener('click', async () =
 });
 
 // ── APP INIT ──
+function initAdminSetlist(){
+  const box = document.getElementById('admin-setlist');
+  if (!box) return;
+  onSnapshot(doc(db,'setlist','state'), snap => {
+    const data = snap.exists() ? snap.data() : {};
+    let lastBlock = '';
+    box.innerHTML = '';
+    SETLIST_ORDER.forEach(s => {
+      if (s.block !== lastBlock) {
+        const h = document.createElement('div');
+        h.className = 'admin-sub-title';
+        h.textContent = s.block;
+        box.appendChild(h);
+        lastBlock = s.block;
+      }
+      const state = data[s.id];
+      const row = document.createElement('div');
+      row.className = 'sl-row sl-' + (state || 'pending');
+      row.innerHTML = `<div class="sl-name">${esc(s.name)}</div>`;
+      const btnNow = document.createElement('button');
+      btnNow.className = 'btn-ok';
+      btnNow.textContent = state === 'now' ? '● sonando' : '▶ ahora';
+      btnNow.disabled = state === 'now';
+      btnNow.addEventListener('click', () => markSetlistNow(s.id));
+      const btnDone = document.createElement('button');
+      btnDone.className = 'btn-strike';
+      btnDone.textContent = '✓ ya pasó';
+      btnDone.addEventListener('click', () => markSetlistDone(s.id));
+      const btnClear = document.createElement('button');
+      btnClear.className = 'btn-ko';
+      btnClear.textContent = '↺';
+      btnClear.title = 'volver a pendiente';
+      btnClear.addEventListener('click', () => clearSetlistState(s.id));
+      const acts = document.createElement('div');
+      acts.className = 'sl-actions';
+      acts.appendChild(btnNow); acts.appendChild(btnDone); acts.appendChild(btnClear);
+      row.appendChild(acts);
+      box.appendChild(row);
+    });
+  }, err => console.warn('Admin setlist:', err));
+
+  document.getElementById('btn-setlist-reset').addEventListener('click', resetSetlist);
+}
+
 function initApp(){
   if (appInited) return; appInited = true;
   // Restaurar nombre guardado
@@ -2563,6 +2672,92 @@ function initApp(){
       renderLineup();
     }, err => console.warn('Artists config:', err));
   } catch(e) {}
+  try { initSetlist(); } catch(e) { console.warn('initSetlist:', e); }
+}
+
+// ── SETLIST EN VIVO ──
+const SETLIST_ORDER = [
+  // Noche I
+  {id:'amphetamix', name:'Amphetamix', block:'Noche I'},
+  {id:'lost-mery', name:'Lost Mery', block:'Noche I'},
+  {id:'deejeya', name:'Deejeya', block:'Noche I'},
+  {id:'bohm', name:'BØHM', block:'Noche I'},
+  {id:'ecce-homo', name:'Ecce Homo', block:'Noche I'},
+  {id:'astora', name:'Astora', block:'Noche I'},
+  {id:'mireia-cabani', name:'Mireia Cj b2b Cabani', block:'Noche I'},
+  {id:'droglo', name:'Droglo', block:'Noche I'},
+  // Día
+  {id:'raso-falsojudas', name:'Raso b2b FalsoJudas', block:'Día'},
+  {id:'candel', name:'Candel', block:'Día'},
+  {id:'machete', name:'Machete Soundsystem', block:'Día'},
+  {id:'elena-magdalena', name:'Elena Magdalena', block:'Día'},
+  {id:'snb', name:'SNB', block:'Día'},
+  {id:'dj-celestino', name:'Dj Celestino', block:'Día'},
+  {id:'francis-espinaco', name:'Francis Espinaco', block:'Día'},
+  {id:'traver', name:'Traver', block:'Día'},
+  // Noche II
+  {id:'apparatchik', name:'Apparatchik', block:'Noche II'},
+  {id:'sastresonoro', name:'D.SastreSonoro', block:'Noche II'},
+  {id:'cizette', name:'Cizette', block:'Noche II'},
+  {id:'sero', name:'SeR0', block:'Noche II'},
+  {id:'d-bunk', name:'D-Bunk', block:'Noche II'},
+  {id:'kir', name:'K.Î.R.', block:'Noche II'},
+  {id:'nomada', name:'Nómada', block:'Noche II'},
+  {id:'llinares', name:'Llinares', block:'Noche II'},
+];
+
+function applySetlistState(data){
+  document.querySelectorAll('#tc-hor .hor-ticket[data-id]').forEach(el => {
+    const id = el.dataset.id;
+    el.classList.remove('now', 'done');
+    el.querySelector('.hor-badge-now')?.remove();
+    const state = data?.[id];
+    if (state === 'now') {
+      el.classList.add('now');
+      const badge = document.createElement('div');
+      badge.className = 'hor-badge-now';
+      badge.textContent = '▶ ahora';
+      el.appendChild(badge);
+    } else if (state === 'done') {
+      el.classList.add('done');
+    }
+  });
+}
+
+function initSetlist(){
+  onSnapshot(doc(db,'setlist','state'), snap => {
+    applySetlistState(snap.exists() ? snap.data() : {});
+  }, err => console.warn('Setlist listener:', err));
+}
+
+async function markSetlistNow(id){
+  const ref = doc(db,'setlist','state');
+  const snap = await getDoc(ref);
+  const data = snap.exists() ? snap.data() : {};
+  const patch = {};
+  // El anterior 'now' pasa a 'done'
+  Object.entries(data).forEach(([k,v]) => {
+    if (v === 'now' && k !== id) patch[k] = 'done';
+  });
+  patch[id] = 'now';
+  await setDoc(ref, patch, {merge: true});
+}
+
+async function markSetlistDone(id){
+  await setDoc(doc(db,'setlist','state'), {[id]:'done'}, {merge:true});
+}
+
+async function clearSetlistState(id){
+  const ref = doc(db,'setlist','state');
+  const snap = await getDoc(ref);
+  const data = snap.exists() ? snap.data() : {};
+  delete data[id];
+  await setDoc(ref, data); // sobrescribir entero
+}
+
+async function resetSetlist(){
+  if (!confirm('¿Resetear setlist? Esto borra el estado de todos los sets.')) return;
+  await setDoc(doc(db,'setlist','state'), {});
 }
 
 function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }

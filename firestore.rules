@@ -92,6 +92,13 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    // Setlist en vivo. Estado de cada slot ('now' | 'done' | undefined).
+    // Asistentes leen para ver quién está sonando, solo admin escribe.
+    match /setlist/{doc} {
+      allow read:  if isAuth();
+      allow write: if isAdmin();
+    }
+
     // ===== Sonora Crew (app interna, auth a nivel UI) =====
 
     match /sonora_editions/{doc} {
