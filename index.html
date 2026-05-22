@@ -465,6 +465,18 @@ body.night .msg-reply{background:rgba(45,164,78,.1);color:#6ddb8a}
 .car-list{display:flex;flex-direction:column;gap:7px}
 .car-section-title{font-family:'EB Garamond',serif;font-weight:800;font-style:italic;font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--rojo);margin:14px 0 4px;padding-bottom:4px;border-bottom:2px solid var(--rojo)}
 .car-section-title:first-child{margin-top:0}
+.car-subsection-title{font-family:'EB Garamond',serif;font-weight:700;font-style:italic;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#666;margin:10px 0 4px}
+.car-item.seek{border-left-color:var(--azul-dark)}
+
+.cp-type-toggle{display:flex;gap:6px;margin-bottom:10px}
+.cp-type-btn{
+  flex:1;background:#eee;border:2px solid var(--negro);color:var(--negro);
+  font-family:'EB Garamond',serif;font-weight:700;font-style:italic;
+  font-size:14px;padding:8px 6px;cursor:pointer;
+  transition:all .15s ease;
+}
+.cp-type-btn.active{background:var(--amarillo);box-shadow:2px 2px 0 var(--negro)}
+.cp-type-btn:active{transform:translate(1px,1px)}
 .car-item{background:#fff;border:2px solid var(--negro);border-left:6px solid var(--verde);padding:10px 14px;display:flex;justify-content:space-between;align-items:center;animation:fadeup .2s ease}
 .car-item.pending{border-left-color:#ccc;opacity:.65}
 .car-from{font-family:'EB Garamond',serif;font-weight:800;font-size:17px;color:var(--negro)}
@@ -1479,7 +1491,10 @@ body.night .night-toggle{
         <div class="card-title">Caravana</div>
         <div class="sec-desc">Si ofreces plaza deja tu contacto. Tu entrada aparece una vez validada por el Consejo del Festejo.</div>
         <div class="cp-form">
-          <span class="cp-label">Registrar plaza disponible</span>
+          <div class="cp-type-toggle">
+            <button type="button" class="cp-type-btn active" data-type="offer">Ofrezco coche</button>
+            <button type="button" class="cp-type-btn" data-type="seek">Busco plaza</button>
+          </div>
           <input class="cp-inp" id="cpname" placeholder="Tu nombre" style="width:100%;margin-bottom:10px"/>
           <div class="cp-row">
             <select class="cp-sel" id="cpdir" style="flex:1">
@@ -2114,48 +2129,63 @@ document.getElementById('minp').addEventListener('keydown', e => { if (e.key ===
 
 // ── CARAVANA ──
 function renderCar(c){
+  const isSeek = c.type === 'seek';
   const d = document.createElement('div');
-  d.className = 'car-item' + (c.approved ? '' : ' pending');
+  d.className = 'car-item' + (c.approved ? '' : ' pending') + (isSeek ? ' seek' : '');
   const st = c.full
     ? '<div class="car-status" style="color:var(--rojo)">✗ completo</div>'
     : c.approved
       ? '<div class="car-status ok">✓ validado</div>'
       : '<div class="car-status wait">○ pendiente</div>';
   const when = [c.day, c.time].filter(Boolean).join(' · ');
-  const title = c.name ? `${esc(c.name)} · desde ${esc(c.from)}` : `Desde ${esc(c.from)}`;
+  const fromLabel = isSeek ? 'sale desde' : 'desde';
+  const title = c.name ? `${esc(c.name)} · ${fromLabel} ${esc(c.from)}` : `${fromLabel} ${esc(c.from)}`;
   const sub = [when, c.contact || '—', st.replace(/<[^>]+>/g,'').trim()].filter(Boolean).join(' · ');
-  d.innerHTML = `<div><div class="car-from">${title}</div><div class="car-contact">${esc(sub)}</div></div><div class="car-seats">${c.seats}p</div>`;
+  const sideLabel = isSeek ? `${c.seats}p buscando` : `${c.seats}p`;
+  d.innerHTML = `<div><div class="car-from">${title}</div><div class="car-contact">${esc(sub)}</div></div><div class="car-seats">${sideLabel}</div>`;
   return d;
 }
-function renderCarSection(container, title, items){
+function renderCarSubsection(container, label, items, emptyText){
   const h = document.createElement('div');
-  h.className = 'car-section-title';
-  h.textContent = title;
+  h.className = 'car-subsection-title';
+  h.textContent = label;
   container.appendChild(h);
   if (items.length === 0) {
     const e = document.createElement('div');
     e.className = 'empty-msg';
-    e.textContent = 'Sin plazas todavía';
+    e.textContent = emptyText;
     container.appendChild(e);
   } else {
     items.forEach(c => container.appendChild(renderCar(c)));
   }
+}
+function renderCarDirection(container, title, offers, seeks){
+  const h = document.createElement('div');
+  h.className = 'car-section-title';
+  h.textContent = title;
+  container.appendChild(h);
+  renderCarSubsection(container, 'Ofrecen plaza', offers, 'Sin plazas todavía');
+  renderCarSubsection(container, 'Buscan plaza', seeks,  'Nadie busca todavía');
 }
 function initCars(){
   onSnapshot(query(collection(db,'carpool'), orderBy('ts','desc')), snap => {
     const list = document.getElementById('carlist');
     const preview = document.getElementById('carlist-preview');
     list.innerHTML = ''; preview.innerHTML = '';
-    const idas = [], vueltas = [];
+    const idaOffer = [], idaSeek = [], vueltaOffer = [], vueltaSeek = [];
     snap.forEach(ds => {
       const c = { id:ds.id, ...ds.data() };
-      if ((c.direction || 'ida') === 'vuelta') vueltas.push(c);
-      else idas.push(c);
+      const dir  = (c.direction || 'ida') === 'vuelta' ? 'vuelta' : 'ida';
+      const tipo = c.type === 'seek' ? 'seek' : 'offer';
+      if (dir === 'ida' && tipo === 'offer') idaOffer.push(c);
+      else if (dir === 'ida' && tipo === 'seek') idaSeek.push(c);
+      else if (dir === 'vuelta' && tipo === 'offer') vueltaOffer.push(c);
+      else vueltaSeek.push(c);
     });
-    renderCarSection(list, 'IDA', idas);
-    renderCarSection(list, 'VUELTA', vueltas);
-    renderCarSection(preview, 'IDA', idas);
-    renderCarSection(preview, 'VUELTA', vueltas);
+    renderCarDirection(list, 'IDA',    idaOffer,    idaSeek);
+    renderCarDirection(list, 'VUELTA', vueltaOffer, vueltaSeek);
+    renderCarDirection(preview, 'IDA',    idaOffer,    idaSeek);
+    renderCarDirection(preview, 'VUELTA', vueltaOffer, vueltaSeek);
   }, err => { console.warn('Carpool listener error:', err); });
 }
 
@@ -2171,6 +2201,27 @@ function updateCpDayOptions(){
 }
 document.getElementById('cpdir').addEventListener('change', updateCpDayOptions);
 
+let cpType = 'offer';
+function updateCpType(t){
+  cpType = t;
+  document.querySelectorAll('.cp-type-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.type === t);
+  });
+  const fromInp = document.getElementById('cpfrom');
+  const btnCar  = document.getElementById('btn-car');
+  const seatsLabel = document.querySelector('label[for="cpseats"]');
+  if (t === 'seek') {
+    fromInp.placeholder = '¿Desde dónde necesitas salir?';
+    btnCar.textContent = '★ Publicar petición ★';
+  } else {
+    fromInp.placeholder = 'Salgo desde...';
+    btnCar.textContent = '★ Publicar plaza ★';
+  }
+}
+document.querySelectorAll('.cp-type-btn').forEach(b => {
+  b.addEventListener('click', () => updateCpType(b.dataset.type));
+});
+
 document.getElementById('btn-car').addEventListener('click', async () => {
   const name      = document.getElementById('cpname').value.trim();
   const from      = document.getElementById('cpfrom').value.trim();
@@ -2179,23 +2230,30 @@ document.getElementById('btn-car').addEventListener('click', async () => {
   const day       = document.getElementById('cpday').value;
   const time      = document.getElementById('cptime').value;
   const direction = document.getElementById('cpdir').value || 'ida';
+  const type      = cpType;
   if (!name) { toast('Pon tu nombre'); return; }
-  if (!from) { toast('Pon desde dónde sales'); return; }
+  if (!from) { toast(type === 'seek' ? 'Pon desde dónde necesitas salir' : 'Pon desde dónde sales'); return; }
   if (!contact) { toast('Pon tu contacto'); return; }
   const btn = document.getElementById('btn-car');
   btn.disabled = true;
   btn.classList.add('sending'); btn.textContent = 'Enviando...';
-  await addDoc(collection(db,'carpool'), { name, from, contact, seats, day, time, direction, ts:Date.now(), approved:false, full:false });
-  document.getElementById('cpname').value = '';
-  document.getElementById('cpfrom').value = '';
-  document.getElementById('cpcont').value = '';
-  document.getElementById('cpday').value = '';
-  document.getElementById('cptime').value = '';
-  document.getElementById('cpdir').value = 'ida';
-  updateCpDayOptions();
-  btn.classList.remove('sending'); btn.classList.add('done'); btn.textContent = '✓ Enviado';
-  toast('★ +1 MIEMBRO · PENDIENTE DE VALIDACIÓN');
-  setTimeout(() => { btn.classList.remove('done'); btn.textContent = '★ Publicar plaza ★'; btn.disabled = false; }, 30000);
+  try {
+    await addDoc(collection(db,'carpool'), { name, from, contact, seats, day, time, direction, type, ts:Date.now(), approved:false, full:false });
+    document.getElementById('cpname').value = '';
+    document.getElementById('cpfrom').value = '';
+    document.getElementById('cpcont').value = '';
+    document.getElementById('cpday').value = '';
+    document.getElementById('cptime').value = '';
+    document.getElementById('cpdir').value = 'ida';
+    updateCpDayOptions();
+    updateCpType('offer');
+    btn.classList.remove('sending'); btn.classList.add('done'); btn.textContent = '✓ Enviado';
+    toast(type === 'seek' ? '★ Petición registrada · pendiente de validación' : '★ +1 MIEMBRO · PENDIENTE DE VALIDACIÓN');
+    setTimeout(() => { btn.classList.remove('done'); btn.textContent = '★ Publicar plaza ★'; btn.disabled = false; }, 30000);
+  } catch(e) {
+    btn.classList.remove('sending'); btn.disabled = false; btn.textContent = '★ Publicar plaza ★';
+    toast('error: ' + (e.code || e.message));
+  }
 });
 
 // ── LINEUP / SOUNDCLOUD ──
@@ -2433,14 +2491,22 @@ function initAdmin(){
       const c = { id:ds.id, ...ds.data() }; n++;
       const d = document.createElement('div'); d.className = 'admin-item';
       if (c.full) d.style.opacity = '.5';
-      const statusTxt = c.full ? '✗ completo' : c.approved ? '✓ validado' : '○ pendiente';
-      const dayOpts = ['viernes 29','sábado 30']
+      const typeNow = c.type === 'seek' ? 'seek' : 'offer';
+      const dirNow  = c.direction === 'vuelta' ? 'vuelta' : 'ida';
+      const statusTxt = (typeNow === 'seek' ? 'BUSCA · ' : 'OFRECE · ') +
+        (c.full ? '✗ completo' : c.approved ? '✓ validado' : '○ pendiente');
+      const dirOpts = ['ida','vuelta'].map(x => `<option value="${x}" ${dirNow===x?'selected':''}>${x}</option>`).join('');
+      const typeOpts = [['offer','ofrece'],['seek','busca']]
+        .map(([v,l]) => `<option value="${v}" ${typeNow===v?'selected':''}>${l}</option>`).join('');
+      const dayOpts = ['viernes 29','sábado 30','domingo 31']
         .map(x => `<option value="${x}" ${c.day===x?'selected':''}>${x}</option>`).join('');
       const seatOpts = [1,2,3,4]
         .map(x => `<option value="${x}" ${Number(c.seats)===x?'selected':''}>${x}p</option>`).join('');
       d.innerHTML = `<div class="admin-item-info" style="width:100%">
         <div class="admin-item-meta" style="margin-bottom:6px">${statusTxt}</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px">
+          <select class="cp-sel" data-f="type">${typeOpts}</select>
+          <select class="cp-sel" data-f="direction">${dirOpts}</select>
           <input class="cp-inp" data-f="name"    placeholder="Nombre"   value="${esc(c.name||'')}"/>
           <input class="cp-inp" data-f="from"    placeholder="Desde"    value="${esc(c.from||'')}"/>
           <select class="cp-sel" data-f="day"><option value="">Día…</option>${dayOpts}</select>
