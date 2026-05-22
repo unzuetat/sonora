@@ -463,6 +463,8 @@ body.night .msg-reply{background:rgba(45,164,78,.1);color:#6ddb8a}
 
 .car-legend{font-family:'EB Garamond',serif;font-style:italic;font-size:12px;color:#aaa;margin-bottom:12px}
 .car-list{display:flex;flex-direction:column;gap:7px}
+.car-section-title{font-family:'EB Garamond',serif;font-weight:800;font-style:italic;font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--rojo);margin:14px 0 4px;padding-bottom:4px;border-bottom:2px solid var(--rojo)}
+.car-section-title:first-child{margin-top:0}
 .car-item{background:#fff;border:2px solid var(--negro);border-left:6px solid var(--verde);padding:10px 14px;display:flex;justify-content:space-between;align-items:center;animation:fadeup .2s ease}
 .car-item.pending{border-left-color:#ccc;opacity:.65}
 .car-from{font-family:'EB Garamond',serif;font-weight:800;font-size:17px;color:var(--negro)}
@@ -1480,11 +1482,15 @@ body.night .night-toggle{
           <span class="cp-label">Registrar plaza disponible</span>
           <input class="cp-inp" id="cpname" placeholder="Tu nombre" style="width:100%;margin-bottom:10px"/>
           <div class="cp-row">
-            <input class="cp-inp" id="cpfrom" placeholder="Salgo desde..."/>
+            <select class="cp-sel" id="cpdir" style="flex:1">
+              <option value="ida">Ida</option>
+              <option value="vuelta">Vuelta</option>
+            </select>
             <select class="cp-sel" id="cpseats">
               <option>1</option><option>2</option><option selected>3</option><option>4</option>
             </select>
           </div>
+          <input class="cp-inp" id="cpfrom" placeholder="Salgo desde..." style="width:100%;margin-bottom:10px"/>
           <div class="cp-row">
             <select class="cp-sel" id="cpday" style="flex:1">
               <option value="">Día de salida…</option>
@@ -1901,6 +1907,12 @@ async function doLogin(){
     localStorage.removeItem(ED_KEY);
     showScreen('app'); initApp(); startWelcomeMusic();
   } catch(e) {
+    if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+      console.warn('Anonymous auth falló en localhost, continuando sin Firestore:', e);
+      localStorage.removeItem(ED_KEY);
+      showScreen('app'); initApp(); startWelcomeMusic();
+      return;
+    }
     err.textContent = 'no se pudo conectar, prueba de nuevo';
     setTimeout(() => { err.textContent = ''; }, 3000);
   }
@@ -2115,43 +2127,72 @@ function renderCar(c){
   d.innerHTML = `<div><div class="car-from">${title}</div><div class="car-contact">${esc(sub)}</div></div><div class="car-seats">${c.seats}p</div>`;
   return d;
 }
+function renderCarSection(container, title, items){
+  const h = document.createElement('div');
+  h.className = 'car-section-title';
+  h.textContent = title;
+  container.appendChild(h);
+  if (items.length === 0) {
+    const e = document.createElement('div');
+    e.className = 'empty-msg';
+    e.textContent = 'Sin plazas todavía';
+    container.appendChild(e);
+  } else {
+    items.forEach(c => container.appendChild(renderCar(c)));
+  }
+}
 function initCars(){
   onSnapshot(query(collection(db,'carpool'), orderBy('ts','desc')), snap => {
     const list = document.getElementById('carlist');
     const preview = document.getElementById('carlist-preview');
     list.innerHTML = ''; preview.innerHTML = '';
-    if (snap.empty) {
-      list.innerHTML = '<div class="empty-msg">Sin plazas todavía. ¡Ofrece la tuya!</div>';
-      preview.innerHTML = '<div class="empty-msg">Sin plazas todavía</div>';
-      return;
-    }
+    const idas = [], vueltas = [];
     snap.forEach(ds => {
       const c = { id:ds.id, ...ds.data() };
-      list.appendChild(renderCar(c));
-      preview.appendChild(renderCar(c));
+      if ((c.direction || 'ida') === 'vuelta') vueltas.push(c);
+      else idas.push(c);
     });
+    renderCarSection(list, 'IDA', idas);
+    renderCarSection(list, 'VUELTA', vueltas);
+    renderCarSection(preview, 'IDA', idas);
+    renderCarSection(preview, 'VUELTA', vueltas);
   }, err => { console.warn('Carpool listener error:', err); });
 }
 
+const CARPOOL_DAYS = {
+  ida:    [{v:'viernes 29', l:'viernes 29'}, {v:'sábado 30', l:'sábado 30'}],
+  vuelta: [{v:'sábado 30',  l:'sábado 30'},  {v:'domingo 31', l:'domingo 31'}]
+};
+function updateCpDayOptions(){
+  const dir = document.getElementById('cpdir').value || 'ida';
+  const sel = document.getElementById('cpday');
+  sel.innerHTML = '<option value="">Día de salida…</option>' +
+    CARPOOL_DAYS[dir].map(d => `<option value="${d.v}">${d.l}</option>`).join('');
+}
+document.getElementById('cpdir').addEventListener('change', updateCpDayOptions);
+
 document.getElementById('btn-car').addEventListener('click', async () => {
-  const name    = document.getElementById('cpname').value.trim();
-  const from    = document.getElementById('cpfrom').value.trim();
-  const contact = document.getElementById('cpcont').value.trim();
-  const seats   = parseInt(document.getElementById('cpseats').value);
-  const day     = document.getElementById('cpday').value;
-  const time    = document.getElementById('cptime').value;
+  const name      = document.getElementById('cpname').value.trim();
+  const from      = document.getElementById('cpfrom').value.trim();
+  const contact   = document.getElementById('cpcont').value.trim();
+  const seats     = parseInt(document.getElementById('cpseats').value);
+  const day       = document.getElementById('cpday').value;
+  const time      = document.getElementById('cptime').value;
+  const direction = document.getElementById('cpdir').value || 'ida';
   if (!name) { toast('Pon tu nombre'); return; }
   if (!from) { toast('Pon desde dónde sales'); return; }
   if (!contact) { toast('Pon tu contacto'); return; }
   const btn = document.getElementById('btn-car');
   btn.disabled = true;
   btn.classList.add('sending'); btn.textContent = 'Enviando...';
-  await addDoc(collection(db,'carpool'), { name, from, contact, seats, day, time, ts:Date.now(), approved:false, full:false });
+  await addDoc(collection(db,'carpool'), { name, from, contact, seats, day, time, direction, ts:Date.now(), approved:false, full:false });
   document.getElementById('cpname').value = '';
   document.getElementById('cpfrom').value = '';
   document.getElementById('cpcont').value = '';
   document.getElementById('cpday').value = '';
   document.getElementById('cptime').value = '';
+  document.getElementById('cpdir').value = 'ida';
+  updateCpDayOptions();
   btn.classList.remove('sending'); btn.classList.add('done'); btn.textContent = '✓ Enviado';
   toast('★ +1 MIEMBRO · PENDIENTE DE VALIDACIÓN');
   setTimeout(() => { btn.classList.remove('done'); btn.textContent = '★ Publicar plaza ★'; btn.disabled = false; }, 30000);
