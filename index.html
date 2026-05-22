@@ -2426,7 +2426,8 @@ function initAdmin(){
 
   onSnapshot(query(collection(db,'carpool'), orderBy('ts','asc')), snap => {
     const el = document.getElementById('admin-cars');
-    if (el.querySelector(':focus')) return;
+    const focused = el.querySelector(':focus');
+    if (focused && (focused.tagName === 'INPUT' || focused.tagName === 'SELECT')) return;
     el.innerHTML = ''; let n = 0;
     snap.forEach(ds => {
       const c = { id:ds.id, ...ds.data() }; n++;
@@ -2461,9 +2462,18 @@ function initAdmin(){
       const bOk   = document.createElement('button'); bOk.className='btn-ok';     bOk.textContent = c.approved ? '✓' : '○ validar';
       const bFull = document.createElement('button'); bFull.className='btn-strike'; bFull.textContent = c.full ? 'abrir' : 'lleno';
       const bKo   = document.createElement('button'); bKo.className='btn-ko';     bKo.textContent='✗';
-      bOk.addEventListener('click',   async () => await updateDoc(doc(db,'carpool',c.id), {approved:!c.approved}));
-      bFull.addEventListener('click', async () => await updateDoc(doc(db,'carpool',c.id), {full:!c.full, approved:true}));
-      bKo.addEventListener('click',   async () => await deleteDoc(doc(db,'carpool',c.id)));
+      bOk.addEventListener('click', async () => {
+        try { await updateDoc(doc(db,'carpool',c.id), {approved:!c.approved}); toast(c.approved ? 'plaza pendiente' : '✓ plaza validada'); }
+        catch(e) { toast('error: ' + (e.code || e.message)); }
+      });
+      bFull.addEventListener('click', async () => {
+        try { await updateDoc(doc(db,'carpool',c.id), {full:!c.full, approved:true}); toast(c.full ? 'plaza reabierta' : 'plaza completa'); }
+        catch(e) { toast('error: ' + (e.code || e.message)); }
+      });
+      bKo.addEventListener('click', async () => {
+        try { await deleteDoc(doc(db,'carpool',c.id)); toast('plaza borrada'); }
+        catch(e) { toast('error: ' + (e.code || e.message)); }
+      });
       const a = document.createElement('div'); a.className = 'admin-actions';
       a.appendChild(bSave); a.appendChild(bOk); a.appendChild(bFull); a.appendChild(bKo);
       d.appendChild(a); el.appendChild(d);
