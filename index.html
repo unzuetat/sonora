@@ -2138,7 +2138,10 @@ function renderCar(c){
       ? '<div class="car-status ok">✓ validado</div>'
       : '<div class="car-status wait">○ pendiente</div>';
   const when = [c.day, c.time].filter(Boolean).join(' · ');
-  const fromLabel = isSeek ? 'sale desde' : 'desde';
+  const isVuelta = c.direction === 'vuelta';
+  const fromLabel = isVuelta
+    ? (isSeek ? 'va a' : 'a')
+    : (isSeek ? 'sale desde' : 'desde');
   const title = c.name ? `${esc(c.name)} · ${fromLabel} ${esc(c.from)}` : `${fromLabel} ${esc(c.from)}`;
   const sub = [when, c.contact || '—', st.replace(/<[^>]+>/g,'').trim()].filter(Boolean).join(' · ');
   const sideLabel = isSeek ? `${c.seats}p buscando` : `${c.seats}p`;
@@ -2207,20 +2210,24 @@ function updateCpType(t){
   document.querySelectorAll('.cp-type-btn').forEach(b => {
     b.classList.toggle('active', b.dataset.type === t);
   });
+  updateCpPlaceholder();
+}
+function updateCpPlaceholder(){
+  const dir = document.getElementById('cpdir').value || 'ida';
   const fromInp = document.getElementById('cpfrom');
   const btnCar  = document.getElementById('btn-car');
-  const seatsLabel = document.querySelector('label[for="cpseats"]');
-  if (t === 'seek') {
-    fromInp.placeholder = '¿Desde dónde necesitas salir?';
+  if (cpType === 'seek') {
+    fromInp.placeholder = dir === 'vuelta' ? '¿Hacia dónde necesitas ir?' : '¿Desde dónde necesitas salir?';
     btnCar.textContent = '★ Publicar petición ★';
   } else {
-    fromInp.placeholder = 'Salgo desde...';
+    fromInp.placeholder = dir === 'vuelta' ? 'Salgo hacia...' : 'Salgo desde...';
     btnCar.textContent = '★ Publicar plaza ★';
   }
 }
 document.querySelectorAll('.cp-type-btn').forEach(b => {
   b.addEventListener('click', () => updateCpType(b.dataset.type));
 });
+document.getElementById('cpdir').addEventListener('change', updateCpPlaceholder);
 
 document.getElementById('btn-car').addEventListener('click', async () => {
   const name      = document.getElementById('cpname').value.trim();
