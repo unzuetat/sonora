@@ -1772,9 +1772,10 @@ const INFO_FIELDS = [
   { key:'emergencia',  label:'Contactos',     color:'var(--amarillo)' },
   { key:'horarios',    label:'Horarios',                   color:'#8833cc' },
 ];
-const ADDRESS_TEXT    = "PASACALLES ACID";
-const ADDRESS_DETAIL  = "Aquí la dirección completa · Valencia";
-const MAP_LINK        = "https://maps.google.com/?q=TU+UBICACION";
+const ADDRESS_TEXT    = "SONORA XI YA TERMINÓ";
+const ADDRESS_DETAIL  = "Gracias por venir · Hasta Sonora XII";
+const MAP_LINK        = "#";
+const EVENT_ENDED     = true;
 const TARGET = new Date('2026-05-29T21:00:00+02:00');
 const START  = new Date('2026-01-01T00:00:00');
 
@@ -1805,7 +1806,7 @@ const SC_ARTISTS = [
   { name:"D.SastreSonoro" },
   { name:"D-Bunk" },
   { name:"Nómada", url:"https://soundcloud.com/nomada-wav/tracks", sc:"https://soundcloud.com/nomada-wav", ig:"https://www.instagram.com/n00mada", img:"img/nomada.jpg" },
-  { name:"SNB", img:"img/snb.jpg" },
+  { name:"SNB", url:"https://soundcloud.com/sergio-navarro-299921871/tracks", sc:"https://soundcloud.com/sergio-navarro-299921871", img:"img/snb.jpg" },
   { name:"SeR0" },
   { name:"Traver", url:"https://soundcloud.com/traver93/tracks", sc:"https://soundcloud.com/traver93", ig:"https://www.instagram.com/traver.music", img:"img/traver.jpeg" },
 ];
@@ -1814,7 +1815,6 @@ SC_ARTISTS.sort((a, b) => a.name.localeCompare(b.name, 'es', { sensitivity:'base
 const FAKE_LOCS = [
   { name:"RAVE EN EL CAMPILLO",      detail:"Nave 7, bajando al pantano · Valencia" },
   { name:"LIADA EN TXOSNAS",  detail:"Pista forestal km 4 · Desvía en el pino gordo" },
-  { name:"PASACALLES ACID",         detail:"Camino Miguel de Cervantes · Antes de la fuente del perro" },
   { name:"CHARANGA 303",   detail:"Pasando el carril bici · Junto al río · Acceso por la vía" },
   { name:"FUNERAL VIKINGO",     detail:"Playa del Saler · Zona dunas · Trae antorcha" },
   { name:"AFTER POR LA CALLE MAYOR", detail:"Ruta por los bares · Punto de encuentro: La Lonja" },
@@ -2029,7 +2029,13 @@ function triggerUnlock(){
   document.getElementById('addr-detail').textContent   = ADDRESS_DETAIL;
   document.getElementById('map-link').href             = MAP_LINK;
   typeAddr(ADDRESS_TEXT, document.getElementById('addr-type'));
-  // Vibración para que lo sientan
+  if (EVENT_ENDED){
+    document.getElementById('map-link').style.display = 'none';
+    document.getElementById('btn-copy').style.display = 'none';
+    const hdr = document.querySelector('#unlocked-box > div:first-child');
+    if (hdr) hdr.textContent = '★ EDICIÓN FINALIZADA ★';
+    return;
+  }
   if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200]);
   toast('★ BOSS DESBLOQUEADO · UBICACIÓN REVELADA');
 }
