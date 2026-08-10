@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#5bb8f5">
+<meta name="theme-color" content="#e8613a">
 <meta name="description" content="Sonora x UPMV XII · The Summer of Love · 4-6 septiembre 2026 · Valencia">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
@@ -20,7 +20,7 @@
 <meta name="twitter:description" content="Gran Función · 4-6 septiembre 2026 · Valencia">
 <meta name="twitter:image" content="https://sonora.community/img/cartel-og-xii.jpg">
 <title>SONORA X UPMV</title>
-<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,700;0,800;1,400;1,700;1,800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bowlby+One&family=EB+Garamond:ital,wght@0,400;0,700;0,800;1,400;1,700;1,800&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 
@@ -31,19 +31,23 @@
    basta con reescribir estos valores (ver THEMES en el JS).
 ══════════════════════════════════════════════════════════ */
 :root{
-  /* ── PALETA DE LA EDICIÓN ── */
-  --azul:#5bb8f5;
-  --azul-dark:#1a5a8a;
-  --rojo:#e8001a;
-  --rojo-light:#ff4444;
-  --amarillo:#f7e200;
-  --negro:#1a1a1a;
-  --crema:#f5f0e0;
-  --verde:#2da44e;
+  /* ── PALETA DE LA EDICIÓN ──
+     XII · The Summer of Love, en clave del cartel de Woodstock del 69:
+     naranja quemado de fondo, papel crudo y tinta marrón en vez de negro.
+     Los nombres vienen de la XI (--azul era el fondo, --rojo el acento);
+     se mantienen para no renombrar 400 usos. */
+  --azul:#e8613a;           /* fondo dominante */
+  --azul-dark:#7a2410;      /* texto sobre el fondo */
+  --rojo:#c62828;           /* acento */
+  --rojo-light:#ff7961;
+  --amarillo:#ffd24a;       /* destaque */
+  --negro:#2e1a12;          /* tinta: marrón muy oscuro */
+  --crema:#fdf3e3;          /* papel */
+  --verde:#6b8e4e;          /* estados correctos */
 
   /* ── TIPOGRAFÍA ── */
-  --font-display:'EB Garamond',serif;   /* rótulos, cifras, botones grandes */
-  --font-body:'EB Garamond',serif;      /* todo lo demás */
+  --font-display:'Bowlby One',sans-serif; /* rótulos, cifras, botones grandes */
+  --font-body:'EB Garamond',serif;        /* todo lo demás */
 
   /* ── SUPERFICIES Y NEUTROS ── */
   --c-white:#fff;
@@ -89,22 +93,22 @@
   --bw:3px;                 /* borde estándar */
   --bw-thin:2px;
   --bw-hair:1px;
-  --radius:0;               /* 0 = brutalista. Súbelo y se redondea toda la interfaz. */
+  --radius:10px;            /* 0 = brutalista. Súbelo y se redondea toda la interfaz. */
 
   /* ── RÓTULO PRINCIPAL ──
      Escala con el ancho, pero el nombre de la edición influye:
      'SONORA X UPMV' ocupa mucho más que 'SAN SONORÍN'. Si un año
      el nombre crece, baja el vw o se sale por los lados. */
-  --fs-title:clamp(52px,13.5vw,92px);
+  --fs-title:clamp(32px,8vw,56px);
 
   /* ── CUENTA ATRÁS ──
      Depende de lo ancha que sea la tipografía de display: si un
      tema usa letra gorda hay que bajar estos valores, o "seg" se
      cae a la línea de abajo en móvil. */
-  --fs-cd:clamp(52px,13vw,70px);
-  --fs-cd-sm:clamp(36px,10vw,52px);
-  --cd-min:72px;
-  --cd-min-sm:56px;
+  --fs-cd:clamp(30px,7.5vw,44px);
+  --fs-cd-sm:clamp(24px,6.5vw,34px);
+  --cd-min:58px;
+  --cd-min-sm:46px;
 
   /* ── TRAZO DE TEXTO (rótulos perfilados) ── */
   --stroke-lg:4px;
@@ -535,11 +539,11 @@ body.night .mauthor{color:var(--glow-azul)}
 .empty-msg{font-family:var(--font-body);font-style:italic;font-size:13px;color:var(--c-faint);padding:14px 0;text-align:center}
 .msg-reply{
   display:block;margin-top:6px;padding:6px 10px;
-  background:rgba(45,164,78,.08);border-left:var(--bw) solid var(--verde);
+  background:color-mix(in srgb, var(--verde) 8%, transparent);border-left:var(--bw) solid var(--verde);
   font-family:var(--font-body);font-size:13px;font-style:italic;
   color:var(--verde);
 }
-body.night .msg-reply{background:rgba(45,164,78,.1);color:var(--c-ok-light)}
+body.night .msg-reply{background:color-mix(in srgb, var(--verde) 10%, transparent);color:var(--c-ok-light)}
 
 /* CARPOOL */
 .cp-form{background:var(--c-surface-warm);border:var(--bw-thin) solid var(--negro);padding:18px;margin-bottom:16px}
@@ -670,7 +674,7 @@ body.night .artist-img-placeholder{background:var(--bg-card);border-color:var(--
 .lightbox img{
   max-width:100%;max-height:100%;
   border:var(--bw) solid var(--amarillo);
-  box-shadow:0 0 40px rgba(232,0,26,.4);
+  box-shadow:0 0 40px color-mix(in srgb, var(--rojo) 40%, transparent);
 }
 .artist-img{cursor:zoom-in}
 
@@ -755,7 +759,7 @@ body.night .artist-img-placeholder{background:var(--bg-card);border-color:var(--
 /* Estado: sonando ahora */
 .hor-ticket.now{
   outline:var(--bw) solid var(--amarillo);
-  box-shadow:0 0 22px rgba(247,226,0,.65), inset 0 0 0 2px var(--amarillo);
+  box-shadow:0 0 22px color-mix(in srgb, var(--amarillo) 65%, transparent), inset 0 0 0 2px var(--amarillo);
   position:relative;z-index:5;
 }
 .hor-badge-now{
@@ -871,7 +875,7 @@ body.night .lineup-player-name{color:var(--amarillo)}
 .sl-row{display:flex;align-items:center;gap:8px;padding:8px 6px;border-bottom:var(--bw-hair) dotted var(--c-disabled-2);flex-wrap:wrap}
 .sl-row:last-child{border-bottom:none}
 .sl-name{flex:1;font-weight:700;font-size:15px;min-width:140px}
-.sl-row.sl-now{background:rgba(247,226,0,.25);outline:var(--bw-hair) solid var(--amarillo)}
+.sl-row.sl-now{background:color-mix(in srgb, var(--amarillo) 25%, transparent);outline:var(--bw-hair) solid var(--amarillo)}
 .sl-row.sl-done{opacity:.55}
 .sl-row.sl-done .sl-name{text-decoration:line-through;font-style:italic}
 .sl-actions{display:flex;gap:4px;flex-wrap:wrap}
@@ -1156,15 +1160,15 @@ body.night{
   --shadow-xs:3px 3px 0 var(--c-shadow);
   --shadow-2xs:2px 2px 0 var(--c-shadow);
   --shadow-1:1px 1px 0 var(--c-shadow);
-  --bg:#0a0e1a;
-  --bg-card:#121828;
-  --bg-input:#0d1220;
-  --text:#e8e4d8;
+  --bg:#1a0e08;
+  --bg-card:#2a1810;
+  --bg-input:#150b06;
+  --text:#f6e8d5;
   --text-dim:var(--c-muted-2);
-  --border:#2a3a5a;
-  --glow-rojo:rgba(232,0,26,.4);
-  --glow-amarillo:rgba(247,226,0,.3);
-  --glow-azul:rgba(91,184,245,.3);
+  --border:#573322;
+  --glow-rojo:color-mix(in srgb, var(--rojo) 40%, transparent);
+  --glow-amarillo:color-mix(in srgb, var(--amarillo) 30%, transparent);
+  --glow-azul:color-mix(in srgb, var(--azul) 30%, transparent);
 }
 
 body.night{background:var(--bg)}
@@ -1189,7 +1193,7 @@ body.night .hdr-sub{color:var(--glow-azul)}
 body.night .tabs{border-top-color:var(--border)}
 body.night .tb{background:var(--bg);color:var(--text-dim);border-right-color:var(--border)}
 body.night .tb.on{background:var(--amarillo);color:var(--negro)}
-body.night .tb:hover:not(.on){background:rgba(91,184,245,.08)}
+body.night .tb:hover:not(.on){background:color-mix(in srgb, var(--azul) 8%, transparent)}
 
 /* Cards */
 body.night .card{
@@ -1201,7 +1205,7 @@ body.night .card-body{color:var(--text)}
 
 /* Sec desc */
 body.night .sec-desc{
-  background:rgba(91,184,245,.05);color:var(--c-muted-night);
+  background:color-mix(in srgb, var(--azul) 5%, transparent);color:var(--c-muted-night);
   border-left-color:var(--border);
 }
 
@@ -1230,15 +1234,15 @@ body.night .xp-rank{color:var(--text-dim)}
 /* Locked */
 body.night .locked{
   border-color:var(--border);
-  background:rgba(232,0,26,.04);
+  background:color-mix(in srgb, var(--rojo) 4%, transparent);
 }
 body.night .lock-txt{color:var(--text);text-shadow:0 0 8px var(--glow-rojo)}
 body.night .lock-squiggles{color:var(--text-dim)}
 
 /* Unlocked */
 body.night .unlocked{
-  background:rgba(45,164,78,.08);border-color:var(--verde);
-  box-shadow:var(--shadow-md),0 0 20px rgba(45,164,78,.2);
+  background:color-mix(in srgb, var(--verde) 8%, transparent);border-color:var(--verde);
+  box-shadow:var(--shadow-md),0 0 20px color-mix(in srgb, var(--verde) 20%, transparent);
 }
 body.night .addr-big{color:var(--amarillo);text-shadow:0 0 12px var(--glow-amarillo)}
 body.night .addr-sub{color:var(--text-dim)}
@@ -1272,7 +1276,7 @@ body.night .car-item.pending{border-left-color:var(--border)}
 body.night .car-from{color:var(--text)}
 body.night .car-contact{color:var(--text-dim)}
 body.night .car-seats{background:var(--bg);color:var(--amarillo);border-color:var(--border)}
-body.night .cp-form{background:rgba(91,184,245,.03);border-color:var(--border)}
+body.night .cp-form{background:color-mix(in srgb, var(--azul) 3%, transparent);border-color:var(--border)}
 body.night .cp-inp{background:var(--bg-input);border-color:var(--border);color:var(--text)}
 body.night .cp-inp::placeholder{color:var(--c-muted-3)}
 body.night .cp-sel{background:var(--bg-input);border-color:var(--border);color:var(--text)}
@@ -1341,7 +1345,7 @@ body.night::after{
 body.night .night-toggle{
   background:var(--amarillo);color:var(--negro);
   border-color:var(--negro);
-  box-shadow:3px 3px 0 rgba(247,226,0,.3);
+  box-shadow:3px 3px 0 color-mix(in srgb, var(--amarillo) 30%, transparent);
 }
 .night-toggle:hover{transform:translate(1px,1px);box-shadow:2px 2px 0 var(--c-black)}
 
@@ -1966,35 +1970,12 @@ function aplicarTema(id){
   return true;
 }
 
-const temaPedido = new URLSearchParams(location.search).get('tema');
+const params = new URLSearchParams(location.search);
+
+const temaPedido = params.get('tema');
 if (temaPedido && !aplicarTema(temaPedido)){
   console.warn(`Tema "${temaPedido}" no existe. Disponibles: ${Object.keys(THEMES).join(', ')}`);
 }
-
-// Lee un token del CSS, para que el JS no tenga colores propios.
-// Mide sobre <body> y no sobre <html>: así también ve los tokens
-// que solo existen en modo noche (--bg, --bg-card...).
-const token = (name, fallback='') =>
-  getComputedStyle(document.body).getPropertyValue(name).trim() || fallback;
-
-// Vuelca EDITION sobre la cabecera. El HTML lleva los mismos textos
-// escritos a mano para que se vea algo si el JS tarda o falla.
-function pintarEdicion(){
-  const set = (sel, txt) => { const el = document.querySelector(sel); if (el) el.textContent = txt; };
-  set('.auth-eyebrow', `Zona privada · Edición ${EDITION.id}`);
-  set('.hdr-eyebrow',  EDITION.eyebrow);
-  set('.hdr-title',    EDITION.titulo);
-  set('.hdr-num',      EDITION.id);
-  set('.hdr-date',     EDITION.fechas);
-  set('.hdr-sub',      EDITION.subtitulo);
-  for (const sel of ['.auth-bg', '#cartel-lineup-img']){
-    const el = document.querySelector(sel);
-    if (!el) continue;
-    if (el.tagName === 'IMG'){ el.src = EDITION.cartel; el.alt = `Cartel ${EDITION.titulo} ${EDITION.id}`; }
-    else el.style.backgroundImage = `url('${EDITION.cartel}')`;
-  }
-}
-pintarEdicion();
 
 // ══════════════════════════════════════
 //  ★ CONFIGURACIÓN — edita aquí
@@ -2065,7 +2046,7 @@ const INFO_FIELDS = [
   { key:'transporte',  label:'Transporte',                 color:'var(--azul-dark)' },
   { key:'llevar',      label:'Qué llevar / Qué no llevar', color:'var(--verde)' },
   { key:'emergencia',  label:'Contactos',     color:'var(--amarillo)' },
-  { key:'horarios',    label:'Horarios',                   color:'#8833cc' },
+  { key:'horarios',    label:'Horarios',                   color:'var(--rojo-light)' },
 ];
 const ADDRESS_TEXT    = EDITION.direccion.texto;
 const ADDRESS_DETAIL  = EDITION.direccion.detalle;
@@ -2722,7 +2703,9 @@ document.getElementById('cartel-lineup-img').addEventListener('click', () => ope
 document.getElementById('cartel-lineup-cta').addEventListener('click', () => openLightbox(EDITION.cartel, `Cartel ${EDITION.titulo} ${EDITION.id}`));
 
 function launchConfetti(){
-  const colors = ['#e8001a', '#f4c542', '#2da44e', '#2b7fff', '#ff8c00', '#c850ff'];
+  // Los colores salen de la paleta, así que la lluvia acompaña a la piel.
+  const colors = ['--rojo', '--amarillo', '--verde', '--azul-dark', '--rojo-light', '--negro']
+    .map(t => token(t)).filter(Boolean);
   const N = 80;
   for (let i = 0; i < N; i++){
     const piece = document.createElement('div');
