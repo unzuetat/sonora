@@ -1407,7 +1407,7 @@ body.night .night-toggle{
 /* ══════════════════════════════════════════════════════════
    CAPAS OPCIONALES
    Cuatro añadidos que se encienden por separado con
-   ?extra=serigrafia,ornamentos,tiedye,animaciones
+   ?extra=serigrafia,tiedye
    Cada uno es independiente y se puede combinar con el resto.
 ══════════════════════════════════════════════════════════ */
 
@@ -1424,20 +1424,20 @@ body.x-serigrafia .hdr-num{text-shadow:-2px 2px 0 var(--amarillo)}
 body.x-serigrafia .admin-title{text-shadow:2px -1.5px 0 var(--amarillo)}
 body.x-serigrafia .cd-num{text-shadow:1.5px -1.5px 0 color-mix(in srgb, var(--amarillo) 70%, transparent)}
 
-/* ── ORNAMENTOS: margaritas en vez de estrellas ── */
-body.x-ornamentos .card-title::before{content:'✿ ';color:var(--verde)}
-body.x-ornamentos .hor-title::before{content:'✿ '}
-body.x-ornamentos .info-dot{
+/* ── ORNAMENTOS: margaritas, flores y el signo de la paz ── */
+.card-title::before{content:'✿ ';color:var(--verde)}
+.hor-title::before{content:'✿ '}
+.info-dot{
   background:none;width:auto;height:auto;border-radius:0;
   font-size:13px;line-height:1;
 }
-body.x-ornamentos .info-dot::before{content:'✿';color:var(--verde)}
-body.x-ornamentos .sc-dot{
+.info-dot::before{content:'✿';color:var(--verde)}
+.sc-dot{
   background:none;width:auto;height:auto;border-radius:0;
   font-size:12px;line-height:1;color:var(--amarillo);
 }
-body.x-ornamentos .sc-dot::before{content:'☮'}
-body.x-ornamentos .lock-squiggles{letter-spacing:4px}
+.sc-dot::before{content:'☮'}
+.lock-squiggles{letter-spacing:4px}
 
 /* ── TIE-DYE: la banda de las tarjetas, teñida ── */
 body.x-tiedye .card-stripe{
@@ -1452,14 +1452,14 @@ body.x-tiedye .prog-fill{
     var(--rojo), var(--amarillo) 25%, var(--verde) 50%, var(--azul-dark) 75%, var(--rojo));
 }
 
-/* ── ANIMACIONES: el contador respira ── */
+/* ── El contador respira ── */
 @keyframes latido{0%,100%{transform:scale(1)}50%{transform:scale(1.035)}}
-body.x-animaciones .cd-num{animation:latido 2.6s ease-in-out infinite}
-body.x-animaciones .cd-unit:nth-child(3) .cd-num{animation-delay:.2s}
-body.x-animaciones .cd-unit:nth-child(5) .cd-num{animation-delay:.4s}
-body.x-animaciones .cd-unit:nth-child(7) .cd-num{animation-delay:.6s}
+.cd-num{animation:latido 2.6s ease-in-out infinite}
+.cd-unit:nth-child(3) .cd-num{animation-delay:.2s}
+.cd-unit:nth-child(5) .cd-num{animation-delay:.4s}
+.cd-unit:nth-child(7) .cd-num{animation-delay:.6s}
 @media (prefers-reduced-motion: reduce){
-  body.x-animaciones .cd-num{animation:none}
+  .cd-num{animation:none}
 }
 </style>
 </head>
@@ -1489,7 +1489,7 @@ body.x-animaciones .cd-unit:nth-child(7) .cd-num{animation-delay:.6s}
     <div class="hdr-title">SONORA X UPMV</div>
     <div class="hdr-num">XII</div>
     <div class="hdr-date">4.5.6 septiembre</div>
-    <div class="hdr-sub">★ Ubicación por desclasificar ★</div>
+    <div class="hdr-sub">✿ Ubicación por desclasificar ✿</div>
   </div>
 
   <div class="tabs">
@@ -1532,7 +1532,7 @@ body.x-animaciones .cd-unit:nth-child(7) .cd-num{animation-delay:.6s}
           <div class="lock-squiggles">? ~ ? ~ ? ~ ?</div>
         </div>
         <div class="unlocked" id="unlocked-box">
-          <div style="font-family:'EB Garamond',serif;font-weight:800;font-size:12px;color:var(--verde);letter-spacing:3px;margin-bottom:10px">★ UBICACIÓN DESBLOQUEADA ★</div>
+          <div style="font-family:'EB Garamond',serif;font-weight:800;font-size:12px;color:var(--verde);letter-spacing:3px;margin-bottom:10px">✿ UBICACIÓN DESBLOQUEADA ✿</div>
           <div class="addr-big" id="addr-type"></div>
           <div class="addr-sub" id="addr-detail"></div>
           <a class="map-btn" id="map-link" href="#" target="_blank">→ Abrir mapa</a>
@@ -1547,7 +1547,7 @@ body.x-animaciones .cd-unit:nth-child(7) .cd-num{animation-delay:.6s}
       <div class="card-body">
         <div class="card-title" style="color:var(--rojo)">Cartel</div>
         <img class="cartel-img" id="cartel-lineup-img" src="img/cartel-xii.jpg" alt="Cartel Sonora x UPMV XII" loading="lazy">
-        <div class="cartel-cta" id="cartel-lineup-cta">★ Ver a tamaño completo ★</div>
+        <div class="cartel-cta" id="cartel-lineup-cta">✿ Ver a tamaño completo ✿</div>
       </div>
     </div>
 
@@ -1686,7 +1686,7 @@ body.x-animaciones .cd-unit:nth-child(7) .cd-num{animation-delay:.6s}
             <input class="cp-inp" id="cptime" type="time" style="flex:1"/>
           </div>
           <input class="cp-inp" id="cpcont" placeholder="@telegram o WhatsApp" style="width:100%;margin-bottom:10px"/>
-          <button class="offer-btn" id="btn-car">★ Publicar plaza ★</button>
+          <button class="offer-btn" id="btn-car">✿ Publicar plaza ✿</button>
         </div>
         <div class="car-legend">✓ validado · ○ pendiente · ✗ completo</div>
         <div class="car-list" id="carlist"></div>
@@ -1769,7 +1769,7 @@ body.x-animaciones .cd-unit:nth-child(7) .cd-num{animation-delay:.6s}
 <!-- ══ CHEF MODAL (artista sin link) ══ -->
 <div class="admin-modal" id="chef-modal" style="display:none">
   <div class="admin-modal-box" style="text-align:center;max-width:380px">
-    <div style="font-family:'EB Garamond',serif;font-weight:800;font-size:18px;letter-spacing:2px;color:var(--rojo);margin-bottom:14px">★ COMANDA DEL CHEF ★</div>
+    <div style="font-family:'EB Garamond',serif;font-weight:800;font-size:18px;letter-spacing:2px;color:var(--rojo);margin-bottom:14px">✿ COMANDA DEL CHEF ✿</div>
     <div style="font-family:'EB Garamond',serif;font-style:italic;font-size:16px;color:var(--negro);line-height:1.5;margin-bottom:18px">Por comanda del chef, este plato se degustará en directo.</div>
     <button class="auth-btn" id="btn-chef-close" style="padding:10px 24px;font-size:14px">Cerrar</button>
   </div>
@@ -1792,7 +1792,7 @@ body.x-animaciones .cd-unit:nth-child(7) .cd-num{animation-delay:.6s}
 <div id="screen-admin" class="screen">
 <div class="wrap" style="padding-top:20px">
   <div class="admin-hdr">
-    <div class="admin-title">★ Admin ★</div>
+    <div class="admin-title">✿ Admin ✿</div>
     <div class="admin-sub">SAN SONORÍN · panel de control</div>
   </div>
 
@@ -1880,7 +1880,7 @@ const EDITION = {
   eyebrow:   'Gran Función · Edición XII',
   titulo:    'SONORA X UPMV',
   fechas:    '4.5.6 septiembre',
-  subtitulo: '★ Ubicación por desclasificar ★',
+  subtitulo: '✿ Ubicación por desclasificar ✿',
   empieza:   '2026-09-04T21:00:00+02:00',                 // fin de la cuenta atrás
   desde:     '2026-06-01T00:00:00',                       // arranque: el día después de acabar la XI
   terminada:       false,                                 // oculta el mapa y marca "edición finalizada"
@@ -2035,34 +2035,71 @@ if (temaPedido && !aplicarTema(temaPedido)){
   console.warn(`Tema "${temaPedido}" no existe. Disponibles: ${Object.keys(THEMES).join(', ')}`);
 }
 
-// ── Capas opcionales: ?extra=serigrafia,ornamentos,tiedye,animaciones ──
+// ══════════════════════════════════════════════════════════
+//  ★ PRUEBAS DE TIPOGRAFÍA Y FONDO
+//  Para decidir sin tocar el código:
+//    ?fuente=modak           cambia los rótulos
+//    ?fuente=modak&todo=1    los cambia también en el cuerpo de texto
+//    ?fondo=cielo            cambia el color dominante
+//    ?fuente=bagel&fondo=lavanda   se combinan
+//  Cada tipografía trae su propio tamaño: unas son mucho más anchas
+//  que otras y con un valor único se salen de pantalla.
+// ══════════════════════════════════════════════════════════
+const FUENTES = {
+  shrikhand:{ nombre:'Shrikhand',     gf:'Shrikhand',     css:"'Shrikhand',cursive",
+              title:'clamp(36px,9vw,62px)',   cd:'clamp(30px,7.5vw,44px)', cdsm:'clamp(24px,6.5vw,34px)', slg:'2.5px', smd:'2px' },
+  bagel:    { nombre:'Bagel Fat One', gf:'Bagel+Fat+One', css:"'Bagel Fat One',cursive",
+              title:'clamp(30px,7.4vw,52px)', cd:'clamp(28px,7vw,40px)',   cdsm:'clamp(22px,6vw,32px)', slg:'1.5px', smd:'1.2px' },
+  modak:    { nombre:'Modak',         gf:'Modak',         css:"'Modak',cursive",
+              title:'clamp(34px,8.4vw,58px)', cd:'clamp(30px,7.5vw,44px)', cdsm:'clamp(24px,6.5vw,34px)', slg:'1.5px', smd:'1.2px' },
+  burbujas: { nombre:'Rubik Bubbles', gf:'Rubik+Bubbles', css:"'Rubik Bubbles',cursive",
+              title:'clamp(33px,8.2vw,56px)', cd:'clamp(29px,7.2vw,42px)', cdsm:'clamp(23px,6.2vw,33px)', slg:'1.5px', smd:'1.2px' },
+  rammetto: { nombre:'Rammetto One',  gf:'Rammetto+One',  css:"'Rammetto One',cursive",
+              title:'clamp(32px,8vw,54px)',   cd:'clamp(28px,7vw,40px)',   cdsm:'clamp(22px,6vw,32px)', slg:'2.5px', smd:'2px' },
+  chewy:    { nombre:'Chewy',         gf:'Chewy',         css:"'Chewy',cursive",
+              title:'clamp(40px,10vw,70px)',  cd:'clamp(34px,8.5vw,50px)', cdsm:'clamp(27px,7.2vw,38px)', slg:'3.5px', smd:'2.5px' },
+};
+
+const FONDOS = {
+  cielo:    { nombre:'Cielo empolvado', azul:'#7fb3c8', dark:'#28505f' },
+  petroleo: { nombre:'Petróleo suave',  azul:'#6f9fb0', dark:'#224b58' },
+  lavanda:  { nombre:'Azul lavanda',    azul:'#8fa8d8', dark:'#31447a' },
+  laguna:   { nombre:'Laguna',          azul:'#86c0c4', dark:'#205457' },
+};
+
+function aplicarVariante(){
+  const f = FUENTES[params.get('fuente')];
+  const b = FONDOS[params.get('fondo')];
+  if (!f && !b) return;
+  let css = ':root{';
+  if (f){
+    css += `--font-display:${f.css};--fs-title:${f.title};--fs-cd:${f.cd};--fs-cd-sm:${f.cdsm};--stroke-lg:${f.slg};--stroke-md:${f.smd};`;
+    if (params.get('todo')) css += `--font-body:${f.css};`;
+  }
+  if (b) css += `--azul:${b.azul};--azul-dark:${b.dark};`;
+  css += '}';
+  const tag = document.createElement('style');
+  tag.id = 'variante';
+  tag.textContent = css;
+  document.head.appendChild(tag);
+  if (f){
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = `https://fonts.googleapis.com/css2?family=${f.gf}&display=swap`;
+    document.head.appendChild(link);
+  }
+  if (b) document.querySelector('meta[name="theme-color"]').content = b.azul;
+}
+aplicarVariante();
+
+// ── Capas opcionales: ?extra=serigrafia,tiedye ──
 // Se pueden combinar. Cuando una convenza, se fija añadiendo su clase
 // al <body> del HTML y se borra el resto.
-const EXTRAS = ['serigrafia', 'ornamentos', 'tiedye', 'animaciones'];
+const EXTRAS = ['serigrafia', 'tiedye'];
 const extrasPedidos = (params.get('extra') || '').split(',').map(e => e.trim()).filter(Boolean);
 for (const e of extrasPedidos){
   if (EXTRAS.includes(e)) document.body.classList.add('x-' + e);
   else console.warn(`Extra "${e}" no existe. Disponibles: ${EXTRAS.join(', ')}`);
-}
-
-// Con los ornamentos puestos, las estrellas de los textos pasan a margaritas.
-// Se hace sobre los nodos de texto para no tener que duplicar cada cadena.
-function florearEstrellas(){
-  const paseo = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
-  const tocados = [];
-  while (paseo.nextNode()) if (paseo.currentNode.nodeValue.includes('★')) tocados.push(paseo.currentNode);
-  for (const n of tocados) n.nodeValue = n.nodeValue.replace(/★/g, '✿');
-}
-if (document.body.classList.contains('x-ornamentos')){
-  florearEstrellas();
-  // El contenido que se pinta después (cartel, tablón, caravana) también.
-  // Con freno: la cuenta atrás repinta cada segundo y no hace falta
-  // recorrer el DOM entero cada vez.
-  let pendiente = null;
-  new MutationObserver(() => {
-    clearTimeout(pendiente);
-    pendiente = setTimeout(florearEstrellas, 250);
-  }).observe(document.body, {childList:true, subtree:true});
 }
 
 // Lee un token del CSS, para que el JS no tenga colores propios.
@@ -2432,11 +2469,11 @@ function triggerUnlock(){
     document.getElementById('map-link').style.display = 'none';
     document.getElementById('btn-copy').style.display = 'none';
     const hdr = document.querySelector('#unlocked-box > div:first-child');
-    if (hdr) hdr.textContent = '★ EDICIÓN FINALIZADA ★';
+    if (hdr) hdr.textContent = '✿ EDICIÓN FINALIZADA ✿';
     return;
   }
   if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200]);
-  toast('★ BOSS DESBLOQUEADO · UBICACIÓN REVELADA');
+  toast('✿ BOSS DESBLOQUEADO · UBICACIÓN REVELADA');
 }
 
 let demoLocIdx = -1;
@@ -2458,7 +2495,7 @@ document.getElementById('btn-demo').addEventListener('click', () => {
   document.getElementById('map-link').href = '#';
   typeAddr(loc.name, document.getElementById('addr-type'));
   if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200]);
-  toast('★ UBICACIÓN REVELADA');
+  toast('✿ UBICACIÓN REVELADA');
 });
 
 // ── TABLÓN ──
@@ -2477,7 +2514,7 @@ function renderMsg(m){
   const bc  = TAG_BC[m.tagId] || 'b-other';
   const ver = m.verified ? '<span class="mverified">✓</span>' : '';
   const st  = m.struck ? 'text-decoration:line-through;opacity:.4' : '';
-  const reply = m.reply ? `<div class="msg-reply">★ Consejo: ${esc(m.reply)}</div>` : '';
+  const reply = m.reply ? `<div class="msg-reply">✿ Consejo: ${esc(m.reply)}</div>` : '';
   const authorHtml = m.author ? `<span class="mauthor">${esc(m.author)}</span>` : '';
   const d = document.createElement('div');
   d.className = 'msg';
@@ -2526,7 +2563,7 @@ async function sendMsg(){
   inp.value = '';
   localStorage.setItem(NAME_KEY, author);
   btn.classList.remove('sending'); btn.classList.add('done'); btn.textContent = '✓';
-  toast('★ +1 TRANSMISIÓN ENVIADA');
+  toast('✿ +1 TRANSMISIÓN ENVIADA');
   setTimeout(() => { btn.classList.remove('done'); btn.textContent = '→'; btn.disabled = false; msgCooldown = false; }, 15000);
 }
 document.getElementById('btn-send').addEventListener('click', sendMsg);
@@ -2623,10 +2660,10 @@ function updateCpPlaceholder(){
   const btnCar  = document.getElementById('btn-car');
   if (cpType === 'seek') {
     fromInp.placeholder = dir === 'vuelta' ? '¿Hacia dónde necesitas ir?' : '¿Desde dónde necesitas salir?';
-    btnCar.textContent = '★ Publicar petición ★';
+    btnCar.textContent = '✿ Publicar petición ✿';
   } else {
     fromInp.placeholder = dir === 'vuelta' ? 'Salgo hacia...' : 'Salgo desde...';
-    btnCar.textContent = '★ Publicar plaza ★';
+    btnCar.textContent = '✿ Publicar plaza ✿';
   }
 }
 document.querySelectorAll('.cp-type-btn').forEach(b => {
@@ -2660,10 +2697,10 @@ document.getElementById('btn-car').addEventListener('click', async () => {
     updateCpDayOptions();
     updateCpType('offer');
     btn.classList.remove('sending'); btn.classList.add('done'); btn.textContent = '✓ Enviado';
-    toast(type === 'seek' ? '★ Petición registrada · pendiente de validación' : '★ +1 MIEMBRO · PENDIENTE DE VALIDACIÓN');
-    setTimeout(() => { btn.classList.remove('done'); btn.textContent = '★ Publicar plaza ★'; btn.disabled = false; }, 30000);
+    toast(type === 'seek' ? '✿ Petición registrada · pendiente de validación' : '✿ +1 MIEMBRO · PENDIENTE DE VALIDACIÓN');
+    setTimeout(() => { btn.classList.remove('done'); btn.textContent = '✿ Publicar plaza ✿'; btn.disabled = false; }, 30000);
   } catch(e) {
-    btn.classList.remove('sending'); btn.disabled = false; btn.textContent = '★ Publicar plaza ★';
+    btn.classList.remove('sending'); btn.disabled = false; btn.textContent = '✿ Publicar plaza ✿';
     toast('error: ' + (e.code || e.message));
   }
 });
@@ -2819,7 +2856,6 @@ function launchConfetti(){
   // Los colores salen de la paleta, así que la lluvia acompaña a la piel.
   const colors = ['--rojo', '--amarillo', '--verde', '--azul-dark', '--rojo-light', '--negro']
     .map(t => token(t)).filter(Boolean);
-  const petalos = document.body.classList.contains('x-animaciones');
   const N = 80;
   for (let i = 0; i < N; i++){
     const piece = document.createElement('div');
@@ -2828,17 +2864,12 @@ function launchConfetti(){
     piece.style.background = colors[Math.floor(Math.random() * colors.length)];
     piece.style.animationDuration = (2 + Math.random() * 2) + 's';
     piece.style.animationDelay = (Math.random() * 0.6) + 's';
-    if (petalos){
-      // Pétalo: un lado redondo y el otro en punta, y algo más grande.
-      const d = 10 + Math.random() * 9;
-      piece.style.width = d + 'px';
-      piece.style.height = d * (1.2 + Math.random() * .5) + 'px';
-      piece.style.borderRadius = '50% 50% 50% 0';
-      piece.style.opacity = .75 + Math.random() * .25;
-    } else {
-      piece.style.width = (6 + Math.random() * 8) + 'px';
-      piece.style.height = (10 + Math.random() * 10) + 'px';
-    }
+    // Pétalo: un lado redondo y el otro en punta.
+    const d = 10 + Math.random() * 9;
+    piece.style.width = d + 'px';
+    piece.style.height = d * (1.2 + Math.random() * .5) + 'px';
+    piece.style.borderRadius = '50% 50% 50% 0';
+    piece.style.opacity = .75 + Math.random() * .25;
     document.body.appendChild(piece);
     setTimeout(() => piece.remove(), 5000);
   }
