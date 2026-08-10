@@ -1403,6 +1403,64 @@ body.night .night-toggle{
 .hor-title,.hor-stub,.demo-btn,.sc-next,.btn-ok,.btn-ko,.btn-strike{
   border-radius:var(--radius);
 }
+
+/* ══════════════════════════════════════════════════════════
+   CAPAS OPCIONALES
+   Cuatro añadidos que se encienden por separado con
+   ?extra=serigrafia,ornamentos,tiedye,animaciones
+   Cada uno es independiente y se puede combinar con el resto.
+══════════════════════════════════════════════════════════ */
+
+/* ── SERIGRAFÍA: grano de papel y tinta mal registrada ── */
+body.x-serigrafia::before{
+  content:'';position:fixed;inset:0;z-index:9997;
+  pointer-events:none;mix-blend-mode:multiply;opacity:.19;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+body.night.x-serigrafia::before{mix-blend-mode:screen;opacity:.09}
+/* El desajuste de plancha: una sombra de color desplazada bajo los rótulos */
+body.x-serigrafia .hdr-title{text-shadow:2.5px -2px 0 var(--rojo)}
+body.x-serigrafia .hdr-num{text-shadow:-2px 2px 0 var(--amarillo)}
+body.x-serigrafia .admin-title{text-shadow:2px -1.5px 0 var(--amarillo)}
+body.x-serigrafia .cd-num{text-shadow:1.5px -1.5px 0 color-mix(in srgb, var(--amarillo) 70%, transparent)}
+
+/* ── ORNAMENTOS: margaritas en vez de estrellas ── */
+body.x-ornamentos .card-title::before{content:'✿ ';color:var(--verde)}
+body.x-ornamentos .hor-title::before{content:'✿ '}
+body.x-ornamentos .info-dot{
+  background:none;width:auto;height:auto;border-radius:0;
+  font-size:13px;line-height:1;
+}
+body.x-ornamentos .info-dot::before{content:'✿';color:var(--verde)}
+body.x-ornamentos .sc-dot{
+  background:none;width:auto;height:auto;border-radius:0;
+  font-size:12px;line-height:1;color:var(--amarillo);
+}
+body.x-ornamentos .sc-dot::before{content:'☮'}
+body.x-ornamentos .lock-squiggles{letter-spacing:4px}
+
+/* ── TIE-DYE: la banda de las tarjetas, teñida ── */
+body.x-tiedye .card-stripe{
+  background:linear-gradient(90deg,
+    var(--rojo) 0%, var(--amarillo) 18%, var(--verde) 36%,
+    var(--azul-dark) 54%, var(--rojo) 72%, var(--amarillo) 88%, var(--verde) 100%);
+  filter:saturate(1.15) blur(.4px);
+}
+body.x-tiedye .xp-fill,
+body.x-tiedye .prog-fill{
+  background:linear-gradient(90deg,
+    var(--rojo), var(--amarillo) 25%, var(--verde) 50%, var(--azul-dark) 75%, var(--rojo));
+}
+
+/* ── ANIMACIONES: el contador respira ── */
+@keyframes latido{0%,100%{transform:scale(1)}50%{transform:scale(1.035)}}
+body.x-animaciones .cd-num{animation:latido 2.6s ease-in-out infinite}
+body.x-animaciones .cd-unit:nth-child(3) .cd-num{animation-delay:.2s}
+body.x-animaciones .cd-unit:nth-child(5) .cd-num{animation-delay:.4s}
+body.x-animaciones .cd-unit:nth-child(7) .cd-num{animation-delay:.6s}
+@media (prefers-reduced-motion: reduce){
+  body.x-animaciones .cd-num{animation:none}
+}
 </style>
 </head>
 <body>
@@ -1976,6 +2034,61 @@ const temaPedido = params.get('tema');
 if (temaPedido && !aplicarTema(temaPedido)){
   console.warn(`Tema "${temaPedido}" no existe. Disponibles: ${Object.keys(THEMES).join(', ')}`);
 }
+
+// ── Capas opcionales: ?extra=serigrafia,ornamentos,tiedye,animaciones ──
+// Se pueden combinar. Cuando una convenza, se fija añadiendo su clase
+// al <body> del HTML y se borra el resto.
+const EXTRAS = ['serigrafia', 'ornamentos', 'tiedye', 'animaciones'];
+const extrasPedidos = (params.get('extra') || '').split(',').map(e => e.trim()).filter(Boolean);
+for (const e of extrasPedidos){
+  if (EXTRAS.includes(e)) document.body.classList.add('x-' + e);
+  else console.warn(`Extra "${e}" no existe. Disponibles: ${EXTRAS.join(', ')}`);
+}
+
+// Con los ornamentos puestos, las estrellas de los textos pasan a margaritas.
+// Se hace sobre los nodos de texto para no tener que duplicar cada cadena.
+function florearEstrellas(){
+  const paseo = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+  const tocados = [];
+  while (paseo.nextNode()) if (paseo.currentNode.nodeValue.includes('★')) tocados.push(paseo.currentNode);
+  for (const n of tocados) n.nodeValue = n.nodeValue.replace(/★/g, '✿');
+}
+if (document.body.classList.contains('x-ornamentos')){
+  florearEstrellas();
+  // El contenido que se pinta después (cartel, tablón, caravana) también.
+  // Con freno: la cuenta atrás repinta cada segundo y no hace falta
+  // recorrer el DOM entero cada vez.
+  let pendiente = null;
+  new MutationObserver(() => {
+    clearTimeout(pendiente);
+    pendiente = setTimeout(florearEstrellas, 250);
+  }).observe(document.body, {childList:true, subtree:true});
+}
+
+// Lee un token del CSS, para que el JS no tenga colores propios.
+// Mide sobre <body> y no sobre <html>: así también ve los tokens
+// que solo existen en modo noche (--bg, --bg-card...).
+const token = (name, fallback='') =>
+  getComputedStyle(document.body).getPropertyValue(name).trim() || fallback;
+
+// Vuelca EDITION sobre la cabecera. El HTML lleva los mismos textos
+// escritos a mano para que se vea algo si el JS tarda o falla.
+function pintarEdicion(){
+  const set = (sel, txt) => { const el = document.querySelector(sel); if (el) el.textContent = txt; };
+  set('.auth-eyebrow', `Zona privada · Edición ${EDITION.id}`);
+  set('.hdr-eyebrow',  EDITION.eyebrow);
+  set('.hdr-title',    EDITION.titulo);
+  set('.hdr-num',      EDITION.id);
+  set('.hdr-date',     EDITION.fechas);
+  set('.hdr-sub',      EDITION.subtitulo);
+  for (const sel of ['.auth-bg', '#cartel-lineup-img']){
+    const el = document.querySelector(sel);
+    if (!el) continue;
+    if (el.tagName === 'IMG'){ el.src = EDITION.cartel; el.alt = `Cartel ${EDITION.titulo} ${EDITION.id}`; }
+    else el.style.backgroundImage = `url('${EDITION.cartel}')`;
+  }
+}
+pintarEdicion();
 
 // ══════════════════════════════════════
 //  ★ CONFIGURACIÓN — edita aquí
@@ -2706,6 +2819,7 @@ function launchConfetti(){
   // Los colores salen de la paleta, así que la lluvia acompaña a la piel.
   const colors = ['--rojo', '--amarillo', '--verde', '--azul-dark', '--rojo-light', '--negro']
     .map(t => token(t)).filter(Boolean);
+  const petalos = document.body.classList.contains('x-animaciones');
   const N = 80;
   for (let i = 0; i < N; i++){
     const piece = document.createElement('div');
@@ -2714,8 +2828,17 @@ function launchConfetti(){
     piece.style.background = colors[Math.floor(Math.random() * colors.length)];
     piece.style.animationDuration = (2 + Math.random() * 2) + 's';
     piece.style.animationDelay = (Math.random() * 0.6) + 's';
-    piece.style.width = (6 + Math.random() * 8) + 'px';
-    piece.style.height = (10 + Math.random() * 10) + 'px';
+    if (petalos){
+      // Pétalo: un lado redondo y el otro en punta, y algo más grande.
+      const d = 10 + Math.random() * 9;
+      piece.style.width = d + 'px';
+      piece.style.height = d * (1.2 + Math.random() * .5) + 'px';
+      piece.style.borderRadius = '50% 50% 50% 0';
+      piece.style.opacity = .75 + Math.random() * .25;
+    } else {
+      piece.style.width = (6 + Math.random() * 8) + 'px';
+      piece.style.height = (10 + Math.random() * 10) + 'px';
+    }
     document.body.appendChild(piece);
     setTimeout(() => piece.remove(), 5000);
   }
