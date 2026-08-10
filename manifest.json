@@ -4,8 +4,8 @@
   "description": "The Summer of Love · Edición XII · 4.5.6 septiembre 2026",
   "start_url": "/index.html",
   "display": "standalone",
-  "background_color": "#e8613a",
-  "theme_color": "#e8613a",
+  "background_color": "#7fb3c8",
+  "theme_color": "#7fb3c8",
   "orientation": "portrait",
   "icons": [
     {
