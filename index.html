@@ -106,6 +106,7 @@
      'SONORA X UPMV' ocupa mucho más que 'SAN SONORÍN'. Si un año
      el nombre crece, baja el vw o se sale por los lados. */
   --fs-title:clamp(36px,9vw,62px);
+  --logo-max:440px;        /* ancho máximo del rótulo dibujado */
 
   /* ── CUENTA ATRÁS ──
      Depende de lo ancha que sea la tipografía de display: si un
@@ -310,6 +311,17 @@ body.night #screen-app::before{opacity:var(--nubes-op-noche)}
   font-family:var(--font-body);font-style:italic;
   font-size:16px;letter-spacing:3px;color:var(--azul-dark);margin-bottom:6px;
 }
+
+/* Rótulo dibujado a mano. Cuando lo hay, el rótulo tipográfico y el
+   badge de fechas se ocultan: el dibujo ya trae el nombre y los días. */
+.hdr-logo{
+  display:none;
+  width:100%;max-width:var(--logo-max);
+  height:auto;margin:0 auto 4px;
+}
+body.con-rotulo .hdr-logo{display:block}
+body.con-rotulo .hdr-title{display:none}
+body.con-rotulo.rotulo-con-fechas .hdr-date{display:none}
 
 .hdr-title{
   font-family:var(--font-display);font-weight:800;
@@ -1509,6 +1521,7 @@ body.x-tiedye .prog-fill{
 
   <div class="hdr">
     <div class="hdr-eyebrow">Gran Función · Edición XII</div>
+    <img class="hdr-logo" id="hdr-logo" src="img/rotulo-xii.webp" alt="Sonora x UPMV · 4, 5 y 6 de septiembre">
     <div class="hdr-title">SONORA X UPMV</div>
     <div class="hdr-num">XII</div>
     <div class="hdr-date">4.5.6 septiembre</div>
@@ -1908,6 +1921,8 @@ const EDITION = {
   desde:     '2026-06-01T00:00:00',                       // arranque: el día después de acabar la XI
   terminada:       false,                                 // oculta el mapa y marca "edición finalizada"
   tablonCongelado: false,                                 // tablón en solo lectura
+  rotulo:    'img/rotulo-xii.webp',   // rótulo dibujado; vacío = se usa el tipográfico
+  rotuloConFechas: true,              // el dibujo ya trae los días: se oculta el badge
   cartel:    'img/cartel-xii.jpg',
   direccion: {
     texto:   'PENDIENTE DE DESCLASIFICAR',
@@ -2138,6 +2153,13 @@ function pintarEdicion(){
   set('.auth-eyebrow', `Zona privada · Edición ${EDITION.id}`);
   set('.hdr-eyebrow',  EDITION.eyebrow);
   set('.hdr-title',    EDITION.titulo);
+  const logo = document.getElementById('hdr-logo');
+  if (logo && EDITION.rotulo){
+    logo.src = EDITION.rotulo;
+    logo.alt = `${EDITION.titulo} · ${EDITION.fechas}`;
+    document.body.classList.add('con-rotulo');
+    if (EDITION.rotuloConFechas) document.body.classList.add('rotulo-con-fechas');
+  }
   set('.hdr-num',      EDITION.id);
   set('.hdr-date',     EDITION.fechas);
   set('.hdr-sub',      EDITION.subtitulo);
