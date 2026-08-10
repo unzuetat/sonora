@@ -1876,6 +1876,67 @@ const THEMES = {
       'cd-min':'58px', 'cd-min-sm':'46px',
     },
   },
+
+  // ── Alternativas sobre la misma temática, para comparar ────
+  // Todas se ven con ?tema=<nombre>. Cuando una gane, sus valores
+  // se copian al :root y las demás se pueden borrar.
+
+  // El cartel del 69: naranja quemado, letra blanca redonda, nada
+  // de estridencias. La más limpia y legible de las cuatro.
+  woodstock: {
+    nombre:      'Woodstock 69',
+    googleFonts: ['Bowlby+One', 'EB+Garamond:ital,wght@0,400;0,700;0,800;1,400;1,700;1,800'],
+    fuentes: { display:"'Bowlby One',sans-serif", body:"'EB Garamond',serif" },
+    dia: {
+      azul:'#e8613a', 'azul-dark':'#7a2410', rojo:'#c62828', 'rojo-light':'#ff7961',
+      amarillo:'#ffd24a', negro:'#2e1a12', crema:'#fdf3e3', verde:'#6b8e4e',
+    },
+    noche: { bg:'#1a0e08', 'bg-card':'#2a1810', 'bg-input':'#150b06', text:'#f6e8d5', border:'#573322' },
+    forma: {
+      radius:'10px', bw:'3px', 'bw-thin':'2px', 'bw-thick':'4px', 'bw-hair':'1px',
+      'fs-title':'clamp(32px,8vw,56px)',
+      'fs-cd':'clamp(30px,7.5vw,44px)', 'fs-cd-sm':'clamp(24px,6.5vw,34px)',
+      'cd-min':'58px', 'cd-min-sm':'46px',
+    },
+  },
+
+  // Cartelería del Fillmore, escuela Wes Wilson: colores que vibran
+  // entre sí y letra victoriana. La más agresiva y la más de época.
+  fillmore: {
+    nombre:      'Fillmore · Wes Wilson',
+    googleFonts: ['Ribeye', 'EB+Garamond:ital,wght@0,400;0,700;0,800;1,400;1,700;1,800'],
+    fuentes: { display:"'Ribeye',cursive", body:"'EB Garamond',serif" },
+    dia: {
+      azul:'#f2761b', 'azul-dark':'#7d2b00', rojo:'#d10f5a', 'rojo-light':'#ff5c93',
+      amarillo:'#ffe45e', negro:'#241019', crema:'#fbf0d9', verde:'#3f8f4a',
+    },
+    noche: { bg:'#170610', 'bg-card':'#2a0f1d', 'bg-input':'#12040c', text:'#ffeccd', border:'#5c2340' },
+    forma: {
+      radius:'4px', bw:'3px', 'bw-thin':'2px', 'bw-thick':'4px', 'bw-hair':'1px',
+      'fs-title':'clamp(40px,11vw,74px)',
+      'fs-cd':'clamp(36px,9vw,52px)', 'fs-cd-sm':'clamp(28px,7.5vw,40px)',
+      'cd-min':'62px', 'cd-min-sm':'50px',
+    },
+  },
+
+  // El lado suave del hippie: arcilla, mostaza y oliva. Menos ácido,
+  // más comuna y furgoneta. La que mejor envejece.
+  tierra: {
+    nombre:      'Tierra y mostaza',
+    googleFonts: ['Alfa+Slab+One', 'EB+Garamond:ital,wght@0,400;0,700;0,800;1,400;1,700;1,800'],
+    fuentes: { display:"'Alfa Slab One',serif", body:"'EB Garamond',serif" },
+    dia: {
+      azul:'#d9a441', 'azul-dark':'#6b4a12', rojo:'#b5451b', 'rojo-light':'#e07a4a',
+      amarillo:'#f2c14e', negro:'#2f2418', crema:'#f7efe0', verde:'#6b7a3a',
+    },
+    noche: { bg:'#161208', 'bg-card':'#241d10', 'bg-input':'#110e06', text:'#f0e6cd', border:'#4a3d20' },
+    forma: {
+      radius:'6px', bw:'3px', 'bw-thin':'2px', 'bw-thick':'4px', 'bw-hair':'1px',
+      'fs-title':'clamp(36px,9.5vw,64px)',
+      'fs-cd':'clamp(32px,8vw,46px)', 'fs-cd-sm':'clamp(25px,6.8vw,35px)',
+      'cd-min':'58px', 'cd-min-sm':'46px',
+    },
+  },
 };
 
 const SHADOW_STEPS = [['xl',8],['lg',6],['md',5],['sm',4],['xs',3],['2xs',2],['1',1]];
