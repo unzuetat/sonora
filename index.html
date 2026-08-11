@@ -99,7 +99,10 @@
      Las nubes son una máscara: el color sale de aquí. */
   --c-nube:#ffffff;
   --nubes-op:.38;           /* 0 = cielo raso */
-  --nubes-op-noche:.05;
+  --c-estrella:#fff;
+  --estrellas-op:.75;
+  --eclipse-d:200px;        /* diámetro del eclipse */
+  --c-corona:#ffd98a;       /* la corona encendida */
 
   /* ── RÓTULO PRINCIPAL ──
      Escala con el ancho, pero el nombre de la edición influye:
@@ -107,6 +110,7 @@
      el nombre crece, baja el vw o se sale por los lados. */
   --fs-title:clamp(36px,9vw,62px);
   --logo-max:440px;        /* ancho máximo del rótulo dibujado */
+  --tema-max:190px;        /* ancho máximo del rótulo de la temática */
 
   /* ── CUENTA ATRÁS ──
      Depende de lo ancha que sea la tipografía de display: si un
@@ -301,8 +305,30 @@ body{
   -webkit-mask-repeat:repeat;mask-repeat:repeat;
   -webkit-mask-size:440px auto;mask-size:440px auto;
 }
-/* De noche el cielo se cierra: quedan apenas insinuadas. */
-body.night #screen-app::before{opacity:var(--nubes-op-noche)}
+/* De noche no hay nubes: hay estrellas. */
+body.night #screen-app::before{
+  --nube-svg:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='440' height='580' viewBox='0 0 440 580'%3E%3Cg fill='%23fff'%3E%3Ccircle cx='252.7' cy='13.3' r='1.3'/%3E%3Ccircle cx='109.8' cy='531.2' r='0.9'/%3E%3Ccircle cx='322.1' cy='296.1' r='2.3'/%3E%3Ccircle cx='141.1' cy='55.4' r='1.3'/%3E%3Ccircle cx='23.0' cy='61.9' r='2.3'/%3E%3Ccircle cx='152.2' cy='394.3' r='2.3'/%3E%3Ccircle cx='101.5' cy='108.5' r='1.1'/%3E%3Ccircle cx='386.4' cy='358.2' r='1.6'/%3E%3Ccircle cx='357.8' cy='76.6' r='1.3'/%3E%3Ccircle cx='265.4' cy='493.9' r='1.6'/%3E%3Ccircle cx='340.2' cy='113.0' r='1.1'/%3E%3Ccircle cx='269.7' cy='211.5' r='1.3'/%3E%3Ccircle cx='174.1' cy='354.3' r='2.3'/%3E%3Ccircle cx='162.0' cy='216.5' r='0.9'/%3E%3Ccircle cx='239.8' cy='139.4' r='1.6'/%3E%3Ccircle cx='163.2' cy='500.5' r='2.3'/%3E%3Ccircle cx='313.1' cy='263.5' r='1.3'/%3E%3Ccircle cx='165.9' cy='93.4' r='2.3'/%3E%3Ccircle cx='174.6' cy='17.9' r='2.3'/%3E%3Ccircle cx='399.9' cy='377.4' r='1.3'/%3E%3Ccircle cx='375.7' cy='482.2' r='1.3'/%3E%3Ccircle cx='50.7' cy='408.4' r='1.3'/%3E%3Ccircle cx='17.6' cy='554.0' r='0.9'/%3E%3Ccircle cx='238.2' cy='325.1' r='1.1'/%3E%3Ccircle cx='237.6' cy='532.4' r='0.9'/%3E%3Ccircle cx='305.0' cy='274.3' r='1.6'/%3E%3Ccircle cx='14.3' cy='288.7' r='1.9'/%3E%3Ccircle cx='263.6' cy='105.7' r='1.6'/%3E%3Ccircle cx='82.4' cy='237.2' r='1.3'/%3E%3Ccircle cx='296.8' cy='515.5' r='1.9'/%3E%3Ccircle cx='97.7' cy='8.4' r='2.3'/%3E%3Ccircle cx='191.9' cy='8.1' r='1.1'/%3E%3Ccircle cx='306.1' cy='344.3' r='0.9'/%3E%3Ccircle cx='43.8' cy='222.1' r='1.9'/%3E%3Ccircle cx='405.2' cy='286.3' r='1.6'/%3E%3Ccircle cx='379.2' cy='272.3' r='1.3'/%3E%3Ccircle cx='303.6' cy='110.3' r='1.3'/%3E%3Ccircle cx='81.4' cy='573.2' r='1.3'/%3E%3Ccircle cx='176.3' cy='344.2' r='1.6'/%3E%3Ccircle cx='55.0' cy='496.1' r='0.9'/%3E%3Ccircle cx='194.6' cy='382.6' r='1.9'/%3E%3Ccircle cx='222.2' cy='192.6' r='1.6'/%3E%3Ccircle cx='312.3' cy='232.9' r='1.6'/%3E%3Ccircle cx='219.5' cy='469.7' r='0.9'/%3E%3Ccircle cx='139.1' cy='477.6' r='1.3'/%3E%3Ccircle cx='59.4' cy='387.1' r='1.9'/%3E%3Ccircle cx='221.7' cy='264.2' r='1.3'/%3E%3Ccircle cx='42.6' cy='250.2' r='1.1'/%3E%3Ccircle cx='17.9' cy='84.7' r='1.3'/%3E%3Ccircle cx='382.3' cy='240.1' r='1.9'/%3E%3Ccircle cx='96.1' cy='291.3' r='1.1'/%3E%3Ccircle cx='44.8' cy='276.8' r='0.9'/%3E%3C/g%3E%3C/svg%3E");
+  background-color:var(--c-estrella);
+  opacity:var(--estrellas-op);
+}
+
+/* ── ECLIPSE ──
+   No es noche cerrada: en mitad del cielo hay un eclipse, con su
+   disco oscuro y la corona encendida alrededor. */
+body.night #screen-app::after{
+  content:'';
+  position:fixed;
+  top:34%;left:50%;
+  width:var(--eclipse-d);height:var(--eclipse-d);
+  margin:calc(var(--eclipse-d) / -2) 0 0 calc(var(--eclipse-d) / -2);
+  border-radius:50%;
+  background:var(--bg);
+  box-shadow:
+    0 0 0 2px var(--c-corona),
+    0 0 30px 6px color-mix(in srgb, var(--c-corona) 55%, transparent),
+    0 0 120px 46px color-mix(in srgb, var(--c-corona) 18%, transparent);
+  z-index:0;pointer-events:none;
+}
 
 /* HEADER */
 .hdr{text-align:center;padding:28px 0 20px;border-bottom:var(--bw-thick) solid var(--negro)}
@@ -321,6 +347,13 @@ body.night #screen-app::before{opacity:var(--nubes-op-noche)}
 }
 body.con-rotulo .hdr-logo{display:block}
 body.con-rotulo .hdr-title{display:none}
+.hdr-tema{
+  display:none;
+  width:100%;max-width:var(--tema-max);
+  height:auto;margin:0 auto 10px;
+}
+body.con-rotulo-tema .hdr-tema{display:block}
+body.con-rotulo-tema .hdr-num{display:none}
 body.con-rotulo.rotulo-con-fechas .hdr-date{display:none}
 
 .hdr-title{
@@ -1195,12 +1228,12 @@ body.night{
   --shadow-xs:3px 3px 0 var(--c-shadow);
   --shadow-2xs:2px 2px 0 var(--c-shadow);
   --shadow-1:1px 1px 0 var(--c-shadow);
-  --bg:#1a0e08;
-  --bg-card:#2a1810;
-  --bg-input:#150b06;
-  --text:#f6e8d5;
+  --bg:#0d1420;
+  --bg-card:#17212f;
+  --bg-input:#0a111b;
+  --text:#e9eef4;
   --text-dim:var(--c-muted-2);
-  --border:#573322;
+  --border:#2c3f56;
   --glow-rojo:color-mix(in srgb, var(--rojo) 40%, transparent);
   --glow-amarillo:color-mix(in srgb, var(--amarillo) 30%, transparent);
   --glow-azul:color-mix(in srgb, var(--azul) 30%, transparent);
@@ -1375,6 +1408,7 @@ body.night::after{
   width:38px;height:38px;
   display:flex;align-items:center;justify-content:center;
   cursor:pointer;box-shadow:3px 3px 0 var(--c-black);
+  font-size:0;
   transition:.15s;
 }
 body.night .night-toggle{
@@ -1382,6 +1416,16 @@ body.night .night-toggle{
   border-color:var(--negro);
   box-shadow:3px 3px 0 color-mix(in srgb, var(--amarillo) 30%, transparent);
 }
+/* Anillo: disco oscuro con la corona alrededor. De noche se llena,
+   porque entonces el botón devuelve al día. */
+.night-toggle::before{
+  content:'';
+  width:17px;height:17px;border-radius:50%;
+  border:3.5px solid currentColor;
+  background:transparent;
+  box-sizing:border-box;
+}
+body.night .night-toggle::before{background:currentColor}
 .night-toggle:hover{transform:translate(1px,1px);box-shadow:2px 2px 0 var(--c-black)}
 
 /* ── MOBILE RESPONSIVE ── */
@@ -1523,6 +1567,7 @@ body.x-tiedye .prog-fill{
     <div class="hdr-eyebrow">Gran Función · Edición XII</div>
     <img class="hdr-logo" id="hdr-logo" src="img/rotulo-xii.webp" alt="Sonora x UPMV · 4, 5 y 6 de septiembre">
     <div class="hdr-title">SONORA X UPMV</div>
+    <img class="hdr-tema" id="hdr-tema" src="img/rotulo-tema-xii.webp" alt="The Summer of Love">
     <div class="hdr-num">XII</div>
     <div class="hdr-date">4.5.6 septiembre</div>
     <div class="hdr-sub">✿ Ubicación por desclasificar ✿</div>
@@ -1530,7 +1575,7 @@ body.x-tiedye .prog-fill{
 
   <div class="tabs">
     <button class="tb on" id="tab-main">Inicio</button>
-    <button class="tb" id="tab-sc">Menú</button>
+    <button class="tb" id="tab-sc">Bromistas</button>
     <button class="tb" id="tab-hor">Horarios</button>
     <button class="tb" id="tab-cp">Caravana</button>
     <button class="tb" id="tab-brd">Tablón</button>
@@ -1544,7 +1589,7 @@ body.x-tiedye .prog-fill{
     <div class="card">
       <div class="card-stripe"></div>
       <div class="card-body">
-        <div class="card-title">Cuenta atrás para el pregonazo</div>
+        <div class="card-title">Cuenta atrás para el verano del amor</div>
         <div class="cd-grid">
           <div class="cd-unit"><span class="cd-num" id="dd">00</span><div class="cd-name">días</div></div>
           <div class="cd-sep">:</div>
@@ -1716,8 +1761,6 @@ body.x-tiedye .prog-fill{
           <div class="cp-row">
             <select class="cp-sel" id="cpday" style="flex:1">
               <option value="">Día de salida…</option>
-              <option value="viernes 29">viernes 29</option>
-              <option value="sábado 30">sábado 30</option>
             </select>
             <input class="cp-inp" id="cptime" type="time" style="flex:1"/>
           </div>
@@ -1735,8 +1778,8 @@ body.x-tiedye .prog-fill{
     <div class="card">
       <div class="card-stripe"></div>
       <div class="card-body">
-        <div class="card-title">Menú Popular</div>
-        <div class="sec-desc" style="font-size:20px;font-weight:700;font-style:italic;color:var(--rojo);letter-spacing:1px">Café y postre incluidos</div>
+        <div class="card-title">Los Alegres Bromistas</div>
+        <div class="sec-desc" style="font-size:20px;font-weight:700;font-style:italic;color:var(--rojo);letter-spacing:1px">¿Quieres montar en el autobús?</div>
         <div class="lineup-player" id="lineup-player">
           <div class="lineup-player-name" id="lineup-player-name"></div>
           <iframe class="sc-frame" id="lineup-frame" height="166" scrolling="no" frameborder="no" allow="autoplay" src="about:blank" style="width:100%;display:block"></iframe>
@@ -1829,7 +1872,7 @@ body.x-tiedye .prog-fill{
 <div class="wrap" style="padding-top:20px">
   <div class="admin-hdr">
     <div class="admin-title">✿ Admin ✿</div>
-    <div class="admin-sub">SAN SONORÍN · panel de control</div>
+    <div class="admin-sub">SONORA X UPMV · panel de control</div>
   </div>
 
   <!-- Info editable -->
@@ -1888,7 +1931,7 @@ body.x-tiedye .prog-fill{
 </div>
 </div>
 
-<button class="night-toggle" id="night-toggle" title="Modo noche">☽</button>
+<button class="night-toggle" id="night-toggle" title="Modo noche" aria-label="Cambiar a modo noche"></button>
 <div class="toast" id="toast"></div>
 
 <script type="module">
@@ -1918,10 +1961,12 @@ const EDITION = {
   fechas:    '4.5.6 septiembre',
   subtitulo: '✿ Ubicación por desclasificar ✿',
   empieza:   '2026-09-04T21:00:00+02:00',                 // fin de la cuenta atrás
+  dias:      ['viernes 4', 'sábado 5', 'domingo 6'],   // días del festival
   desde:     '2026-06-01T00:00:00',                       // arranque: el día después de acabar la XI
   terminada:       false,                                 // oculta el mapa y marca "edición finalizada"
   tablonCongelado: false,                                 // tablón en solo lectura
-  rotulo:    'img/rotulo-xii.webp',   // rótulo dibujado; vacío = se usa el tipográfico
+  rotulo:    'img/rotulo-xii.webp',       // rótulo dibujado; vacío = se usa el tipográfico
+  rotuloTema:'img/rotulo-tema-xii.webp',  // la temática, dibujada; vacío = se usa el número
   rotuloConFechas: true,              // el dibujo ya trae los días: se oculta el badge
   cartel:    'img/cartel-xii.jpg',
   direccion: {
@@ -2153,6 +2198,12 @@ function pintarEdicion(){
   set('.auth-eyebrow', `Zona privada · Edición ${EDITION.id}`);
   set('.hdr-eyebrow',  EDITION.eyebrow);
   set('.hdr-title',    EDITION.titulo);
+  const tema = document.getElementById('hdr-tema');
+  if (tema && EDITION.rotuloTema){
+    tema.src = EDITION.rotuloTema;
+    tema.alt = EDITION.tema;
+    document.body.classList.add('con-rotulo-tema');
+  }
   const logo = document.getElementById('hdr-logo');
   if (logo && EDITION.rotulo){
     logo.src = EDITION.rotulo;
@@ -2338,7 +2389,7 @@ if (new URLSearchParams(location.search).get('dev') === '1') {
 // ── DARK MODE (auto nocturno + toggle manual) ──
 function applyNight(on){
   document.body.classList.toggle('night', on);
-  document.getElementById('night-toggle').textContent = on ? '☀' : '☽';
+  document.getElementById('night-toggle').setAttribute('aria-label', on ? 'Volver al modo día' : 'Cambiar a modo noche');
   document.querySelector('meta[name="theme-color"]').content = on ? token('--bg','#0a0e1a') : token('--azul','#5bb8f5');
 }
 function isNightHour(){
@@ -2680,8 +2731,9 @@ function initCars(){
 }
 
 const CARPOOL_DAYS = {
-  ida:    [{v:'viernes 29', l:'viernes 29'}, {v:'sábado 30', l:'sábado 30'}],
-  vuelta: [{v:'sábado 30',  l:'sábado 30'},  {v:'domingo 31', l:'domingo 31'}]
+  // Se va el primer día, se vuelve a partir del segundo.
+  ida:    EDITION.dias.slice(0, -1).map(d => ({v:d, l:d})),
+  vuelta: EDITION.dias.slice(1).map(d => ({v:d, l:d}))
 };
 function updateCpDayOptions(){
   const dir = document.getElementById('cpdir').value || 'ida';
@@ -2897,10 +2949,13 @@ document.getElementById('lightbox').addEventListener('click', () => {
 document.getElementById('cartel-lineup-img').addEventListener('click', () => openLightbox(EDITION.cartel, `Cartel ${EDITION.titulo} ${EDITION.id}`));
 document.getElementById('cartel-lineup-cta').addEventListener('click', () => openLightbox(EDITION.cartel, `Cartel ${EDITION.titulo} ${EDITION.id}`));
 
-function launchConfetti(){
+function launchConfetti(opts = {}){
   // Los colores salen de la paleta, así que la lluvia acompaña a la piel.
-  const colors = ['--rojo', '--amarillo', '--verde', '--azul-dark', '--rojo-light', '--negro']
-    .map(t => token(t)).filter(Boolean);
+  const margaritas = !!opts.margaritas;
+  const colors = margaritas
+    ? [token('--c-nube', '#fff')]
+    : ['--rojo', '--amarillo', '--verde', '--azul-dark', '--rojo-light', '--negro']
+        .map(t => token(t)).filter(Boolean);
   const N = 80;
   for (let i = 0; i < N; i++){
     const piece = document.createElement('div');
@@ -2909,12 +2964,23 @@ function launchConfetti(){
     piece.style.background = colors[Math.floor(Math.random() * colors.length)];
     piece.style.animationDuration = (2 + Math.random() * 2) + 's';
     piece.style.animationDelay = (Math.random() * 0.6) + 's';
-    // Pétalo: un lado redondo y el otro en punta.
-    const d = 10 + Math.random() * 9;
-    piece.style.width = d + 'px';
-    piece.style.height = d * (1.2 + Math.random() * .5) + 'px';
-    piece.style.borderRadius = '50% 50% 50% 0';
-    piece.style.opacity = .75 + Math.random() * .25;
+    if (margaritas){
+      // Flor entera, no pétalo suelto: la recompensa de las diez ediciones.
+      const d = 16 + Math.random() * 16;
+      piece.style.background = 'none';
+      piece.style.color = colors[0];
+      piece.style.font = `${d}px/1 serif`;
+      piece.style.width = piece.style.height = 'auto';
+      piece.textContent = '✿';
+      piece.style.textShadow = '0 1px 3px rgba(0,0,0,.25)';
+    } else {
+      // Pétalo: un lado redondo y el otro en punta.
+      const d = 10 + Math.random() * 9;
+      piece.style.width = d + 'px';
+      piece.style.height = d * (1.2 + Math.random() * .5) + 'px';
+      piece.style.borderRadius = '50% 50% 50% 0';
+      piece.style.opacity = .75 + Math.random() * .25;
+    }
     document.body.appendChild(piece);
     setTimeout(() => piece.remove(), 5000);
   }
@@ -2998,7 +3064,7 @@ function initAdmin(){
       const dirOpts = ['ida','vuelta'].map(x => `<option value="${x}" ${dirNow===x?'selected':''}>${x}</option>`).join('');
       const typeOpts = [['offer','ofrece'],['seek','busca']]
         .map(([v,l]) => `<option value="${v}" ${typeNow===v?'selected':''}>${l}</option>`).join('');
-      const dayOpts = ['viernes 29','sábado 30','domingo 31']
+      const dayOpts = EDITION.dias
         .map(x => `<option value="${x}" ${c.day===x?'selected':''}>${x}</option>`).join('');
       const seatOpts = [1,2,3,4]
         .map(x => `<option value="${x}" ${Number(c.seats)===x?'selected':''}>${x}p</option>`).join('');
@@ -3120,7 +3186,7 @@ function initEditions(){
           document.getElementById('huele-modal').style.display = 'flex';
         }
         if (newCount === 10 && prevCount !== 10) {
-          launchConfetti();
+          launchConfetti({ margaritas: true });   // diez ediciones: lluvia de margaritas
           document.getElementById('maria-modal').style.display = 'flex';
         }
         if (justMarkedFirst) {
