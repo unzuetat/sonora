@@ -1484,6 +1484,31 @@ body.night .night-toggle::before{background:currentColor}
   border-radius:var(--radius);
 }
 
+/* El aviso de rango no se cierra: aparece y se va. Y no intercepta el
+   ratón, para poder seguir marcando ediciones mientras está. */
+.rango-pop{
+  position:fixed;inset:0;z-index:10001;
+  display:flex;align-items:center;justify-content:center;
+  padding:20px;pointer-events:none;
+  opacity:0;transition:opacity .3s ease;
+}
+.rango-pop.show{opacity:1}
+.rango-pop-box{
+  background:var(--crema);
+  border:var(--bw) solid var(--negro);
+  box-shadow:var(--shadow-lg);
+  border-radius:var(--radius);
+  padding:22px 26px 18px;text-align:center;max-width:340px;
+  transform:scale(.9);
+  transition:transform .3s cubic-bezier(.34,1.56,.64,1);
+}
+.rango-pop.show .rango-pop-box{transform:scale(1)}
+body.night .rango-pop-box{background:var(--bg-card);border-color:var(--border)}
+.rango-pop .rango-nombre{margin-bottom:0}
+@media (prefers-reduced-motion: reduce){
+  .rango-pop,.rango-pop-box{transition:none}
+}
+
 /* ── AVISO DE RANGO ──
    Se usa suelto, al subir de rango, y también dentro del modal de
    las ocho ediciones, encima de la ilustración. */
@@ -1848,12 +1873,11 @@ body.x-tiedye .prog-fill{
   </div>
 </div>
 
-<!-- ══ RANGO MODAL (al subir de rango) ══ -->
-<div class="admin-modal" id="rango-modal" style="display:none">
-  <div class="admin-modal-box" style="text-align:center;max-width:380px">
+<!-- ══ AVISO DE RANGO ══ (sale y se va solo; no estorba al seguir marcando) -->
+<div class="rango-pop" id="rango-pop">
+  <div class="rango-pop-box">
     <div class="rango-eyebrow">Nuevo rango</div>
     <div class="rango-nombre" id="rango-nombre"></div>
-    <button class="auth-btn" id="btn-rango-close" style="padding:10px 24px;font-size:14px">Cerrar</button>
   </div>
 </div>
 
@@ -2944,12 +2968,6 @@ document.getElementById('btn-conductor-close').addEventListener('click', () => {
 document.getElementById('conductor-modal').addEventListener('click', (e) => {
   if (e.target.id === 'conductor-modal') document.getElementById('conductor-modal').style.display = 'none';
 });
-document.getElementById('btn-rango-close').addEventListener('click', () => {
-  document.getElementById('rango-modal').style.display = 'none';
-});
-document.getElementById('rango-modal').addEventListener('click', (e) => {
-  if (e.target.id === 'rango-modal') document.getElementById('rango-modal').style.display = 'none';
-});
 document.getElementById('btn-huele-close').addEventListener('click', () => {
   document.getElementById('huele-modal').style.display = 'none';
 });
@@ -3187,6 +3205,17 @@ function getEdRoleText(saved){
   const count = saved.filter(c => c !== '0').length;
   return getEdRole(count);
 }
+// Saca el aviso de rango y lo retira solo. Si subes otro escalón antes
+// de que se vaya, se reinicia con el nuevo.
+let rangoTimer = null;
+function mostrarRango(nombre){
+  const pop = document.getElementById('rango-pop');
+  document.getElementById('rango-nombre').textContent = nombre;
+  pop.classList.add('show');
+  clearTimeout(rangoTimer);
+  rangoTimer = setTimeout(() => pop.classList.remove('show'), 2200);
+}
+
 function initEditions(){
   const saved = JSON.parse(localStorage.getItem(ED_KEY) || '[]');
   const grid = document.getElementById('ed-grid');
@@ -3230,10 +3259,7 @@ function initEditions(){
         // ya tienen su propio modal y lo llevan dentro, así que no se dobla.
         const nuevoRango = getEdRole(newCount);
         const tieneModalPropio = newCount === 8 || newCount === ED_TOTAL || justMarkedFirst;
-        if (nuevoRango && nuevoRango !== prevRango && !tieneModalPropio) {
-          document.getElementById('rango-nombre').textContent = nuevoRango;
-          document.getElementById('rango-modal').style.display = 'flex';
-        }
+        if (nuevoRango && nuevoRango !== prevRango && !tieneModalPropio) mostrarRango(nuevoRango);
       });
     }
     grid.appendChild(chip);
