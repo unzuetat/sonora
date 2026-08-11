@@ -304,7 +304,7 @@ body{
   --nube-svg:url('img/cielo-nubes.png');
   -webkit-mask-image:var(--nube-svg);mask-image:var(--nube-svg);
   -webkit-mask-repeat:repeat;mask-repeat:repeat;
-  -webkit-mask-size:440px 900px;mask-size:440px 900px;
+  -webkit-mask-size:1500px 1600px;mask-size:1500px 1600px;
 }
 /* De noche no hay nubes: hay estrellas. */
 body.night #screen-app::before{
@@ -1703,7 +1703,7 @@ body.x-tiedye .prog-fill{
           font-family:'EB Garamond',serif;font-weight:800;
           font-size:17px;letter-spacing:1px;line-height:1.3;
           cursor:pointer;transition:.15s;
-        ">¿Todavía fuera del autobús?<br>Asómate al resto de la troupe.</button>
+        ">¿Todavía fuera del autobús?<br>Asoma el bolo.</button>
       </div>
     </div>
 
@@ -3392,32 +3392,33 @@ const SETLIST_BLOCKS = [
 ];
 
 // 22 pases para 26 artistas: el cartel junta cuatro parejas b2b.
-// PENDIENTE: el reparto por noches/día y el orden los pasa Telmo esta
-// semana. De momento van todos en 'n1' y en alfabético; para repartir
-// basta cambiar el campo block de cada uno ('n1' | 'day' | 'n2').
+// El orden es el del cartel, no alfabético: manda el reparto de la noche.
 const SETLIST_ORDER = [
-  {id:'apparatchik-gurke',  name:'Apparatchik b2b Gurke',      block:'n1', b2b:true},
-  {id:'astora',             name:'Astora',                     block:'n1'},
-  {id:'bacanos-brothers',   name:"Bacano's Brothers",          block:'n1'},
-  {id:'bohm-dbunk',         name:'BØHM b2b D-Bunk',            block:'n1', b2b:true},
-  {id:'c0ne',               name:'C0ne',                       block:'n1'},
-  {id:'candel',             name:'Candel',                     block:'n1'},
-  {id:'cizette',            name:'Cizette',                    block:'n1'},
-  {id:'sastresonoro-droglo',name:'D.SastreSonoro b2b Droglo',  block:'n1', b2b:true},
-  {id:'deejeya',            name:'Deejeya',                    block:'n1'},
-  {id:'elena-magdalena',    name:'Elena Magdalena',            block:'n1'},
-  {id:'falsojudas',         name:'FalsoJudas',                 block:'n1'},
-  {id:'francis-espinaco',   name:'Francis Espinaco',           block:'n1'},
-  {id:'gom',                name:'GOM',                        block:'n1'},
-  {id:'kore-tek',           name:'KORE.TEK',                   block:'n1'},
-  {id:'llinares-mireia',    name:'Llinares b2b Mireia Cj',     block:'n1', b2b:true},
-  {id:'lost-mery',          name:'Lost Mery',                  block:'n1'},
-  {id:'machete',            name:'Machete Soundsystem',        block:'n1'},
-  {id:'rebbdei',            name:'Rebbdei',                    block:'n1'},
-  {id:'sero',               name:'SeR0',                       block:'n1'},
-  {id:'toretto',            name:'Toretto',                    block:'n1'},
-  {id:'traver',             name:'Traver',                     block:'n1'},
-  {id:'wametek',            name:'Wametek',                    block:'n1'},
+  // ── Noche I ──
+  {id:'sero',              name:'SeR0',                   block:'n1'},
+  {id:'c0ne',              name:'C0ne',                   block:'n1'},
+  {id:'rebbdei',           name:'Rebbdei',                block:'n1'},
+  {id:'elena-magdalena',   name:'Elena Magdalena',        block:'n1'},
+  {id:'falsojudas',        name:'FalsoJudas',             block:'n1'},
+  {id:'bohm-dbunk',        name:'BØHM b2b D-Bunk',        block:'n1', b2b:true},
+  {id:'bacanos-brothers',  name:"Bacano's Brothers",      block:'n1'},
+  {id:'toretto',           name:'Toretto',                block:'n1'},
+  // ── Día ──
+  {id:'mireia-llinares',   name:'Mireia Cj b2b Llinares', block:'day', b2b:true},
+  {id:'candel',            name:'Candel',                 block:'day'},
+  {id:'traver',            name:'Traver',                 block:'day'},
+  {id:'astora',            name:'Astora',                 block:'day'},
+  {id:'machete',           name:'Machete Soundsystem',    block:'day'},
+  {id:'cizette',           name:'Cizette',                block:'day'},
+  {id:'kore-tek',          name:'KORE.TEK',               block:'day'},
+  // ── Noche II ──
+  {id:'francis-espinaco',  name:'Francis Espinaco',       block:'n2'},
+  {id:'deejeya',           name:'Deejeya',                block:'n2'},
+  {id:'lost-mery',         name:'Lost Mery',              block:'n2'},
+  {id:'gurke-apparatchik', name:'Gurke b2b Apparatchik',  block:'n2', b2b:true},
+  {id:'wametek',           name:'Wametek',                block:'n2'},
+  {id:'sastresonoro-droglo',name:'D.SastreSonoro b2b Droglo', block:'n2', b2b:true},
+  {id:'gom',               name:'GOM',                    block:'n2'},
 ];
 
 // Pinta los tickets troquelados de la pestaña Horarios.
