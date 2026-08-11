@@ -11,13 +11,13 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://sonora.community/">
 <meta property="og:title" content="Sonora x UPMV XII · The Summer of Love">
-<meta property="og:description" content="Gran Función · 4-6 septiembre 2026 · Valencia">
+<meta property="og:description" content="Rumbo a Furthur · 4-6 septiembre 2026 · Valencia">
 <meta property="og:image" content="https://sonora.community/img/cartel-og-xii.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Sonora x UPMV XII · The Summer of Love">
-<meta name="twitter:description" content="Gran Función · 4-6 septiembre 2026 · Valencia">
+<meta name="twitter:description" content="Rumbo a Furthur · 4-6 septiembre 2026 · Valencia">
 <meta name="twitter:image" content="https://sonora.community/img/cartel-og-xii.jpg">
 <title>SONORA X UPMV</title>
 <link href="https://fonts.googleapis.com/css2?family=Shrikhand&family=EB+Garamond:ital,wght@0,400;0,700;0,800;1,400;1,700;1,800&display=swap" rel="stylesheet">
@@ -1554,7 +1554,7 @@ body.x-tiedye .prog-fill{
       <input class="auth-inp" id="inp-pwd" type="password" placeholder="··········"/>
       <button class="auth-btn" id="btn-login">Entrar</button>
       <div class="auth-err" id="auth-err"></div>
-      <div class="auth-info">Solo pueden acceder personas invitadas.<br>Si no tienes la contraseña, contacta con el Ayuntamiento.</div>
+      <div class="auth-info">Solo suben los que están en el autobús.<br>Si no tienes la contraseña, pregunta a los Bromistas.</div>
     </div>
   </div>
 </div>
@@ -1564,7 +1564,7 @@ body.x-tiedye .prog-fill{
 <div class="wrap">
 
   <div class="hdr">
-    <div class="hdr-eyebrow">Gran Función · Edición XII</div>
+    <div class="hdr-eyebrow">Rumbo a Furthur · Edición XII</div>
     <img class="hdr-logo" id="hdr-logo" src="img/rotulo-xii.webp" alt="Sonora x UPMV · 4, 5 y 6 de septiembre">
     <div class="hdr-title">SONORA X UPMV</div>
     <img class="hdr-tema" id="hdr-tema" src="img/rotulo-tema-xii.webp" alt="The Summer of Love">
@@ -1636,7 +1636,7 @@ body.x-tiedye .prog-fill{
     <div class="card" style="margin-top:16px">
       <div class="card-stripe"></div>
       <div class="card-body">
-        <div class="card-title">Tu historial médico</div>
+        <div class="card-title">Tu hoja de ruta</div>
         <div class="ed-role" id="ed-role"></div>
         <div class="ed-grid" id="ed-grid"></div>
       </div>
@@ -1656,8 +1656,8 @@ body.x-tiedye .prog-fill{
     <div class="card" style="margin-top:16px">
       <div class="card-stripe"></div>
       <div class="card-body">
-        <div class="card-title">Tablón Municipal</div>
-        <div class="sec-desc">Deja avisos para el resto del vecindario. El Consejo del Festejo puede verificar o tachar mensajes.</div>
+        <div class="card-title">El Mural</div>
+        <div class="sec-desc">Deja recados para el resto de la comuna. El Consejo de Bromistas puede verificar o tachar mensajes.</div>
         <div class="msgs" id="mlist-preview"></div>
       </div>
     </div>
@@ -1702,7 +1702,7 @@ body.x-tiedye .prog-fill{
           font-family:'EB Garamond',serif;font-weight:800;
           font-size:17px;letter-spacing:1px;line-height:1.3;
           cursor:pointer;transition:.15s;
-        ">Te crujen las tripas.<br>Echa un ojo al resto del menú.</button>
+        ">¿Todavía fuera del autobús?<br>Asómate al resto de la troupe.</button>
       </div>
     </div>
 
@@ -1713,7 +1713,7 @@ body.x-tiedye .prog-fill{
     <div class="card">
       <div class="card-stripe"></div>
       <div class="card-body">
-        <div class="card-title">Tablón Municipal</div>
+        <div class="card-title">El Mural</div>
         <div class="sec-desc" id="board-desc">Selecciona una categoría, pon tu nombre y escribe tu aviso.</div>
         <div id="board-form">
           <div class="tags-row">
@@ -1741,7 +1741,7 @@ body.x-tiedye .prog-fill{
       <div class="card-stripe"></div>
       <div class="card-body">
         <div class="card-title">Caravana</div>
-        <div class="sec-desc">Si ofreces plaza deja tu contacto. Tu entrada aparece una vez validada por el Consejo del Festejo.</div>
+        <div class="sec-desc">Si ofreces plaza deja tu contacto. Tu entrada aparece una vez validada por el Consejo de Bromistas.</div>
         <div class="cp-form">
           <div class="cp-type-toggle">
             <button type="button" class="cp-type-btn active" data-type="offer">Ofrezco coche</button>
@@ -1809,7 +1809,7 @@ body.x-tiedye .prog-fill{
 
   <!-- Admin access (visible en todas las pestañas) -->
   <div style="text-align:center;margin-top:30px;padding-bottom:20px">
-    <button class="admin-link" id="btn-admin">Consejo del Festejo</button>
+    <button class="admin-link" id="btn-admin">Consejo de Bromistas</button>
   </div>
 
 </div>
@@ -1846,11 +1846,11 @@ body.x-tiedye .prog-fill{
 </div>
 
 <!-- ══ CHEF MODAL (artista sin link) ══ -->
-<div class="admin-modal" id="chef-modal" style="display:none">
+<div class="admin-modal" id="conductor-modal" style="display:none">
   <div class="admin-modal-box" style="text-align:center;max-width:380px">
-    <div style="font-family:'EB Garamond',serif;font-weight:800;font-size:18px;letter-spacing:2px;color:var(--rojo);margin-bottom:14px">✿ COMANDA DEL CHEF ✿</div>
-    <div style="font-family:'EB Garamond',serif;font-style:italic;font-size:16px;color:var(--negro);line-height:1.5;margin-bottom:18px">Por comanda del chef, este plato se degustará en directo.</div>
-    <button class="auth-btn" id="btn-chef-close" style="padding:10px 24px;font-size:14px">Cerrar</button>
+    <div style="font-family:'EB Garamond',serif;font-weight:800;font-size:18px;letter-spacing:2px;color:var(--rojo);margin-bottom:14px">✿ AVISO DEL CONDUCTOR ✿</div>
+    <div style="font-family:'EB Garamond',serif;font-style:italic;font-size:16px;color:var(--negro);line-height:1.5;margin-bottom:18px">Por orden del Conductor, este pase se toma en directo.</div>
+    <button class="auth-btn" id="btn-conductor-close" style="padding:10px 24px;font-size:14px">Cerrar</button>
   </div>
 </div>
 
@@ -1956,7 +1956,7 @@ import { initializeAppCheck, ReCaptchaV3Provider }
 const EDITION = {
   id:        'XII',                                       // número romano
   tema:      'The Summer of Love',                        // temática de la edición
-  eyebrow:   'Gran Función · Edición XII',
+  eyebrow:   'Rumbo a Furthur · Edición XII',
   titulo:    'SONORA X UPMV',
   fechas:    '4.5.6 septiembre',
   subtitulo: '✿ Ubicación por desclasificar ✿',
@@ -2281,7 +2281,7 @@ const ED_ROLES = [
   { min:3,  name:'Animal de bafle' },
   { min:4,  name:'Ya estás preparando el disfraz' },
   { min:5,  name:'Has pedido días en el curro' },
-  { min:6,  name:'Ya no vas a bodas' },
+  { min:6,  name:'Ya solo viajas en autobús' },
   { min:7,  name:'Estás entrenando para los juegos sonoros' },
   { min:8,  name:'A ver a qué huele eso' },
   { min:9,  name:'Pum pum pum' },
@@ -2569,7 +2569,7 @@ function triggerUnlock(){
     return;
   }
   if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200]);
-  toast('✿ BOSS DESBLOQUEADO · UBICACIÓN REVELADA');
+  toast('✿ FURTHUR · DESTINO REVELADO');
 }
 
 let demoLocIdx = -1;
@@ -2909,13 +2909,13 @@ function makeArtistItem(a, i, hasUrl, isPreview){
 }
 
 function showChefModal(){
-  document.getElementById('chef-modal').style.display = 'flex';
+  document.getElementById('conductor-modal').style.display = 'flex';
 }
-document.getElementById('btn-chef-close').addEventListener('click', () => {
-  document.getElementById('chef-modal').style.display = 'none';
+document.getElementById('btn-conductor-close').addEventListener('click', () => {
+  document.getElementById('conductor-modal').style.display = 'none';
 });
-document.getElementById('chef-modal').addEventListener('click', (e) => {
-  if (e.target.id === 'chef-modal') document.getElementById('chef-modal').style.display = 'none';
+document.getElementById('conductor-modal').addEventListener('click', (e) => {
+  if (e.target.id === 'conductor-modal') document.getElementById('conductor-modal').style.display = 'none';
 });
 document.getElementById('btn-huele-close').addEventListener('click', () => {
   document.getElementById('huele-modal').style.display = 'none';
@@ -3349,7 +3349,7 @@ function initApp(){
     const bf = document.getElementById('board-form');
     const bd = document.getElementById('board-desc');
     if (bf) bf.style.display = 'none';
-    if (bd) bd.textContent = 'El tablón está cerrado por el momento. Solo lectura.';
+    if (bd) bd.textContent = 'El Mural está cerrado por el momento. Solo lectura.';
   }
   // Local first (no Firestore)
   initEditions();
@@ -3378,7 +3378,7 @@ function initApp(){
 // ══════════════════════════════════════════════════════════
 //  ★ CARTEL POR BLOQUES — fuente única
 //  De aquí salen los tickets de la pestaña Horarios y la lista
-//  del Consejo del Festejo. Antes estaban duplicados (HTML + JS)
+//  del Consejo de Bromistas. Antes estaban duplicados (HTML + JS)
 //  y había que acordarse de tocar los dos.
 //
 //  b2b: un solo ticket con los dos nombres y b2b:true.
