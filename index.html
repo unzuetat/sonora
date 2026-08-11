@@ -2286,7 +2286,7 @@ const ED_ROLES = [
   { min:7,  name:'Estás entrenando para los juegos sonoros' },
   { min:8,  name:'A ver a qué huele eso' },
   { min:9,  name:'Pum pum pum' },
-  { min:10, name:'Te llamas María' },
+  { min:ED_TOTAL, name:'Te llamas María' },   // haberlas visto todas
 ];
 const INFO_FIELDS = [
   { key:'normas',      label:'Normas del espacio',         color:'var(--rojo)' },
@@ -3186,8 +3186,8 @@ function initEditions(){
         if (newCount === 8 && prevCount !== 8) {
           document.getElementById('huele-modal').style.display = 'flex';
         }
-        if (newCount === 10 && prevCount !== 10) {
-          launchConfetti({ margaritas: true });   // diez ediciones: lluvia de margaritas
+        if (newCount === ED_TOTAL && prevCount !== ED_TOTAL) {
+          launchConfetti({ margaritas: true });   // todas las ediciones: lluvia de margaritas
           document.getElementById('maria-modal').style.display = 'flex';
         }
         if (justMarkedFirst) {
