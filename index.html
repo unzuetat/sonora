@@ -976,10 +976,11 @@ body.night .lineup-player-name{color:var(--amarillo)}
 
 /* EDICIONES ASISTIDAS */
 .ed-role{
-  font-family:var(--font-display);font-weight:800;
-  font-size:20px;letter-spacing:3px;color:var(--rojo);
+  /* En cuerpo y no en display: Shrikhand dibuja la z casi como una x
+     ("disfraz" se leía "disfrax") y estos rangos son frases largas. */
+  font-family:var(--font-body);font-weight:800;font-style:italic;
+  font-size:19px;letter-spacing:1px;color:var(--rojo);
   text-align:center;margin-bottom:14px;
-  -webkit-text-stroke:var(--stroke-hair) var(--negro);paint-order:stroke fill;
 }
 .ed-grid{
   display:flex;flex-direction:column;gap:6px;
@@ -1518,9 +1519,8 @@ body.night .rango-pop-box{background:var(--bg-card);border-color:var(--border)}
   color:var(--c-muted);margin-bottom:10px;
 }
 .rango-nombre{
-  font-family:var(--font-display);
-  font-size:22px;line-height:1.3;color:var(--rojo);
-  -webkit-text-stroke:var(--stroke-hair) var(--negro);paint-order:stroke fill;
+  font-family:var(--font-body);font-weight:800;font-style:italic;
+  font-size:21px;line-height:1.3;color:var(--rojo);
   margin-bottom:18px;
 }
 
@@ -2332,10 +2332,11 @@ const ED_ROLES = [
   { min:3,  name:'Animal de bafle' },
   { min:4,  name:'Ya estás preparando el disfraz' },
   { min:5,  name:'Has pedido días en el curro' },
-  { min:6,  name:'Ya solo viajas en autobús' },
+  { min:6,  name:'Ya no vas a bodas' },
   { min:7,  name:'Estás entrenando para los juegos sonoros' },
   { min:8,  name:'A ver a qué huele eso' },
   { min:9,  name:'Pum pum pum' },
+  { min:10, name:'Ni una ni dos ni tres, diez' },
   { min:ED_TOTAL, name:'Te llamas María' },   // haberlas visto todas
 ];
 const INFO_FIELDS = [
@@ -3213,7 +3214,7 @@ function mostrarRango(nombre){
   document.getElementById('rango-nombre').textContent = nombre;
   pop.classList.add('show');
   clearTimeout(rangoTimer);
-  rangoTimer = setTimeout(() => pop.classList.remove('show'), 2200);
+  rangoTimer = setTimeout(() => pop.classList.remove('show'), 1600);
 }
 
 function initEditions(){
