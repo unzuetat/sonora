@@ -2356,7 +2356,7 @@ const START  = new Date(EDITION.desde);
 const SC_ARTISTS = [
   // ── Cartel de la XII ──
   { name:"Apparatchik", url:"https://soundcloud.com/user901179098", sc:"https://soundcloud.com/user901179098", ig:"https://instagram.com/itsapparatchik", img:"https://i1.sndcdn.com/avatars-8yzKhifSN7MMxfyG-wHbkwQ-t500x500.jpg" },
-  { name:"Astora", url:"https://soundcloud.com/juan-carmona-513512584", sc:"https://soundcloud.com/juan-carmona-513512584", ig:"https://instagram.com/astoramusic", img:"https://i1.sndcdn.com/avatars-aL7A2KBu8wlPM4Zp-Bcescw-t500x500.jpg" },
+  { name:"Astora", url:"https://soundcloud.com/juan-carmona-513512584", sc:"https://soundcloud.com/juan-carmona-513512584", ig:"https://instagram.com/astoramusic", img:"img/astora.jpg" },
   { name:"Bacano's Brothers" },
   { name:"BØHM" },
   { name:"C0ne" },
@@ -2794,6 +2794,7 @@ function updateCpDayOptions(){
     CARPOOL_DAYS[dir].map(d => `<option value="${d.v}">${d.l}</option>`).join('');
 }
 document.getElementById('cpdir').addEventListener('change', updateCpDayOptions);
+updateCpDayOptions();   // al arrancar también, o el desplegable sale vacío
 
 let cpType = 'offer';
 function updateCpType(t){
