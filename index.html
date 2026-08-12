@@ -1433,6 +1433,36 @@ body.night .night-toggle{
 body.night .night-toggle::before{background:currentColor}
 .night-toggle:hover{transform:translate(1px,1px);box-shadow:2px 2px 0 var(--c-black)}
 
+/* ── PISTA DEL MODO NOCHE ──
+   Mucha gente no ve el botón. Sale sola a los pocos segundos, señala,
+   y desaparece para siempre en cuanto se usa. */
+.night-hint{
+  position:fixed;top:19px;right:58px;z-index:9999;
+  background:var(--negro);color:var(--amarillo);
+  font-family:var(--font-body);font-weight:700;font-style:italic;
+  font-size:13px;letter-spacing:1px;
+  padding:6px 11px;
+  border:var(--bw-thin) solid var(--amarillo);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow-2xs);
+  white-space:nowrap;pointer-events:none;
+  opacity:0;transform:translateX(8px);
+  transition:opacity .45s ease, transform .45s ease;
+}
+.night-hint.show{opacity:1;transform:translateX(0)}
+.night-hint span{display:inline-block;animation:pistaFlecha 1.1s ease-in-out infinite}
+@keyframes pistaFlecha{0%,100%{transform:translateX(0)}50%{transform:translateX(3px)}}
+#screen-auth.active ~ .night-hint{display:none}
+
+@keyframes pistaAro{
+  0%,100%{box-shadow:var(--shadow-xs)}
+  50%    {box-shadow:var(--shadow-xs), 0 0 0 7px color-mix(in srgb, var(--amarillo) 40%, transparent)}
+}
+body.pista-noche .night-toggle{animation:pistaAro 1.8s ease-in-out infinite}
+@media (prefers-reduced-motion: reduce){
+  .night-hint span,body.pista-noche .night-toggle{animation:none}
+}
+
 /* ── MOBILE RESPONSIVE ── */
 @media(max-width:480px){
   #screen-app{padding:0 10px 60px}
@@ -2004,6 +2034,7 @@ body.x-tiedye .prog-fill{
 </div>
 
 <button class="night-toggle" id="night-toggle" title="Modo noche" aria-label="Cambiar a modo noche"></button>
+<div class="night-hint" id="night-hint" aria-hidden="true">dale al eclipse <span>→</span></div>
 <div class="toast" id="toast"></div>
 
 <script type="module">
@@ -2470,11 +2501,31 @@ function isNightHour(){
   return h >= 21 || h < 7;
 }
 // Init: manual override > auto
+// La pista del modo noche se enseña una sola vez por persona.
+const HINT_KEY = 'sonora_pista_noche';
+let pistaTimer = null;
+function quitarPistaNoche(){
+  clearTimeout(pistaTimer);
+  document.getElementById('night-hint')?.classList.remove('show');
+  document.body.classList.remove('pista-noche');
+  try { localStorage.setItem(HINT_KEY, '1'); } catch {}
+}
+function pistaNoche(){
+  try { if (localStorage.getItem(HINT_KEY)) return; } catch { return; }
+  setTimeout(() => {
+    if (!document.getElementById('screen-app').classList.contains('active')) return;
+    document.getElementById('night-hint')?.classList.add('show');
+    document.body.classList.add('pista-noche');
+    pistaTimer = setTimeout(quitarPistaNoche, 11000);
+  }, 2600);
+}
+
 const savedNight = localStorage.getItem(NIGHT_KEY);
 if (savedNight !== null) applyNight(savedNight === '1');
 else applyNight(isNightHour());
 // Toggle
 document.getElementById('night-toggle').addEventListener('click', () => {
+  quitarPistaNoche();
   const on = !document.body.classList.contains('night');
   applyNight(on);
   localStorage.setItem(NIGHT_KEY, on ? '1' : '0');
@@ -3430,6 +3481,7 @@ function initAdminSetlist(){
 
 function initApp(){
   if (appInited) return; appInited = true;
+  pistaNoche();
   // Restaurar nombre guardado
   const savedName = localStorage.getItem(NAME_KEY);
   if (savedName) document.getElementById('minp-name').value = savedName;
