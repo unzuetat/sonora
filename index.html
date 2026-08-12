@@ -604,7 +604,7 @@ body.night .tabs{background:var(--bg)}
   display:block;font-weight:700;font-size:12px;
   letter-spacing:1px;color:var(--azul-dark);margin-bottom:2px;
 }
-body.night .mauthor{color:var(--glow-azul)}
+body.night .mauthor{color:var(--azul)}
 .empty-msg{font-family:var(--font-body);font-style:italic;font-size:13px;color:var(--c-faint);padding:14px 0;text-align:center}
 .msg-reply{
   display:block;margin-top:6px;padding:6px 10px;
@@ -1234,7 +1234,7 @@ body.night{
   --bg-card:#17212f;
   --bg-input:#0a111b;
   --text:#e9eef4;
-  --text-dim:var(--c-muted-2);
+  --text-dim:#8d99a8;
   --border:#2c3f56;
   --glow-rojo:color-mix(in srgb, var(--rojo) 40%, transparent);
   --glow-amarillo:color-mix(in srgb, var(--amarillo) 30%, transparent);
@@ -1247,7 +1247,7 @@ body.night #screen-admin{background:var(--bg)}
 
 /* Header */
 body.night .hdr{border-bottom-color:var(--border)}
-body.night .hdr-eyebrow{color:var(--glow-azul)}
+body.night .hdr-eyebrow{color:var(--azul)}
 body.night .hdr-title{
   text-shadow:0 0 30px var(--glow-amarillo),0 0 60px var(--glow-amarillo);
 }
@@ -1257,7 +1257,7 @@ body.night .hdr-num{
 body.night .hdr-date{
   background:var(--rojo);box-shadow:var(--shadow-md),0 0 20px var(--glow-rojo);
 }
-body.night .hdr-sub{color:var(--glow-azul)}
+body.night .hdr-sub{color:var(--azul)}
 
 /* Tabs */
 body.night .tabs{border-top-color:var(--border)}
@@ -1271,6 +1271,9 @@ body.night .card{
 }
 body.night .card-stripe{opacity:.6}
 body.night .card-title{color:var(--amarillo);border-bottom-color:var(--border)}
+body.night .cartel-cta{color:var(--azul)}
+body.night .car-section-title{color:var(--rojo-light);border-bottom-color:var(--rojo-light)}
+body.night .car-subsection-title{color:var(--text-dim)}
 body.night .card-body{color:var(--text)}
 
 /* Sec desc */
@@ -1485,6 +1488,24 @@ body.night .night-toggle::before{background:currentColor}
   border-radius:var(--radius);
 }
 
+/* El rojo de marca es oscuro: como color de texto sobre el fondo
+   nocturno no se lee. Todo lo que iba en rojo pasa por aquí. */
+.txt-acento{color:var(--rojo)}
+body.night .txt-acento{color:var(--rojo-light)}
+
+/* Texto corrido dentro de un modal: el color tiene que cambiar con el
+   tema, porque la caja del modal también cambia. */
+.modal-texto{
+  font-family:var(--font-body);font-style:italic;
+  font-size:16px;color:var(--negro);line-height:1.5;margin-bottom:18px;
+}
+body.night .modal-texto{color:var(--text)}
+body.night .rango-nombre{color:var(--rojo-light)}
+/* …salvo dentro de las cajas que siguen siendo blancas de noche */
+body.night .modal-claro .txt-acento,
+body.night .modal-claro .rango-nombre{color:var(--rojo)}
+body.night .modal-claro .modal-texto{color:var(--negro)}
+
 /* El aviso de rango no se cierra: aparece y se va. Y no intercepta el
    ratón, para poder seguir marcando ediciones mientras está. */
 .rango-pop{
@@ -1667,7 +1688,7 @@ body.x-tiedye .prog-fill{
     <div class="card" style="margin-top:16px">
       <div class="card-stripe" style="background:var(--amarillo)"></div>
       <div class="card-body">
-        <div class="card-title" style="color:var(--rojo)">Cartel</div>
+        <div class="card-title txt-acento" style="">Cartel</div>
         <img class="cartel-img" id="cartel-lineup-img" src="img/cartel-xii.jpg" alt="Cartel Sonora x UPMV XII" loading="lazy">
         <div class="cartel-cta" id="cartel-lineup-cta">✿ Ver a tamaño completo ✿</div>
       </div>
@@ -1689,7 +1710,7 @@ body.x-tiedye .prog-fill{
       <div class="card-body">
         <div class="card-title">Información útil</div>
         <div id="info-list"></div>
-        <div style="text-align:right;font-family:'EB Garamond',serif;font-style:italic;font-size:13px;color:var(--rojo);letter-spacing:1px;margin-top:10px">ver más ›</div>
+        <div class="txt-acento" style="text-align:right;font-family:'EB Garamond',serif;font-style:italic;font-size:13px;letter-spacing:1px;margin-top:10px">ver más ›</div>
       </div>
     </div>
 
@@ -1820,7 +1841,7 @@ body.x-tiedye .prog-fill{
       <div class="card-stripe"></div>
       <div class="card-body">
         <div class="card-title">Los Alegres Bromistas</div>
-        <div class="sec-desc" style="font-size:20px;font-weight:700;font-style:italic;color:var(--rojo);letter-spacing:1px">…ya están en el autobús.</div>
+        <div class="sec-desc txt-acento" style="font-size:20px;font-weight:700;font-style:italic;letter-spacing:1px">…ya están en el autobús.</div>
         <div class="lineup-player" id="lineup-player">
           <div class="lineup-player-name" id="lineup-player-name"></div>
           <iframe class="sc-frame" id="lineup-frame" height="166" scrolling="no" frameborder="no" allow="autoplay" src="about:blank" style="width:100%;display:block"></iframe>
@@ -1858,7 +1879,7 @@ body.x-tiedye .prog-fill{
 
 <!-- ══ PRIMER SONORA MODAL (edición 0) ══ -->
 <div class="admin-modal" id="primer-modal" style="display:none">
-  <div class="admin-modal-box" style="text-align:center;max-width:420px;background:#fff">
+  <div class="admin-modal-box modal-claro" style="text-align:center;max-width:420px;background:#fff">
     <img src="img/primer-sonora.jpg" alt="Ojalá ser tú ahora mismo" style="width:100%;max-width:340px;display:block;margin:0 auto 14px"/>
     <div style="font-family:'EB Garamond',serif;font-style:italic;font-size:16px;color:var(--negro);margin-bottom:14px">Ojalá ser tú ahora mismo</div>
     <button class="auth-btn" id="btn-primer-close" style="padding:10px 24px;font-size:14px">Cerrar</button>
@@ -1867,8 +1888,8 @@ body.x-tiedye .prog-fill{
 
 <!-- ══ MARÍA MODAL (10 ediciones) ══ -->
 <div class="admin-modal" id="maria-modal" style="display:none">
-  <div class="admin-modal-box" style="text-align:center;max-width:380px;background:#fff">
-    <div style="font-family:'EB Garamond',serif;font-weight:800;font-size:20px;letter-spacing:1px;color:var(--rojo);line-height:1.4;margin-bottom:18px">Te llamas María… <span style="font-style:italic;font-weight:700;color:var(--negro)">y no lo sabías</span></div>
+  <div class="admin-modal-box modal-claro" style="text-align:center;max-width:380px;background:#fff">
+    <div class="txt-acento" style="font-family:'EB Garamond',serif;font-weight:800;font-size:20px;letter-spacing:1px;line-height:1.4;margin-bottom:18px">Te llamas María… <span style="font-style:italic;font-weight:700;color:var(--negro)">y no lo sabías</span></div>
     <button class="auth-btn" id="btn-maria-close" style="padding:10px 24px;font-size:14px">Cerrar</button>
   </div>
 </div>
@@ -1883,7 +1904,7 @@ body.x-tiedye .prog-fill{
 
 <!-- ══ HUELE MODAL (8 ediciones) ══ -->
 <div class="admin-modal" id="huele-modal" style="display:none">
-  <div class="admin-modal-box" style="text-align:center;max-width:420px;background:#fff">
+  <div class="admin-modal-box modal-claro" style="text-align:center;max-width:420px;background:#fff">
     <div class="rango-eyebrow">Nuevo rango</div>
     <div class="rango-nombre">A ver a qué huele eso</div>
     <img src="img/a-ver-a-que-huele.png" alt="A ver a qué huele eso" style="width:100%;max-width:340px;display:block;margin:0 auto 14px"/>
@@ -1899,8 +1920,8 @@ body.x-tiedye .prog-fill{
 <!-- ══ CHEF MODAL (artista sin link) ══ -->
 <div class="admin-modal" id="conductor-modal" style="display:none">
   <div class="admin-modal-box" style="text-align:center;max-width:380px">
-    <div style="font-family:'EB Garamond',serif;font-weight:800;font-size:18px;letter-spacing:2px;color:var(--rojo);margin-bottom:14px">✿ AVISO DEL CONDUCTOR ✿</div>
-    <div style="font-family:'EB Garamond',serif;font-style:italic;font-size:16px;color:var(--negro);line-height:1.5;margin-bottom:18px">Por orden del Conductor, este pase se toma en directo.</div>
+    <div class="txt-acento" style="font-family:'EB Garamond',serif;font-weight:800;font-size:18px;letter-spacing:2px;margin-bottom:14px">✿ AVISO DEL CONDUCTOR ✿</div>
+    <div class="modal-texto">Por orden del Conductor, este pase se toma en directo.</div>
     <button class="auth-btn" id="btn-conductor-close" style="padding:10px 24px;font-size:14px">Cerrar</button>
   </div>
 </div>
@@ -1908,7 +1929,7 @@ body.x-tiedye .prog-fill{
 <!-- ══ ADMIN LOGIN MODAL ══ -->
 <div class="admin-modal" id="admin-modal" style="display:none">
   <div class="admin-modal-box">
-    <div style="font-family:'EB Garamond',serif;font-weight:800;font-size:20px;letter-spacing:3px;color:var(--rojo);margin-bottom:12px">ACCESO ADMIN</div>
+    <div class="txt-acento" style="font-family:'EB Garamond',serif;font-weight:800;font-size:20px;letter-spacing:3px;margin-bottom:12px">ACCESO ADMIN</div>
     <input class="auth-inp" id="inp-admin-pwd" type="password" autocomplete="current-password" placeholder="Contraseña admin" style="margin-bottom:10px"/>
     <div style="display:flex;gap:8px">
       <button class="auth-btn" id="btn-admin-login" style="flex:1;font-size:16px;padding:10px">Entrar</button>
@@ -2358,16 +2379,16 @@ const SC_ARTISTS = [
   { name:"Apparatchik", url:"https://soundcloud.com/user901179098", sc:"https://soundcloud.com/user901179098", ig:"https://instagram.com/itsapparatchik", img:"https://i1.sndcdn.com/avatars-8yzKhifSN7MMxfyG-wHbkwQ-t500x500.jpg" },
   { name:"Astora", url:"https://soundcloud.com/juan-carmona-513512584", sc:"https://soundcloud.com/juan-carmona-513512584", ig:"https://instagram.com/astoramusic", img:"img/astora.jpg" },
   { name:"Bacano's Brothers" },
-  { name:"BØHM" },
+  { name:"BØHM", ig:"https://www.instagram.com/bohm_techno" },
   { name:"C0ne" },
   { name:"Candel" },
   { name:"Cizette", url:"https://soundcloud.com/clara-zaragoza-175684940", sc:"https://soundcloud.com/clara-zaragoza-175684940", ig:"https://instagram.com/cizette.music", img:"https://i1.sndcdn.com/avatars-RqzQYCENWDtG00cy-RW1gEw-t500x500.jpg" },
-  { name:"D-Bunk" },
+  { name:"D-Bunk", ig:"https://www.instagram.com/dbunkofficial" },
   { name:"D.SastreSonoro" },
   { name:"Deejeya", url:"https://soundcloud.com/deejeya", sc:"https://soundcloud.com/deejeya", ig:"https://instagram.com/deejeya", img:"https://i1.sndcdn.com/avatars-1xREn6hQsYPaDW2N-MuoJMw-t500x500.jpg" },
   { name:"Droglo", img:"img/droglo.jpg" },
   { name:"Elena Magdalena", img:"img/elena-magdalena.jpg" },
-  { name:"FalsoJudas" },
+  { name:"FalsoJudas", ig:"https://www.instagram.com/falsojudass" },
   { name:"Francis Espinaco", url:"https://soundcloud.com/user-845235880/barman-pongame-un-dyc", sc:"https://soundcloud.com/user-845235880", ig:"https://instagram.com/motelxamar", img:"img/francis-espinaco.png" },
   { name:"GOM" },
   { name:"Gurke", img:"img/gurke.png" },
@@ -2380,7 +2401,7 @@ const SC_ARTISTS = [
   { name:"SeR0" },
   { name:"Toretto", url:"https://soundcloud.com/toretto-sounds", sc:"https://soundcloud.com/toretto-sounds", ig:"https://instagram.com/torettosounds", img:"https://i1.sndcdn.com/avatars-WCDqTymdagNTBQad-jjYWkA-t500x500.jpg" },
   { name:"Traver", url:"https://soundcloud.com/traver93/tracks", sc:"https://soundcloud.com/traver93", ig:"https://www.instagram.com/traver.music", img:"img/traver.jpeg" },
-  { name:"Wametek" },
+  { name:"Wametek", url:"https://soundcloud.com/wametek", sc:"https://soundcloud.com/wametek", ig:"https://www.instagram.com/wametekmusic" },
 
   // ── Archivo: tocaron en ediciones anteriores, no en la XII.
   //    hidden:true los saca del cartel y del reproductor aleatorio,
@@ -2688,7 +2709,7 @@ function initMsgs(){
     if (count > 3) {
       const more = document.createElement('div');
       more.className = 'empty-msg';
-      more.innerHTML = `<a href="#" style="color:var(--rojo);font-weight:700;text-decoration:none;letter-spacing:1px">Ver los ${count} avisos →</a>`;
+      more.innerHTML = `<a class="txt-acento" href="#" style="font-weight:700;text-decoration:none;letter-spacing:1px">Ver los ${count} avisos →</a>`;
       more.querySelector('a').addEventListener('click', e => { e.preventDefault(); sw('brd'); });
       preview.appendChild(more);
     }
@@ -2723,7 +2744,7 @@ function renderCar(c){
   const d = document.createElement('div');
   d.className = 'car-item' + (c.approved ? '' : ' pending') + (isSeek ? ' seek' : '');
   const st = c.full
-    ? '<div class="car-status" style="color:var(--rojo)">✗ completo</div>'
+    ? '<div class="car-status txt-acento" style="">✗ completo</div>'
     : c.approved
       ? '<div class="car-status ok">✓ validado</div>'
       : '<div class="car-status wait">○ pendiente</div>';
