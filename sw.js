@@ -1,4 +1,4 @@
-const CACHE = 'sonora-xi-v1';
+const CACHE = 'sonora-xii-v2';
 const ASSETS = [
   '/',
   '/index.html',

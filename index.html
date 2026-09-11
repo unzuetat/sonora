@@ -4,20 +4,20 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#7fb3c8">
-<meta name="description" content="Sonora x UPMV XII · The Summer of Love · 4-6 septiembre 2026 · Valencia">
+<meta name="description" content="Sonora x UPMV XII · The Summer of Love · La edición de septiembre de 2026 ya terminó · Valencia">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="apple-touch-icon" href="favicon-180.png">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://sonora.community/">
 <meta property="og:title" content="Sonora x UPMV XII · The Summer of Love">
-<meta property="og:description" content="Rumbo a Furthur · 4-6 septiembre 2026 · Valencia">
+<meta property="og:description" content="La XII ya terminó · Gracias por venir · Hasta Sonora XIII">
 <meta property="og:image" content="https://sonora.community/img/cartel-og-xii.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Sonora x UPMV XII · The Summer of Love">
-<meta name="twitter:description" content="Rumbo a Furthur · 4-6 septiembre 2026 · Valencia">
+<meta name="twitter:description" content="La XII ya terminó · Gracias por venir · Hasta Sonora XIII">
 <meta name="twitter:image" content="https://sonora.community/img/cartel-og-xii.jpg">
 <title>SONORA X UPMV</title>
 <link href="https://fonts.googleapis.com/css2?family=Shrikhand&family=EB+Garamond:ital,wght@0,400;0,700;0,800;1,400;1,700;1,800&display=swap" rel="stylesheet">
@@ -1662,7 +1662,7 @@ body.x-tiedye .prog-fill{
     <img class="hdr-tema" id="hdr-tema" src="img/rotulo-tema-xii.webp" alt="The Summer of Love">
     <div class="hdr-num">XII</div>
     <div class="hdr-date">4.5.6 septiembre</div>
-    <div class="hdr-sub">✿ Ubicación por desclasificar ✿</div>
+    <div class="hdr-sub">✿ Nos vemos en la XIII ✿</div>
   </div>
 
   <div class="tabs">
@@ -1745,7 +1745,7 @@ body.x-tiedye .prog-fill{
     </div>
 
     <!-- TABLÓN PREVIEW (read-only) -->
-    <div class="card" style="margin-top:16px">
+    <div class="card" id="board-preview-card" style="margin-top:16px">
       <div class="card-stripe"></div>
       <div class="card-body">
         <div class="card-title">El Mural</div>
@@ -2062,19 +2062,21 @@ const EDITION = {
   eyebrow:   'Rumbo a Furthur · Edición XII',
   titulo:    'SONORA X UPMV',
   fechas:    '4.5.6 septiembre',
-  subtitulo: '✿ Ubicación por desclasificar ✿',
+  subtitulo: '✿ Nos vemos en la XIII ✿',
   empieza:   '2026-09-04T21:00:00+02:00',                 // fin de la cuenta atrás
   dias:      ['viernes 4', 'sábado 5', 'domingo 6'],   // días del festival
   desde:     '2026-06-01T00:00:00',                       // arranque: el día después de acabar la XI
-  terminada:       false,                                 // oculta el mapa y marca "edición finalizada"
-  tablonCongelado: false,                                 // tablón en solo lectura
+  terminada:       true,                                  // oculta el mapa y marca "edición finalizada"
+  tablonCongelado: true,                                  // tablón en solo lectura
+  tablonOculto:    true,                                  // el tablón desaparece de la nav y de la portada
+  tituloCierre: 'Sonora XII · el verano del amor',        // sustituye al de la cuenta atrás al terminar
   rotulo:    'img/rotulo-xii.webp',       // rótulo dibujado; vacío = se usa el tipográfico
   rotuloTema:'img/rotulo-tema-xii.webp',  // la temática, dibujada; vacío = se usa el número
   rotuloConFechas: true,              // el dibujo ya trae los días: se oculta el badge
   cartel:    'img/cartel-xii.jpg',
   direccion: {
-    texto:   'PENDIENTE DE DESCLASIFICAR',
-    detalle: 'Se revela cuando llegue el momento',
+    texto:   'SONORA XII YA TERMINÓ',
+    detalle: 'Gracias por venir · Hasta Sonora XIII',
     mapa:    '#',
   },
 };
@@ -2294,8 +2296,10 @@ for (const e of extrasPedidos){
 const token = (name, fallback='') =>
   getComputedStyle(document.body).getPropertyValue(name).trim() || fallback;
 
-// Vuelca EDITION sobre la cabecera. El HTML lleva los mismos textos
-// escritos a mano para que se vea algo si el JS tarda o falla.
+// Vuelca EDITION sobre la cabecera y aplica el estado de la edición
+// (terminada, tablón retirado). El HTML lleva los mismos textos escritos
+// a mano para que se vea algo si el JS tarda o falla; esto corre antes
+// del portón para que nada de la edición pasada llegue a pintarse.
 function pintarEdicion(){
   const set = (sel, txt) => { const el = document.querySelector(sel); if (el) el.textContent = txt; };
   set('.auth-eyebrow', `Zona privada · Edición ${EDITION.id}`);
@@ -2322,6 +2326,19 @@ function pintarEdicion(){
     if (!el) continue;
     if (el.tagName === 'IMG'){ el.src = EDITION.cartel; el.alt = `Cartel ${EDITION.titulo} ${EDITION.id}`; }
     else el.style.backgroundImage = `url('${EDITION.cartel}')`;
+  }
+  const ocultar = (sel) => { const el = document.querySelector(sel); if (el) el.style.display = 'none'; };
+  // El tablón se retira entero: pestaña, sección y anticipo de portada.
+  // El contenido sigue en Firestore y vuelve con quitar el flag.
+  if (EDITION.tablonOculto){
+    ['#tab-brd', '#tc-brd', '#board-preview-card'].forEach(ocultar);
+  }
+  // Terminada la edición, la cuenta atrás no cuenta hacia nada: se
+  // retira junto al simulador y el título cede el sitio a la despedida.
+  if (EDITION.terminada){
+    ocultar('#tc-main .cd-grid');
+    ocultar('#btn-demo');
+    if (EDITION.tituloCierre) set('#tc-main .card-title', EDITION.tituloCierre);
   }
 }
 pintarEdicion();
@@ -2357,6 +2374,7 @@ try {
   }
 } catch {}
 const BOARD_FROZEN    = EDITION.tablonCongelado;
+const BOARD_HIDDEN    = EDITION.tablonOculto;
 const scUrl = (url) => `https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}&color=${encodeURIComponent(token('--rojo','#e8001a'))}&auto_play=true&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=false`;
 const TAG_BC = { ice:'b-ice', beer:'b-beer', gf:'b-gf', allergy:'b-allergy', food:'b-food', other:'b-other' };
 const EDITIONS = [
@@ -2372,7 +2390,7 @@ const EDITIONS = [
   { id:'IX',   name:'Age of Empires',sub:'Una vez se superan 100, ya no es un cumpleaños', date:'Sep 2025' },
   { id:'X',    name:'Noxevieja',     sub:'10 fiestas, 4 días. Se consiguió.', date:'Año nuevo 2026' },
   { id:'XI',   name:'San Sonorín',           sub:'Dejad que los niños se acerquen a…', date:'May 2026' },
-  { id:'XII',  name:'The Summer of Love', sub:'Paz, amor, zapatilla', date:'Sep 2026', locked:true },
+  { id:'XII',  name:'The Summer of Love', sub:'Paz, amor, zapatilla', date:'Sep 2026' },
 ];
 // Ediciones que se pueden marcar: ni la "es mi primer Sonora" ni las
 // bloqueadas. Antes era un 10 a pelo y se quedaba corto cada año.
@@ -2389,6 +2407,7 @@ const ED_ROLES = [
   { min:8,  name:'A ver a qué huele eso' },
   { min:9,  name:'Pum pum pum' },
   { min:10, name:'Ni una ni dos ni tres, diez' },
+  { min:11, name:'Solo te has perdido una' },
   { min:ED_TOTAL, name:'Te llamas María' },   // haberlas visto todas
 ];
 const INFO_FIELDS = [
@@ -3501,7 +3520,7 @@ function initApp(){
   loadRndPlayer(rndIdx);
   renderLineup();
   // Firestore (may fail on permissions)
-  try { initMsgs(); } catch(e) { console.warn('initMsgs:', e); }
+  if (!BOARD_HIDDEN) { try { initMsgs(); } catch(e) { console.warn('initMsgs:', e); } }
   try { initCars(); } catch(e) { console.warn('initCars:', e); }
   try { initInfo(); } catch(e) { console.warn('initInfo:', e); }
   // Load artist custom descriptions
