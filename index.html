@@ -394,10 +394,14 @@ body.con-rotulo.rotulo-con-fechas .hdr-date{display:none}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
 
 /* TABS */
-.tabs{display:flex;border-top:var(--bw) solid var(--negro);border-bottom:var(--bw) solid var(--negro);margin-top:20px;position:sticky;top:0;z-index:50;background:var(--crema)}
+/* Scrollable en horizontal: a partir de seis pestañas no caben en un
+   móvil. Con flex:1 0 auto se reparten el ancho mientras quepan y solo
+   entonces empiezan a desbordar. La barra del scroll se oculta. */
+.tabs{display:flex;border-top:var(--bw) solid var(--negro);border-bottom:var(--bw) solid var(--negro);margin-top:20px;position:sticky;top:0;z-index:50;background:var(--crema);overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.tabs::-webkit-scrollbar{display:none}
 body.night .tabs{background:var(--bg)}
 .tb{
-  flex:1;padding:11px 3px;text-align:center;
+  flex:1 0 auto;min-width:max-content;padding:11px 8px;text-align:center;
   font-family:var(--font-body);font-style:italic;
   font-size:13px;letter-spacing:1px;
   color:var(--negro);
@@ -740,12 +744,104 @@ body.night .artist-img-placeholder{background:var(--bg-card);border-color:var(--
   z-index:9998;cursor:zoom-out;padding:20px;
 }
 .lightbox.open{display:flex}
+.lb-inner{
+  display:flex;flex-direction:column;align-items:center;
+  gap:14px;max-width:100%;max-height:100%;overflow-y:auto;
+}
 .lightbox img{
   max-width:100%;max-height:100%;
+  min-height:0;flex:0 1 auto;object-fit:contain;
   border:var(--bw) solid var(--amarillo);
   box-shadow:0 0 40px color-mix(in srgb, var(--rojo) 40%, transparent);
 }
+/* Ficha del archivo de arte: de dónde salió cada imagen */
+.lb-cap{
+  flex:0 0 auto;max-width:560px;cursor:auto;
+  background:var(--crema);color:var(--negro);
+  border:var(--bw) solid var(--amarillo);
+  padding:14px 16px;text-align:left;
+}
+.lb-cap-ed{
+  font-family:var(--font-display);font-weight:700;
+  font-size:12px;letter-spacing:3px;color:var(--rojo);
+  text-transform:uppercase;margin-bottom:6px;
+}
+.lb-cap-ttl{
+  font-family:var(--font-display);font-weight:800;
+  font-size:19px;line-height:1.25;margin-bottom:8px;
+}
+.lb-cap-txt{
+  font-family:var(--font-body);font-size:15px;
+  line-height:1.6;color:var(--c-muted-2);
+}
+.lb-cap-txt em{font-style:italic}
 .artist-img{cursor:zoom-in}
+
+/* ══ ARCHIVO: histórico de DJs ══ */
+.hist-intro{margin-bottom:16px}
+.hist-ed-num{
+  font-family:var(--font-display);font-weight:800;
+  font-size:15px;color:var(--negro);
+  background:var(--amarillo);
+  border:var(--bw-thin) solid var(--negro);
+  padding:1px 9px;margin-right:9px;flex-shrink:0;
+}
+.hist-ed-hdr{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 0}
+.hist-ed-name{
+  font-family:var(--font-display);font-weight:700;
+  font-size:13px;letter-spacing:2px;color:var(--rojo);
+  text-transform:uppercase;
+}
+.hist-ed-date{
+  font-family:var(--font-body);font-style:italic;
+  font-size:12px;color:var(--c-muted-2);margin-left:auto;padding-left:10px;
+}
+.hist-ed-sub{
+  font-family:var(--font-body);font-style:italic;
+  font-size:14px;color:var(--c-muted-2);
+  margin:8px 0 0;line-height:1.5;
+}
+.dj-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.dj-chip{
+  font-family:var(--font-body);font-size:14px;
+  color:var(--negro);background:rgba(255,255,255,.55);
+  border:var(--bw-thin) solid var(--negro);
+  padding:3px 10px;text-decoration:none;display:inline-block;
+}
+a.dj-chip:hover{background:var(--amarillo)}
+a.dj-chip::after{content:' ›';color:var(--rojo)}
+.dj-vacio{
+  font-family:var(--font-body);font-style:italic;
+  font-size:14px;color:var(--c-muted-2);margin-top:10px;
+}
+
+/* ══ ARCHIVO: galería de arte (mosaico) ══ */
+.arte-grid{columns:2;column-gap:12px}
+@media (min-width:620px){ .arte-grid{columns:3} }
+.arte-item{
+  break-inside:avoid;margin:0 0 12px;padding:0;width:100%;
+  display:block;position:relative;cursor:zoom-in;
+  background:var(--crema);
+  border:var(--bw) solid var(--negro);
+  box-shadow:var(--shadow-md);
+  transition:transform .12s;
+}
+.arte-item:hover{transform:translateY(-2px)}
+.arte-item img{display:block;width:100%;height:auto}
+.arte-badge{
+  position:absolute;top:0;left:0;
+  font-family:var(--font-display);font-weight:800;font-size:12px;
+  color:var(--negro);background:var(--amarillo);
+  border-right:var(--bw-thin) solid var(--negro);
+  border-bottom:var(--bw-thin) solid var(--negro);
+  padding:2px 8px;
+}
+.arte-pie{
+  font-family:var(--font-body);font-size:12px;
+  color:var(--c-muted-2);text-align:left;
+  padding:6px 8px;border-top:var(--bw-thin) solid var(--negro);
+  line-height:1.35;
+}
 
 /* Cartel destacado en Inicio */
 .cartel-img{
@@ -1272,6 +1368,15 @@ body.night .card{
 body.night .card-stripe{opacity:.6}
 body.night .card-title{color:var(--amarillo);border-bottom-color:var(--border)}
 body.night .cartel-cta{color:var(--azul)}
+/* Archivo (DJs y arte): mismos papeles que las cards de la casa */
+body.night .hist-ed-name{color:var(--amarillo)}
+body.night .hist-ed-sub{color:var(--text-dim)}
+body.night .hist-ed-date{color:var(--text-dim)}
+body.night .dj-vacio{color:var(--text-dim)}
+body.night .dj-chip{background:var(--bg-card);border-color:var(--border);color:var(--text)}
+body.night a.dj-chip:hover{background:var(--amarillo);color:var(--negro)}
+body.night .arte-item{background:var(--bg-card);border-color:var(--border)}
+body.night .arte-pie{color:var(--text-dim);border-top-color:var(--border)}
 body.night .car-section-title{color:var(--rojo-light);border-bottom-color:var(--rojo-light)}
 body.night .car-subsection-title{color:var(--text-dim)}
 body.night .card-body{color:var(--text)}
@@ -1671,6 +1776,8 @@ body.x-tiedye .prog-fill{
     <button class="tb" id="tab-hor">Horarios</button>
     <button class="tb" id="tab-cp">Caravana</button>
     <button class="tb" id="tab-brd">Tablón</button>
+    <button class="tb" id="tab-djs">DJs</button>
+    <button class="tb" id="tab-art">Arte</button>
     <button class="tb" id="tab-info">Info</button>
   </div>
 
@@ -1755,7 +1862,7 @@ body.x-tiedye .prog-fill{
     </div>
 
     <!-- CARPOOL PREVIEW (read-only) -->
-    <div class="card" style="margin-top:16px">
+    <div class="card" id="carpool-preview-card" style="margin-top:16px">
       <div class="card-stripe"></div>
       <div class="card-body">
         <div class="card-title">Caravana </div>
@@ -1888,6 +1995,17 @@ body.x-tiedye .prog-fill{
          no puedan desincronizarse. -->
   </div>
 
+  <!-- ═══ TAB: HISTÓRICO DE DJs ═══ -->
+  <div id="tc-djs" class="tc">
+    <!-- Lo genera renderHistoriaDjs() desde LINEUPS, de la última
+         edición a la primera. -->
+  </div>
+
+  <!-- ═══ TAB: HISTÓRICO DE ARTE Y CARTELES ═══ -->
+  <div id="tc-art" class="tc">
+    <!-- Lo genera renderArte() desde ARTE. -->
+  </div>
+
   <!-- ═══ TAB: INFO ═══ -->
   <div id="tc-info" class="tc">
     <div class="card">
@@ -1942,9 +2060,12 @@ body.x-tiedye .prog-fill{
   </div>
 </div>
 
-<!-- ══ LIGHTBOX (ampliar foto artista) ══ -->
+<!-- ══ LIGHTBOX (ampliar foto artista y fichas del archivo de arte) ══ -->
 <div class="lightbox" id="lightbox">
-  <img id="lightbox-img" src="" alt=""/>
+  <div class="lb-inner">
+    <img id="lightbox-img" src="" alt=""/>
+    <div class="lb-cap" id="lightbox-cap" hidden></div>
+  </div>
 </div>
 
 <!-- ══ CHEF MODAL (artista sin link) ══ -->
@@ -2069,6 +2190,7 @@ const EDITION = {
   terminada:       true,                                  // oculta el mapa y marca "edición finalizada"
   tablonCongelado: true,                                  // tablón en solo lectura
   tablonOculto:    true,                                  // el tablón desaparece de la nav y de la portada
+  caravanaOculta:  true,                                  // ídem la caravana: ya no hay viaje que organizar
   tituloCierre: 'Sonora XII · el verano del amor',        // sustituye al de la cuenta atrás al terminar
   rotulo:    'img/rotulo-xii.webp',       // rótulo dibujado; vacío = se usa el tipográfico
   rotuloTema:'img/rotulo-tema-xii.webp',  // la temática, dibujada; vacío = se usa el número
@@ -2333,6 +2455,10 @@ function pintarEdicion(){
   if (EDITION.tablonOculto){
     ['#tab-brd', '#tc-brd', '#board-preview-card'].forEach(ocultar);
   }
+  // La caravana, igual: pasada la fiesta no hay viaje que organizar.
+  if (EDITION.caravanaOculta){
+    ['#tab-cp', '#tc-cp', '#carpool-preview-card'].forEach(ocultar);
+  }
   // Terminada la edición, la cuenta atrás no cuenta hacia nada: se
   // retira junto al simulador y el título cede el sitio a la despedida.
   if (EDITION.terminada){
@@ -2375,6 +2501,7 @@ try {
 } catch {}
 const BOARD_FROZEN    = EDITION.tablonCongelado;
 const BOARD_HIDDEN    = EDITION.tablonOculto;
+const CARPOOL_HIDDEN  = EDITION.caravanaOculta;
 const scUrl = (url) => `https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}&color=${encodeURIComponent(token('--rojo','#e8001a'))}&auto_play=true&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false&visual=false`;
 const TAG_BC = { ice:'b-ice', beer:'b-beer', gf:'b-gf', allergy:'b-allergy', food:'b-food', other:'b-other' };
 const EDITIONS = [
@@ -2671,6 +2798,8 @@ document.getElementById('tab-cp').addEventListener('click',   () => sw('cp'));
 document.getElementById('tab-sc').addEventListener('click',   () => sw('sc'));
 document.getElementById('tab-info').addEventListener('click', () => sw('info'));
 document.getElementById('tab-hor').addEventListener('click', () => sw('hor'));
+document.getElementById('tab-djs').addEventListener('click', () => sw('djs'));
+document.getElementById('tab-art').addEventListener('click', () => sw('art'));
 document.getElementById('info-shortcut').addEventListener('click', () => sw('info'));
 document.getElementById('btn-go-menu').addEventListener('click', () => sw('sc'));
 
@@ -3080,15 +3209,30 @@ document.getElementById('maria-modal').addEventListener('click', (e) => {
   if (e.target.id === 'maria-modal') document.getElementById('maria-modal').style.display = 'none';
 });
 
-function openLightbox(src, alt){
+// `pieza` es opcional: solo las del archivo de arte traen ficha.
+function openLightbox(src, alt, pieza){
   const lb = document.getElementById('lightbox');
   document.getElementById('lightbox-img').src = src;
   document.getElementById('lightbox-img').alt = alt || '';
+  const cap = document.getElementById('lightbox-cap');
+  if (pieza){
+    cap.innerHTML = `<div class="lb-cap-ed">Sonora ${pieza.ed} · ${pieza.tipo}</div>
+      <div class="lb-cap-ttl"></div>
+      <div class="lb-cap-txt"></div>`;
+    cap.querySelector('.lb-cap-ttl').textContent = pieza.titulo;
+    cap.querySelector('.lb-cap-txt').textContent = pieza.contexto || '';
+    cap.hidden = false;
+  } else {
+    cap.hidden = true;
+    cap.innerHTML = '';
+  }
   lb.classList.add('open');
 }
 document.getElementById('lightbox').addEventListener('click', () => {
   document.getElementById('lightbox').classList.remove('open');
 });
+// La ficha es texto para leer, no un botón de cerrar.
+document.getElementById('lightbox-cap').addEventListener('click', e => e.stopPropagation());
 
 document.getElementById('cartel-lineup-img').addEventListener('click', () => openLightbox(EDITION.cartel, `Cartel ${EDITION.titulo} ${EDITION.id}`));
 document.getElementById('cartel-lineup-cta').addEventListener('click', () => openLightbox(EDITION.cartel, `Cartel ${EDITION.titulo} ${EDITION.id}`));
@@ -3519,9 +3663,11 @@ function initApp(){
   setInterval(updateCD, 1000); updateCD();
   loadRndPlayer(rndIdx);
   renderLineup();
+  renderHistoriaDjs();
+  renderArte();
   // Firestore (may fail on permissions)
   if (!BOARD_HIDDEN) { try { initMsgs(); } catch(e) { console.warn('initMsgs:', e); } }
-  try { initCars(); } catch(e) { console.warn('initCars:', e); }
+  if (!CARPOOL_HIDDEN) { try { initCars(); } catch(e) { console.warn('initCars:', e); } }
   try { initInfo(); } catch(e) { console.warn('initInfo:', e); }
   // Load artist custom descriptions
   try {
@@ -3552,7 +3698,7 @@ const SETLIST_BLOCKS = [
   { id:'n2',  titulo:'Noche II', css:'hor-n2'  },
 ];
 
-// 22 pases para 26 artistas: el cartel junta cuatro parejas b2b.
+// 21 pases para 25 artistas: el cartel junta cuatro parejas b2b.
 // El orden es el del cartel, no alfabético: manda el reparto de la noche.
 const SETLIST_ORDER = [
   // ── Noche I ──
@@ -3580,6 +3726,165 @@ const SETLIST_ORDER = [
   {id:'sastresonoro-droglo',name:'D.SastreSonoro b2b Droglo', block:'n2', b2b:true},
   {id:'gom',               name:'GOM',                    block:'n2'},
 ];
+
+// ══════════════════════════════════════════════════════════
+//  ★ ARCHIVO — quién pinchó en cada edición
+//  La XII se deriva de SETLIST_ORDER para no escribir la misma
+//  lista dos veces: partir por " b2b " deshace las parejas. Las
+//  anteriores se rellenan a mano según aparezca el material; una
+//  edición sin lista se pinta igual, diciendo que falta.
+// ══════════════════════════════════════════════════════════
+const LINEUPS = {
+  XII:  SETLIST_ORDER.flatMap(s => s.name.split(' b2b ')),
+  XI:   [],
+  X:    [],
+  IX:   [],
+  VIII: [],
+  VII:  [],
+  VI:   [],
+  V:    [],
+  IV:   [],
+  III:  [],
+  II:   [],
+  I:    [],
+};
+
+// ══════════════════════════════════════════════════════════
+//  ★ ARCHIVO — arte y carteles
+//  Cada pieza dice de dónde salió. `contexto` es el texto que se
+//  lee al ampliarla: cuándo se usó, quién lo dibujó, qué era.
+//  Para añadir una: mete la imagen en img/ y añade una entrada.
+//  `fondo` es opcional, para las piezas con transparencia que sobre
+//  el crema de la ficha no se verían (el cielo, los rótulos).
+// ══════════════════════════════════════════════════════════
+const ARTE = [
+  {
+    img:     'img/cartel-xii.jpg',
+    ed:      'XII',
+    tipo:    'Cartel',
+    titulo:  'The Summer of Love',
+    contexto:'El cartel completo de la XII: 25 artistas en 21 pases repartidos entre Noche I, Día y Noche II. Septiembre de 2026.',
+  },
+  {
+    img:     'img/rotulo-tema-xii.webp',
+    ed:      'XII',
+    tipo:    'Rótulo',
+    titulo:  'El rótulo de la temática',
+    contexto:'La temática dibujada a mano, la misma pieza que corona la cabecera de la web durante toda la edición.',
+  },
+  {
+    img:     'img/cielo-nubes.png',
+    ed:      'XII',
+    tipo:    'Fondo',
+    titulo:  'El cielo de nubes',
+    fondo:   'var(--azul)',
+    contexto:'Mosaico de 1500×1600 dibujado sin costuras para que repita infinito. En la web entra como máscara, así que el color de las nubes sale de la paleta de la edición y cambia con ella.',
+  },
+  {
+    img:     'img/San Sonorín cartel completo.jpg',
+    ed:      'XI',
+    tipo:    'Cartel',
+    titulo:  'San Sonorín',
+    contexto:'El cartel completo de la XI, mayo de 2026. «Dejad que los niños se acerquen a…».',
+  },
+];
+
+// Pinta el histórico de DJs, de la última edición a la primera.
+function renderHistoriaDjs(){
+  const box = document.getElementById('tc-djs');
+  if (!box) return;
+  box.innerHTML = '';
+  const intro = document.createElement('div');
+  intro.className = 'card hist-intro';
+  intro.innerHTML = `<div class="card-stripe"></div><div class="card-body">
+    <div class="card-title">Quién ha pinchado aquí</div>
+    <div class="sec-desc">Todas las ediciones, de la última a la primera. Las que están en blanco esperan a que alguien se acuerde.</div>
+  </div>`;
+  box.appendChild(intro);
+
+  // De la más reciente a la primera, sin la fila "es mi primer Sonora".
+  for (const ed of [...EDITIONS].reverse()){
+    if (ed.first) continue;
+    const nombres = LINEUPS[ed.id] || [];
+    const card = document.createElement('div');
+    card.className = 'card';
+    const body = document.createElement('div');
+    body.className = 'card-body';
+    const hdr = document.createElement('div');
+    hdr.className = 'hist-ed-hdr';
+    hdr.innerHTML = `<span class="hist-ed-num">${ed.id}</span>
+      <span class="hist-ed-name">${ed.name}</span>
+      <span class="hist-ed-date">${ed.date || ''}</span>`;
+    body.appendChild(hdr);
+    if (ed.sub){
+      const sub = document.createElement('div');
+      sub.className = 'hist-ed-sub';
+      sub.textContent = ed.sub;
+      body.appendChild(sub);
+    }
+    if (nombres.length){
+      const row = document.createElement('div');
+      row.className = 'dj-row';
+      for (const nombre of nombres){
+        // Si el artista está fichado en Bromistas, el nombre lleva a su música.
+        const ficha = SC_ARTISTS.find(a => a.name === nombre);
+        const chip = document.createElement(ficha && ficha.sc ? 'a' : 'span');
+        chip.className = 'dj-chip';
+        chip.textContent = nombre;
+        if (ficha && ficha.sc){ chip.href = ficha.sc; chip.target = '_blank'; chip.rel = 'noopener'; }
+        row.appendChild(chip);
+      }
+      body.appendChild(row);
+    } else {
+      const vacio = document.createElement('div');
+      vacio.className = 'dj-vacio';
+      vacio.textContent = 'Sin registrar todavía.';
+      body.appendChild(vacio);
+    }
+    card.innerHTML = '<div class="card-stripe"></div>';
+    card.appendChild(body);
+    box.appendChild(card);
+  }
+}
+
+// Pinta el mosaico de arte. Al tocar una pieza se amplía con su ficha.
+function renderArte(){
+  const box = document.getElementById('tc-art');
+  if (!box) return;
+  box.innerHTML = '';
+  const card = document.createElement('div');
+  card.className = 'card';
+  const body = document.createElement('div');
+  body.className = 'card-body';
+  body.innerHTML = `<div class="card-title">Arte y carteles</div>
+    <div class="sec-desc">Todo lo que se ha dibujado para Sonora. Toca cualquier pieza para ver de dónde salió.</div>`;
+  const grid = document.createElement('div');
+  grid.className = 'arte-grid';
+  for (const pieza of ARTE){
+    const item = document.createElement('button');
+    item.className = 'arte-item';
+    item.type = 'button';
+    item.innerHTML = `<span class="arte-badge">${pieza.ed}</span>`;
+    const im = document.createElement('img');
+    // El fondo va en la imagen, no en la ficha: el pie mantiene el
+    // color de la tarjeta y sigue legible en los dos modos.
+    if (pieza.fondo) im.style.background = pieza.fondo;
+    im.src = pieza.img;
+    im.alt = `${pieza.tipo} · ${pieza.titulo} · Sonora ${pieza.ed}`;
+    im.loading = 'lazy';
+    item.appendChild(im);
+    const pie = document.createElement('div');
+    pie.className = 'arte-pie';
+    pie.textContent = pieza.titulo;
+    item.appendChild(pie);
+    item.addEventListener('click', () => openLightbox(pieza.img, im.alt, pieza));
+    grid.appendChild(item);
+  }
+  body.appendChild(grid);
+  card.innerHTML = '<div class="card-stripe"></div>';
+  card.appendChild(body);
+  box.appendChild(card);
+}
 
 // Pinta los tickets troquelados de la pestaña Horarios.
 function renderHorarios(){
