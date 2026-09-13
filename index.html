@@ -839,11 +839,29 @@ body.night .artist-img-placeholder{background:var(--bg-card);border-color:var(--
 /* Ficha desplegada bajo el chip. flex-basis:100% la baja a su
    propia línea dentro de la fila de nombres. */
 .dj-panel{
-  flex:0 0 100%;display:flex;align-items:center;flex-wrap:wrap;gap:6px 8px;
+  flex:0 0 100%;
   border:var(--bw-thin) solid var(--negro);
   border-top:none;background:rgba(255,255,255,.35);
-  padding:8px 10px;margin:-1px 0 4px;
+  margin:-1px 0 4px;
 }
+/* Un b2b abre dos fichas, una por artista, separadas por una raya */
+.dj-ficha{padding:8px 10px}
+.dj-ficha + .dj-ficha{border-top:var(--bw-thin) solid var(--negro)}
+.dj-ficha-nombre{
+  font-family:var(--font-display);font-weight:700;
+  font-size:13px;letter-spacing:1px;color:var(--rojo);
+  margin-bottom:6px;
+}
+.dj-ficha-linea{display:flex;align-items:center;flex-wrap:wrap;gap:6px 8px}
+/* El "b2b" dentro del chip, en su propio tono */
+.dj-b2b{
+  font-family:var(--font-body);font-style:italic;
+  font-size:11px;color:var(--rojo);
+  margin:0 5px;letter-spacing:1px;
+}
+/* Sobre el amarillo del chip abierto, el rojo se queda en 3,9 de
+   contraste y esto es letra pequeña: pasa a negro. */
+.dj-chip.on .dj-b2b{color:var(--negro)}
 .dj-panel-lbl{
   font-family:var(--font-body);font-size:11px;letter-spacing:2px;
   text-transform:uppercase;color:var(--c-muted-2);
@@ -1432,6 +1450,10 @@ body.night .dj-chip{background:var(--bg-card);border-color:var(--border);color:v
 body.night .dj-chip:hover,
 body.night .dj-chip.on{background:var(--amarillo);color:var(--negro)}
 body.night .dj-panel{background:var(--bg-card);border-color:var(--border)}
+body.night .dj-ficha + .dj-ficha{border-top-color:var(--border)}
+body.night .dj-ficha-nombre{color:var(--amarillo)}
+body.night .dj-b2b{color:var(--amarillo)}
+body.night .dj-chip.on .dj-b2b{color:var(--negro)}
 body.night .dj-panel-lbl,
 body.night .dj-panel-none{color:var(--text-dim)}
 body.night .dj-sc{color:var(--amarillo);border-bottom-color:var(--amarillo)}
@@ -3952,9 +3974,51 @@ function edicionesDe(nombre){
     .map(ed => ed.id);
 }
 
-// Despliega la ficha de un DJ bajo su chip: dónde ha pinchado y su música.
-// El panel ocupa la línea entera, así que cae justo debajo del chip.
-function toggleDjPanel(chip, nombre){
+// La ficha de un artista dentro del panel: dónde ha pinchado y sus redes.
+// `conNombre` solo cuando el pase es un b2b y hay que distinguir de quién
+// es cada mitad; si pinchó solo, el nombre ya está en el chip.
+function fichaArtista(nombre, conNombre){
+  const ficha = document.createElement('div');
+  ficha.className = 'dj-ficha';
+  if (conNombre){
+    const h = document.createElement('div');
+    h.className = 'dj-ficha-nombre';
+    h.textContent = nombre;
+    ficha.appendChild(h);
+  }
+  const eds = edicionesDe(nombre);
+  const chapas = eds.map(id => `<span class="dj-ed-badge">${id}</span>`).join('');
+  const linea = document.createElement('div');
+  linea.className = 'dj-ficha-linea';
+  linea.innerHTML = `<span class="dj-panel-lbl">Ha pinchado en</span>
+    <span class="dj-ed-row">${chapas || '<span class="dj-panel-none">edición sin registrar</span>'}</span>`;
+
+  // Primero dónde ha pinchado; las redes después, por si te apetece tirar
+  // del hilo. Hay quien solo tiene Instagram y quien solo tiene SoundCloud.
+  const datos = SC_ARTISTS.find(a => a.name === nombre);
+  const redes = datos ? [
+    { url:datos.sc, txt:'SoundCloud' },
+    { url:datos.ig, txt:'Instagram' },
+  ].filter(r => r.url) : [];
+  if (redes.length){
+    const box = document.createElement('span');
+    box.className = 'dj-redes';
+    for (const red of redes){
+      const a = document.createElement('a');
+      a.className = 'dj-sc';
+      a.href = red.url; a.target = '_blank'; a.rel = 'noopener';
+      a.textContent = red.txt + ' ›';
+      box.appendChild(a);
+    }
+    linea.appendChild(box);
+  }
+  ficha.appendChild(linea);
+  return ficha;
+}
+
+// Despliega el pase bajo su chip. Un b2b son dos artistas con carreras
+// distintas, así que abre una ficha para cada uno.
+function toggleDjPanel(chip, pase){
   const abierto = chip.nextElementSibling?.classList.contains('dj-panel');
   // Uno abierto en toda la pestaña, no uno por edición: si no, al recorrer
   // el archivo se van quedando fichas abiertas por el camino.
@@ -3967,29 +4031,9 @@ function toggleDjPanel(chip, nombre){
 
   const panel = document.createElement('div');
   panel.className = 'dj-panel';
-  const eds = edicionesDe(nombre);
-  const chapas = eds.map(id => `<span class="dj-ed-badge">${id}</span>`).join('');
-  panel.innerHTML = `<span class="dj-panel-lbl">Ha pinchado en</span>
-    <span class="dj-ed-row">${chapas || '<span class="dj-panel-none">edición sin registrar</span>'}</span>`;
-
-  // Primero dónde ha pinchado; las redes después, por si te apetece tirar
-  // del hilo. Hay quien solo tiene Instagram y quien solo tiene SoundCloud.
-  const ficha = SC_ARTISTS.find(a => a.name === nombre);
-  const redes = ficha ? [
-    { url:ficha.sc, txt:'SoundCloud' },
-    { url:ficha.ig, txt:'Instagram' },
-  ].filter(r => r.url) : [];
-  if (redes.length){
-    const box = document.createElement('span');
-    box.className = 'dj-redes';
-    for (const red of redes){
-      const a = document.createElement('a');
-      a.className = 'dj-sc';
-      a.href = red.url; a.target = '_blank'; a.rel = 'noopener';
-      a.textContent = red.txt + ' ›';
-      box.appendChild(a);
-    }
-    panel.appendChild(box);
+  const artistas = pase.split(' b2b ');
+  for (const nombre of artistas){
+    panel.appendChild(fichaArtista(nombre, artistas.length > 1));
   }
   chip.after(panel);
   chip.classList.add('on');
@@ -4012,7 +4056,8 @@ function renderHistoriaDjs(){
   // De la más reciente a la primera, sin la fila "es mi primer Sonora".
   for (const ed of [...EDITIONS].reverse()){
     if (ed.first) continue;
-    const nombres = artistasDe(ed.id);
+    // Los pases tal cual salieron en el cartel: un b2b se enseña junto.
+    const pases = LINEUPS[ed.id] || [];
     const card = document.createElement('div');
     card.className = 'card';
     const body = document.createElement('div');
@@ -4029,16 +4074,19 @@ function renderHistoriaDjs(){
       sub.textContent = ed.sub;
       body.appendChild(sub);
     }
-    if (nombres.length){
+    if (pases.length){
       const row = document.createElement('div');
       row.className = 'dj-row';
-      for (const nombre of nombres){
+      for (const pase of pases){
         const chip = document.createElement('button');
         chip.className = 'dj-chip';
         chip.type = 'button';
-        chip.textContent = nombre;
+        // El "b2b" en su propio tono: se lee el pase de un vistazo.
+        chip.innerHTML = pase.split(' b2b ')
+          .map(n => esc(n))
+          .join(' <span class="dj-b2b">b2b</span> ');
         chip.setAttribute('aria-expanded', 'false');
-        chip.addEventListener('click', () => toggleDjPanel(chip, nombre));
+        chip.addEventListener('click', () => toggleDjPanel(chip, pase));
         row.appendChild(chip);
       }
       body.appendChild(row);
