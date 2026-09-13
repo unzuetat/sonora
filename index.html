@@ -859,8 +859,9 @@ body.night .artist-img-placeholder{background:var(--bg-card);border-color:var(--
   font-family:var(--font-body);font-style:italic;
   font-size:12px;color:var(--c-muted-2);
 }
+.dj-redes{margin-left:auto;display:flex;flex-wrap:wrap;gap:4px 12px}
 .dj-sc{
-  margin-left:auto;font-family:var(--font-body);font-size:13px;
+  font-family:var(--font-body);font-size:13px;
   color:var(--rojo);text-decoration:none;border-bottom:var(--bw-thin) solid var(--rojo);
 }
 .dj-sc:hover{background:var(--amarillo)}
@@ -3818,30 +3819,59 @@ const SETLIST_ORDER = [
 
 // ══════════════════════════════════════════════════════════
 //  ★ ARCHIVO — quién pinchó en cada edición
-//  La XII se deriva de SETLIST_ORDER para no escribir la misma
-//  lista dos veces: partir por " b2b " deshace las parejas. Las
-//  anteriores se rellenan a mano según aparezca el material; una
-//  edición sin lista se pinta igual, diciendo que falta.
+//  Se guardan los pases tal cual, con sus b2b, que es como se
+//  dictan y como salen en el cartel. Para pintar los nombres se
+//  parten por " b2b " (ver artistasDe), porque la ficha es de cada
+//  artista. La XII sale de SETLIST_ORDER para no escribir la misma
+//  lista dos veces. Una edición sin lista se pinta igual, diciendo
+//  que falta.
 // ══════════════════════════════════════════════════════════
 const LINEUPS = {
-  XII:  SETLIST_ORDER.flatMap(s => s.name.split(' b2b ')),
-  // Transcrito del propio cartel de la XI, que los lleva impresos.
-  // Con las grafías de SC_ARTISTS, no las del cartel ("K.I.R." y
-  // "Raso"), para que un mismo artista case entre ediciones.
-  XI:   ['Amphetamix', 'Apparatchik', 'Astora', 'BØHM', 'Cabani', 'Candel',
-         'Cizette', 'D-Bunk', 'D.SastreSonoro', 'Deejeya', 'Dj Celestino',
-         'Droglo', 'Ecce Homo', 'Elena Magdalena', 'FalsoJudas',
-         'Francis Espinaco', 'K.I.R.', 'Llinares', 'Lost Mery',
-         'Machete Soundsystem', 'Mireia Cj', 'Nómada', 'Raso', 'SeR0',
-         'SNB', 'Traver'],
-  X:    [],
-  IX:   [],
-  VIII: [],
-  VII:  [],
-  VI:   [],
-  V:    [],
+  XII:  SETLIST_ORDER.map(s => s.name),
+  // Dictado por Telmo, en el orden que lo dictó. Las grafías son las de
+  // SC_ARTISTS para que un mismo artista case entre ediciones. El cartel
+  // impreso lista además a SeR0; esta lista no, y manda esta.
+  XI:   ['Amphetamix', 'Lost Mery', 'Deejeya', 'BØHM', 'Ecce Homo', 'Astora',
+         'Mireia Cj b2b Cabani', 'Droglo', 'Raso b2b FalsoJudas', 'Candel',
+         'Machete Soundsystem', 'Elena Magdalena', 'SNB', 'Dj Celestino',
+         'Francis Espinaco', 'Traver', 'Apparatchik', 'D.SastreSonoro',
+         'Cizette', 'D-Bunk', 'K.I.R.', 'Nómada', 'Llinares'],
+  X:    ['GOM', 'Ocean Clusters', 'UnsteadyUniverse', 'Cabani', 'Traver',
+         'Llinares', 'Mireia Cj', 'Amphetamix', 'Concierto de Año Nuevo',
+         'SNB', 'Astora', 'Toretto', 'BØHM', 'Las Pum Pum Pums',
+         'Ventu Le Roi', 'Elena Magdalena', 'Francis Espinaco', 'Deejeya',
+         'Apparatchik', 'Coño & Antih', 'A. Mengual b2b K.I.R.', 'Cizette',
+         'Sammy Dane', 'Senmeri', 'Deepi', '404.homies', 'Pablo Oliver',
+         'Wametek'],
+  IX:   ['404.homies', 'A. Mengual', 'Ann Blacksmith', 'Apparatchik',
+         'Astora b2b Traver', 'Bat&Burrillo', 'Cizette b2b K.I.R.',
+         'D.SastreSonoro', 'Deejeya b2b Mireia Cj', 'Deepi', 'Droglo',
+         'El Mestizo', 'Elena Magdalena', 'Francis Espinaco', 'GOM',
+         'Gurke & Afterschorle', 'Lost Mery', 'Pablo Oliver', 'Senmeri',
+         'Ventu Le Roi', 'Vinital Sound', 'Wame b2b Zapatacid27', 'WW'],
+  VIII: ['GOM', 'SNB', 'Wametek', 'BØHM b2b Lasziv', 'Gurke', 'K.I.R.',
+         'Lost Mery', 'Llinares', 'Bat&Burrillo', 'Los Chinos',
+         'Elena Magdalena', 'Deepi', 'Manu Marciano', 'Francis Espinaco',
+         'Yordanoff', 'A. Mengual', 'D.SastreSonoro', 'Toretto', 'Droglo',
+         'Ann Blacksmith', 'Mireia Cj', 'Panda'],
+  VII:  ['Apparatchik', 'GOM', 'SNB', 'Llinares', 'Cizette', 'Krei-C',
+         'BØHM', 'Toretto', 'D.SastreSonoro', 'Mireia Cj', 'Bat&Burrillo',
+         'Panda', 'Waato', 'Pablo Oliver', 'Lost Mery', 'Deejeya', 'Saurix',
+         'A. Mengual', 'Wametek', 'Traver', 'Gurke', 'Droglo',
+         'Family Brunch', 'Vinital Sound'],
+  VI:   ['Toretto', 'Nobody', 'Mireia Cj', 'Karxen', 'BØHM', 'Gurke',
+         'Cizette', 'Nairob', 'Bat&Burrillo', 'Machete Soundsystem',
+         'Dj AC', 'Deejeya', 'Lost Mery', 'UnsteadyUniverse', 'A. Mengual',
+         'Wametek', 'Droglo', 'D.SastreSonoro', 'Family Brunch'],
+  V:    ['A. Mengual', 'Bat&Burrillo', 'Bbabycakkes b2b Ventu Le Roi',
+         'BØHM', 'Cizette', 'Deejeya', 'D.SastreSonoro', 'Deepi',
+         'Droglo b2b Gurke', 'Lost Mery', 'Machete Soundsystem', 'Mireia Cj',
+         'Pablo Oliver', 'Panda', 'Rikloud', 'Toretto', 'Ventu Le Roi',
+         'Waato', 'Yobas', 'Wametek'],
   IV:   [],
-  III:  [],
+  III:  ['Panda', 'Waato', 'D.SastreSonoro', 'Nubel', 'Pablo Oliver', 'Jovas',
+         'BØHM b2b Lasziv', 'Store Age', 'Gurke', 'Adex', 'Droglo', 'Albert',
+         'Ventura', 'Invaders'],
   II:   [],
   I:    [],
 };
@@ -3905,12 +3935,19 @@ const ARTE = [
   },
 ];
 
+// Los pases de una edición, ya deshechas las parejas: un b2b son dos
+// artistas y cada uno tiene su ficha. Los dúos con "&" se dejan enteros
+// porque ahí el "&" es parte del nombre, no dos que se juntan un día.
+function artistasDe(edId){
+  return (LINEUPS[edId] || []).flatMap(pase => pase.split(' b2b '));
+}
+
 // En qué ediciones aparece un nombre. Se pregunta a LINEUPS, así que
 // según se vayan rellenando los line-ups viejos, los veteranos empiezan
 // a acumular chapas sin tocar nada más.
 function edicionesDe(nombre){
   return EDITIONS
-    .filter(ed => !ed.first && (LINEUPS[ed.id] || []).includes(nombre))
+    .filter(ed => !ed.first && artistasDe(ed.id).includes(nombre))
     .map(ed => ed.id);
 }
 
@@ -3932,13 +3969,24 @@ function toggleDjPanel(chip, nombre){
   panel.innerHTML = `<span class="dj-panel-lbl">Ha pinchado en</span>
     <span class="dj-ed-row">${chapas || '<span class="dj-panel-none">edición sin registrar</span>'}</span>`;
 
+  // Primero dónde ha pinchado; las redes después, por si te apetece tirar
+  // del hilo. Hay quien solo tiene Instagram y quien solo tiene SoundCloud.
   const ficha = SC_ARTISTS.find(a => a.name === nombre);
-  if (ficha && ficha.sc){
-    const a = document.createElement('a');
-    a.className = 'dj-sc';
-    a.href = ficha.sc; a.target = '_blank'; a.rel = 'noopener';
-    a.textContent = 'Escuchar ›';
-    panel.appendChild(a);
+  const redes = ficha ? [
+    { url:ficha.sc, txt:'SoundCloud' },
+    { url:ficha.ig, txt:'Instagram' },
+  ].filter(r => r.url) : [];
+  if (redes.length){
+    const box = document.createElement('span');
+    box.className = 'dj-redes';
+    for (const red of redes){
+      const a = document.createElement('a');
+      a.className = 'dj-sc';
+      a.href = red.url; a.target = '_blank'; a.rel = 'noopener';
+      a.textContent = red.txt + ' ›';
+      box.appendChild(a);
+    }
+    panel.appendChild(box);
   }
   chip.after(panel);
   chip.classList.add('on');
@@ -3961,7 +4009,7 @@ function renderHistoriaDjs(){
   // De la más reciente a la primera, sin la fila "es mi primer Sonora".
   for (const ed of [...EDITIONS].reverse()){
     if (ed.first) continue;
-    const nombres = LINEUPS[ed.id] || [];
+    const nombres = artistasDe(ed.id);
     const card = document.createElement('div');
     card.className = 'card';
     const body = document.createElement('div');
