@@ -2212,6 +2212,14 @@ body.x-tiedye .prog-fill{
   </div>
 
   <div class="admin-section">
+    <div class="admin-sec-title">Line-ups por edición</div>
+    <div class="sec-desc">Como en el cartel: pases separados por comas y «b2b» entre los que pincharon juntos. Da igual escribir «bohm» o «BØHM». Lo que dejes vacío vuelve a la lista de siempre. La XII sale de los horarios y no se toca aquí.</div>
+    <div id="admin-lineups"></div>
+    <button class="offer-btn" id="btn-save-lineups" style="margin-top:8px">Guardar line-ups</button>
+    <button class="admin-back">← volver a la web</button>
+  </div>
+
+  <div class="admin-section">
     <div class="admin-sec-title">Descripciones de artistas</div>
     <div id="admin-artists"></div>
     <button class="offer-btn" id="btn-save-artists" style="margin-top:8px">Guardar descripciones</button>
@@ -3430,6 +3438,7 @@ let adminInited = false;
 function initAdmin(){
   if (adminInited) return; adminInited = true;
   initAdminArtists();
+  initAdminLineups();
   initAdminSetlist();
   // Load info fields
   onSnapshot(doc(db,'config','info'), snap => {
@@ -3670,6 +3679,50 @@ document.getElementById('btn-save-info').addEventListener('click', async () => {
   toast('Información guardada');
 });
 
+// ── ADMIN LINE-UPS ──
+// Un cuadro por edición, de la última a la primera, precargado con lo que
+// se ve ahora en la web. La XII se queda fuera: la manda el setlist.
+const edicionesEditables = () =>
+  [...EDITIONS].reverse().filter(ed => !ed.first && ed.id !== 'XII');
+
+function initAdminLineups(){
+  const el = document.getElementById('admin-lineups');
+  el.innerHTML = '';
+  for (const ed of edicionesEditables()){
+    const field = document.createElement('div');
+    field.className = 'admin-field';
+    field.innerHTML = `<label class="admin-field-label" for="adm-lineup-${ed.id}">${ed.id} · ${esc(ed.name)}</label>
+      <textarea class="admin-textarea" id="adm-lineup-${ed.id}" rows="3" placeholder="Sin registrar todavía"></textarea>`;
+    field.querySelector('textarea').value = (LINEUPS[ed.id] || []).join(', ');
+    el.appendChild(field);
+  }
+  onSnapshot(doc(db,'config','lineups'), snap => {
+    aplicarLineups(snap.exists() ? snap.data() : {});
+    for (const ed of edicionesEditables()){
+      const inp = document.getElementById('adm-lineup-' + ed.id);
+      // No se pisa el cuadro que alguien está escribiendo.
+      if (inp && document.activeElement !== inp) inp.value = (LINEUPS[ed.id] || []).join(', ');
+    }
+    renderHistoriaDjs();
+  }, err => console.warn('Lineups config error:', err));
+}
+document.getElementById('btn-save-lineups').addEventListener('click', async () => {
+  const data = {};
+  for (const ed of edicionesEditables()){
+    const val = document.getElementById('adm-lineup-' + ed.id).value.trim();
+    if (val) data[ed.id] = val;
+  }
+  try {
+    await setDoc(doc(db,'config','lineups'), data);
+    aplicarLineups(data);
+    renderHistoriaDjs();
+    toast('Line-ups guardados');
+  } catch(e) {
+    console.warn('Guardar line-ups:', e);
+    toast('no se pudo guardar, prueba de nuevo');
+  }
+});
+
 // ── ADMIN ARTIST DESCRIPTIONS ──
 function initAdminArtists(){
   const el = document.getElementById('admin-artists');
@@ -3790,6 +3843,13 @@ function initApp(){
       loadRndPlayer(rndIdx);
       renderLineup();
     }, err => console.warn('Artists config:', err));
+  } catch(e) {}
+  // Line-ups corregidos desde el panel de admin, encima de los del código
+  try {
+    onSnapshot(doc(db,'config','lineups'), snap => {
+      aplicarLineups(snap.exists() ? snap.data() : {});
+      renderHistoriaDjs();
+    }, err => console.warn('Lineups config:', err));
   } catch(e) {}
   try { initSetlist(); } catch(e) { console.warn('initSetlist:', e); }
 }
@@ -3949,7 +4009,7 @@ const ARTE = [
   },
   {
     img:     'img/cartel-lineup-thumb.jpg',
-    alta:    'img/San Sonorín cartel completo.jpg',
+    alta:    'img/cartel-xi-alta.jpg',
     ed:      'XI',
     tipo:    'Cartel',
     titulo:  'San Sonorín',
@@ -3957,6 +4017,52 @@ const ARTE = [
     contexto:'El cartel completo de la XI, mayo de 2026. «Dejad que los niños se acerquen a…». La descarga es el original a tamaño de imprenta: A4 a 300 puntos por pulgada.',
   },
 ];
+
+// Los line-ups tal y como vienen en el código. Lo que se guarda desde el
+// panel de admin (config/lineups) se aplica encima de esta copia, así que
+// vaciar una edición en el panel devuelve la lista de siempre.
+const LINEUPS_CODIGO = structuredClone(LINEUPS);
+
+// Clave para reconocer a un artista escrito de otra manera: sin
+// mayúsculas, tildes, puntos ni espacios. "bohm" casa con "BØHM" y "kir"
+// con "K.I.R.". La Ø no es una tilde y NFD no la separa: va aparte.
+const claveArtista = (n) => n.toLowerCase()
+  .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+  .replace(/ø/g, 'o')
+  .replace(/[^a-z0-9]/g, '');
+
+// Las grafías buenas, las que ya están en el código. Si un nombre sale
+// de dos maneras, gana la primera: la de la edición más reciente.
+const GRAFIAS = new Map();
+for (const n of [
+  ...Object.values(LINEUPS_CODIGO).flat().flatMap(p => p.split(' b2b ')),
+  ...SC_ARTISTS.map(a => a.name),
+]){
+  const k = claveArtista(n);
+  if (k && !GRAFIAS.has(k)) GRAFIAS.set(k, n);
+}
+
+// Lee un line-up escrito a mano en el panel, igual que se dicta: pases
+// separados por comas o saltos de línea y "b2b" entre los que pincharon
+// juntos, en cualquier mayúscula. Cada nombre conocido vuelve a su grafía.
+function leerLineup(texto){
+  return texto.split(/[,\n]/)
+    .map(p => p.trim()).filter(Boolean)
+    .map(p => p.split(/\s+b2b\s+/i)
+      .map(n => GRAFIAS.get(claveArtista(n)) || n.trim())
+      .join(' b2b '));
+}
+
+// Pone lo guardado en el panel encima de los line-ups del código. La XII
+// no se toca: sale de SETLIST_ORDER y la manda el panel de horarios.
+function aplicarLineups(guardados){
+  for (const id of Object.keys(LINEUPS)) LINEUPS[id] = [...LINEUPS_CODIGO[id]];
+  for (const [id, texto] of Object.entries(guardados || {})){
+    if (id === 'XII' || !(id in LINEUPS) || typeof texto !== 'string') continue;
+    const pases = leerLineup(texto);
+    if (pases.length) LINEUPS[id] = pases;
+  }
+}
 
 // Los pases de una edición, ya deshechas las parejas: un b2b son dos
 // artistas y cada uno tiene su ficha. Los dúos con "&" se dejan enteros
