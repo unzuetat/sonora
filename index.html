@@ -775,6 +775,32 @@ body.night .artist-img-placeholder{background:var(--bg-card);border-color:var(--
   line-height:1.6;color:var(--c-muted-2);
 }
 .lb-cap-txt em{font-style:italic}
+.lb-cap-dl{
+  display:flex;align-items:center;flex-wrap:wrap;gap:6px 10px;
+  margin-top:12px;padding-top:12px;
+  border-top:var(--bw-thin) solid var(--negro);
+}
+/* Botón de descarga: el mismo en la ficha y en el presskit */
+.dl-btn{
+  font-family:var(--font-display);font-weight:800;
+  font-size:13px;letter-spacing:1px;
+  color:var(--negro);background:var(--amarillo);
+  border:var(--bw-thin) solid var(--negro);
+  padding:6px 14px;cursor:pointer;text-decoration:none;
+  display:inline-block;transition:.1s;
+}
+.dl-btn:hover{background:var(--verde);color:var(--crema)}
+.dl-btn:disabled{opacity:.6;cursor:default}
+.dl-btn::before{content:'↓ '}
+.dl-medidas,.presskit-nota{
+  font-family:var(--font-body);font-size:12px;
+  color:var(--c-muted-2);line-height:1.4;
+}
+.presskit{
+  display:flex;align-items:center;flex-wrap:wrap;gap:8px 12px;
+  margin-bottom:16px;
+}
+.presskit-nota{flex:1 1 180px}
 .artist-img{cursor:zoom-in}
 
 /* ══ ARCHIVO: histórico de DJs ══ */
@@ -808,8 +834,36 @@ body.night .artist-img-placeholder{background:var(--bg-card);border-color:var(--
   border:var(--bw-thin) solid var(--negro);
   padding:3px 10px;text-decoration:none;display:inline-block;
 }
-a.dj-chip:hover{background:var(--amarillo)}
-a.dj-chip::after{content:' ›';color:var(--rojo)}
+.dj-chip:hover{background:var(--amarillo)}
+.dj-chip.on{background:var(--amarillo);font-weight:700}
+/* Ficha desplegada bajo el chip. flex-basis:100% la baja a su
+   propia línea dentro de la fila de nombres. */
+.dj-panel{
+  flex:0 0 100%;display:flex;align-items:center;flex-wrap:wrap;gap:6px 8px;
+  border:var(--bw-thin) solid var(--negro);
+  border-top:none;background:rgba(255,255,255,.35);
+  padding:8px 10px;margin:-1px 0 4px;
+}
+.dj-panel-lbl{
+  font-family:var(--font-body);font-size:11px;letter-spacing:2px;
+  text-transform:uppercase;color:var(--c-muted-2);
+}
+.dj-ed-row{display:flex;flex-wrap:wrap;gap:4px}
+.dj-ed-badge{
+  font-family:var(--font-display);font-weight:800;font-size:11px;
+  color:var(--negro);background:var(--amarillo);
+  border:var(--bw-thin) solid var(--negro);
+  padding:1px 7px;letter-spacing:1px;
+}
+.dj-panel-none{
+  font-family:var(--font-body);font-style:italic;
+  font-size:12px;color:var(--c-muted-2);
+}
+.dj-sc{
+  margin-left:auto;font-family:var(--font-body);font-size:13px;
+  color:var(--rojo);text-decoration:none;border-bottom:var(--bw-thin) solid var(--rojo);
+}
+.dj-sc:hover{background:var(--amarillo)}
 .dj-vacio{
   font-family:var(--font-body);font-style:italic;
   font-size:14px;color:var(--c-muted-2);margin-top:10px;
@@ -1374,9 +1428,16 @@ body.night .hist-ed-sub{color:var(--text-dim)}
 body.night .hist-ed-date{color:var(--text-dim)}
 body.night .dj-vacio{color:var(--text-dim)}
 body.night .dj-chip{background:var(--bg-card);border-color:var(--border);color:var(--text)}
-body.night a.dj-chip:hover{background:var(--amarillo);color:var(--negro)}
+body.night .dj-chip:hover,
+body.night .dj-chip.on{background:var(--amarillo);color:var(--negro)}
+body.night .dj-panel{background:var(--bg-card);border-color:var(--border)}
+body.night .dj-panel-lbl,
+body.night .dj-panel-none{color:var(--text-dim)}
+body.night .dj-sc{color:var(--amarillo);border-bottom-color:var(--amarillo)}
+body.night .dj-sc:hover{background:var(--amarillo);color:var(--negro)}
 body.night .arte-item{background:var(--bg-card);border-color:var(--border)}
 body.night .arte-pie{color:var(--text-dim);border-top-color:var(--border)}
+body.night .presskit-nota{color:var(--text-dim)}
 body.night .car-section-title{color:var(--rojo-light);border-bottom-color:var(--rojo-light)}
 body.night .car-subsection-title{color:var(--text-dim)}
 body.night .card-body{color:var(--text)}
@@ -2474,6 +2535,8 @@ pintarEdicion();
 // ══════════════════════════════════════
 // Portón social cosmético. La protección real son las reglas de Firestore + Firebase Auth.
 const ACCESS_PASSWORD = "amunt";
+// Preview en local: se salta el portón y se perdona el fallo de Firestore.
+const EN_LOCAL = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
 // Email fijo de la cuenta admin compartida (la password se gestiona en Firebase Console).
 const ADMIN_EMAIL     = "welcome.to.sonora@hotmail.com";
 // App Check site key (reCAPTCHA v3). Si está vacía, no se inicializa App Check.
@@ -2709,8 +2772,20 @@ function showScreen(n){
 }
 
 // ── AUTH ──
+// Cruza el portón. La música se apaga en el atajo de local: sin un
+// gesto previo del usuario el navegador bloquea el audio igualmente.
+function entrar({ musica = true } = {}){
+  localStorage.removeItem(ED_KEY);
+  showScreen('app');
+  initApp();
+  if (musica) startWelcomeMusic();
+}
+
 async function doLogin(){
-  const val = document.getElementById('inp-pwd').value;
+  // Tolerante con el espacio que cuela el autocompletado y con la
+  // mayúscula que pone el móvil: la contraseña es cosmética, no vale
+  // la pena dejar a nadie fuera por un espacio.
+  const val = document.getElementById('inp-pwd').value.trim().toLowerCase();
   const err = document.getElementById('auth-err');
   err.textContent = '';
   if (val !== ACCESS_PASSWORD){
@@ -2721,13 +2796,11 @@ async function doLogin(){
   }
   try {
     await signInAnonymously(auth);
-    localStorage.removeItem(ED_KEY);
-    showScreen('app'); initApp(); startWelcomeMusic();
+    entrar();
   } catch(e) {
-    if (location.hostname === 'localhost' || location.hostname === '127.0.0.1') {
+    if (EN_LOCAL) {
       console.warn('Anonymous auth falló en localhost, continuando sin Firestore:', e);
-      localStorage.removeItem(ED_KEY);
-      showScreen('app'); initApp(); startWelcomeMusic();
+      entrar();
       return;
     }
     err.textContent = 'no se pudo conectar, prueba de nuevo';
@@ -2736,6 +2809,14 @@ async function doLogin(){
 }
 document.getElementById('btn-login').addEventListener('click', doLogin);
 document.getElementById('inp-pwd').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+// Previsualizar en local: el portón se salta solo. No se pierde nada,
+// porque la contraseña viaja en claro en este mismo fichero y lo que
+// de verdad protege son las reglas de Firestore. En sonora.community
+// esta condición no se cumple nunca.
+if (EN_LOCAL){
+  signInAnonymously(auth).catch(() => {}).finally(() => entrar({ musica:false }));
+}
 document.querySelectorAll('.admin-back:not(#btn-admin-cancel)').forEach(btn => {
   btn.addEventListener('click', async () => {
     // Volver del admin: cerrar sesión admin y reabrir como asistente anónimo
@@ -3218,9 +3299,17 @@ function openLightbox(src, alt, pieza){
   if (pieza){
     cap.innerHTML = `<div class="lb-cap-ed">Sonora ${pieza.ed} · ${pieza.tipo}</div>
       <div class="lb-cap-ttl"></div>
-      <div class="lb-cap-txt"></div>`;
+      <div class="lb-cap-txt"></div>
+      <div class="lb-cap-dl">
+        <a class="dl-btn" download><span class="dl-btn-txt">Descargar</span></a>
+        <span class="dl-medidas"></span>
+      </div>`;
     cap.querySelector('.lb-cap-ttl').textContent = pieza.titulo;
     cap.querySelector('.lb-cap-txt').textContent = pieza.contexto || '';
+    const dl = cap.querySelector('.dl-btn');
+    dl.href = pieza.alta || pieza.img;
+    dl.setAttribute('download', nombreDescarga(pieza));
+    cap.querySelector('.dl-medidas').textContent = pieza.medidas || '';
     cap.hidden = false;
   } else {
     cap.hidden = true;
@@ -3736,7 +3825,15 @@ const SETLIST_ORDER = [
 // ══════════════════════════════════════════════════════════
 const LINEUPS = {
   XII:  SETLIST_ORDER.flatMap(s => s.name.split(' b2b ')),
-  XI:   [],
+  // Transcrito del propio cartel de la XI, que los lleva impresos.
+  // Con las grafías de SC_ARTISTS, no las del cartel ("K.I.R." y
+  // "Raso"), para que un mismo artista case entre ediciones.
+  XI:   ['Amphetamix', 'Apparatchik', 'Astora', 'BØHM', 'Cabani', 'Candel',
+         'Cizette', 'D-Bunk', 'D.SastreSonoro', 'Deejeya', 'Dj Celestino',
+         'Droglo', 'Ecce Homo', 'Elena Magdalena', 'FalsoJudas',
+         'Francis Espinaco', 'K.I.R.', 'Llinares', 'Lost Mery',
+         'Machete Soundsystem', 'Mireia Cj', 'Nómada', 'Raso', 'SeR0',
+         'SNB', 'Traver'],
   X:    [],
   IX:   [],
   VIII: [],
@@ -3756,6 +3853,12 @@ const LINEUPS = {
 //  Para añadir una: mete la imagen en img/ y añade una entrada.
 //  `fondo` es opcional, para las piezas con transparencia que sobre
 //  el crema de la ficha no se verían (el cielo, los rótulos).
+//
+//  `img` es lo que se ve en el mosaico y `alta` lo que se descarga:
+//  el cartel de la XI son 9,8 MB a tamaño de imprenta y no puede ser
+//  también la miniatura. Sin `alta`, se descarga `img`. `medidas` se
+//  escribe a mano porque el peso del archivo grande no se conoce sin
+//  bajarlo, y la idea es avisar antes, no después.
 // ══════════════════════════════════════════════════════════
 const ARTE = [
   {
@@ -3763,6 +3866,7 @@ const ARTE = [
     ed:      'XII',
     tipo:    'Cartel',
     titulo:  'The Summer of Love',
+    medidas: '1080 × 1440 px · 1,9 MB · JPG',
     contexto:'El cartel completo de la XII: 25 artistas en 21 pases repartidos entre Noche I, Día y Noche II. Septiembre de 2026.',
   },
   {
@@ -3770,7 +3874,16 @@ const ARTE = [
     ed:      'XII',
     tipo:    'Rótulo',
     titulo:  'El rótulo de la temática',
+    medidas: '1000 × 698 px · 88 KB · WebP',
     contexto:'La temática dibujada a mano, la misma pieza que corona la cabecera de la web durante toda la edición.',
+  },
+  {
+    img:     'img/rotulo-xii.webp',
+    ed:      'XII',
+    tipo:    'Rótulo',
+    titulo:  'El rótulo de la cabecera',
+    medidas: '1300 × 1020 px · 184 KB · WebP',
+    contexto:'«Sonora x UPMV» con los días dentro del propio dibujo. Por eso la web esconde el badge de fechas cuando este rótulo está puesto.',
   },
   {
     img:     'img/cielo-nubes.png',
@@ -3778,16 +3891,59 @@ const ARTE = [
     tipo:    'Fondo',
     titulo:  'El cielo de nubes',
     fondo:   'var(--azul)',
-    contexto:'Mosaico de 1500×1600 dibujado sin costuras para que repita infinito. En la web entra como máscara, así que el color de las nubes sale de la paleta de la edición y cambia con ella.',
+    medidas: '1500 × 1600 px · 96 KB · PNG',
+    contexto:'Mosaico dibujado sin costuras para que repita infinito. En la web entra como máscara, así que el color de las nubes sale de la paleta de la edición y cambia con ella.',
   },
   {
-    img:     'img/San Sonorín cartel completo.jpg',
+    img:     'img/cartel-lineup-thumb.jpg',
+    alta:    'img/San Sonorín cartel completo.jpg',
     ed:      'XI',
     tipo:    'Cartel',
     titulo:  'San Sonorín',
-    contexto:'El cartel completo de la XI, mayo de 2026. «Dejad que los niños se acerquen a…».',
+    medidas: '3508 × 4961 px · 9,8 MB · JPG',
+    contexto:'El cartel completo de la XI, mayo de 2026. «Dejad que los niños se acerquen a…». La descarga es el original a tamaño de imprenta: A4 a 300 puntos por pulgada.',
   },
 ];
+
+// En qué ediciones aparece un nombre. Se pregunta a LINEUPS, así que
+// según se vayan rellenando los line-ups viejos, los veteranos empiezan
+// a acumular chapas sin tocar nada más.
+function edicionesDe(nombre){
+  return EDITIONS
+    .filter(ed => !ed.first && (LINEUPS[ed.id] || []).includes(nombre))
+    .map(ed => ed.id);
+}
+
+// Despliega la ficha de un DJ bajo su chip: dónde ha pinchado y su música.
+// El panel ocupa la línea entera, así que cae justo debajo del chip.
+function toggleDjPanel(chip, nombre){
+  const abierto = chip.nextElementSibling?.classList.contains('dj-panel');
+  // Solo uno abierto a la vez: menos ruido en una lista de 25 nombres.
+  chip.closest('.dj-row').querySelectorAll('.dj-panel').forEach(p => p.remove());
+  chip.closest('.dj-row').querySelectorAll('.dj-chip').forEach(c => {
+    c.classList.remove('on'); c.setAttribute('aria-expanded', 'false');
+  });
+  if (abierto) return;
+
+  const panel = document.createElement('div');
+  panel.className = 'dj-panel';
+  const eds = edicionesDe(nombre);
+  const chapas = eds.map(id => `<span class="dj-ed-badge">${id}</span>`).join('');
+  panel.innerHTML = `<span class="dj-panel-lbl">Ha pinchado en</span>
+    <span class="dj-ed-row">${chapas || '<span class="dj-panel-none">edición sin registrar</span>'}</span>`;
+
+  const ficha = SC_ARTISTS.find(a => a.name === nombre);
+  if (ficha && ficha.sc){
+    const a = document.createElement('a');
+    a.className = 'dj-sc';
+    a.href = ficha.sc; a.target = '_blank'; a.rel = 'noopener';
+    a.textContent = 'Escuchar ›';
+    panel.appendChild(a);
+  }
+  chip.after(panel);
+  chip.classList.add('on');
+  chip.setAttribute('aria-expanded', 'true');
+}
 
 // Pinta el histórico de DJs, de la última edición a la primera.
 function renderHistoriaDjs(){
@@ -3826,12 +3982,12 @@ function renderHistoriaDjs(){
       const row = document.createElement('div');
       row.className = 'dj-row';
       for (const nombre of nombres){
-        // Si el artista está fichado en Bromistas, el nombre lleva a su música.
-        const ficha = SC_ARTISTS.find(a => a.name === nombre);
-        const chip = document.createElement(ficha && ficha.sc ? 'a' : 'span');
+        const chip = document.createElement('button');
         chip.className = 'dj-chip';
+        chip.type = 'button';
         chip.textContent = nombre;
-        if (ficha && ficha.sc){ chip.href = ficha.sc; chip.target = '_blank'; chip.rel = 'noopener'; }
+        chip.setAttribute('aria-expanded', 'false');
+        chip.addEventListener('click', () => toggleDjPanel(chip, nombre));
         row.appendChild(chip);
       }
       body.appendChild(row);
@@ -3847,6 +4003,39 @@ function renderHistoriaDjs(){
   }
 }
 
+// Nombre con el que se guarda el archivo, para que en el escritorio de
+// quien lo baje se entienda de qué es sin tener que abrirlo.
+function nombreDescarga(pieza){
+  const ext = (pieza.alta || pieza.img).split('.').pop();
+  const limpio = (t) => t.toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')   // fuera tildes y la ñ
+    .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  return `sonora-${pieza.ed.toLowerCase()}-${limpio(pieza.tipo)}-${limpio(pieza.titulo)}.${ext}`;
+}
+
+// Dispara la descarga de una pieza sin salir de la página.
+function descargarPieza(pieza){
+  const a = document.createElement('a');
+  a.href = pieza.alta || pieza.img;
+  a.download = nombreDescarga(pieza);
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+
+// Presskit entero. Van espaciadas porque si se lanzan todas a la vez el
+// navegador se come las últimas; aun así suele pedir permiso para
+// descargas múltiples, y eso lo decide quien esté delante.
+function descargarTodo(btn){
+  ARTE.forEach((pieza, i) => setTimeout(() => descargarPieza(pieza), i * 600));
+  if (btn){
+    const antes = btn.textContent;
+    btn.textContent = `Bajando ${ARTE.length} piezas…`;
+    btn.disabled = true;
+    setTimeout(() => { btn.textContent = antes; btn.disabled = false; }, ARTE.length * 600 + 800);
+  }
+}
+
 // Pinta el mosaico de arte. Al tocar una pieza se amplía con su ficha.
 function renderArte(){
   const box = document.getElementById('tc-art');
@@ -3857,7 +4046,12 @@ function renderArte(){
   const body = document.createElement('div');
   body.className = 'card-body';
   body.innerHTML = `<div class="card-title">Arte y carteles</div>
-    <div class="sec-desc">Todo lo que se ha dibujado para Sonora. Toca cualquier pieza para ver de dónde salió.</div>`;
+    <div class="sec-desc">Todo lo que se ha dibujado para Sonora. Toca cualquier pieza para ver de dónde salió y bajártela en la mejor calidad que tenemos.</div>
+    <div class="presskit">
+      <button class="dl-btn dl-todo" type="button">Descargar las ${ARTE.length} piezas</button>
+      <span class="presskit-nota">Originales sin marcas. El navegador puede pedirte permiso para bajar varias a la vez.</span>
+    </div>`;
+  body.querySelector('.dl-todo').addEventListener('click', e => descargarTodo(e.currentTarget));
   const grid = document.createElement('div');
   grid.className = 'arte-grid';
   for (const pieza of ARTE){
