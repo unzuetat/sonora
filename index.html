@@ -3847,8 +3847,8 @@ const LINEUPS = {
          'Astora b2b Traver', 'Bat&Burrillo', 'Cizette b2b K.I.R.',
          'D.SastreSonoro', 'Deejeya b2b Mireia Cj', 'Deepi', 'Droglo',
          'El Mestizo', 'Elena Magdalena', 'Francis Espinaco', 'GOM',
-         'Gurke & Afterschorle', 'Lost Mery', 'Pablo Oliver', 'Senmeri',
-         'Ventu Le Roi', 'Vinital Sound', 'Wame b2b Zapatacid27', 'WW'],
+         'Gurke b2b Afterschorle', 'Lost Mery', 'Pablo Oliver', 'Senmeri',
+         'Ventu Le Roi', 'Vinital Sound', 'Wametek b2b Zapatacid27', 'WW'],
   VIII: ['GOM', 'SNB', 'Wametek', 'BØHM b2b Lasziv', 'Gurke', 'K.I.R.',
          'Lost Mery', 'Llinares', 'Bat&Burrillo', 'Los Chinos',
          'Elena Magdalena', 'Deepi', 'Manu Marciano', 'Francis Espinaco',
@@ -3869,7 +3869,8 @@ const LINEUPS = {
          'Pablo Oliver', 'Panda', 'Rikloud', 'Toretto', 'Ventu Le Roi',
          'Waato', 'Yobas', 'Wametek'],
   IV:   [],
-  III:  ['Panda', 'Waato', 'D.SastreSonoro', 'Nubel', 'Pablo Oliver', 'Jovas',
+  // "Jovas" en el dictado; es el mismo Yobas de la V.
+  III:  ['Panda', 'Waato', 'D.SastreSonoro', 'Nubel', 'Pablo Oliver', 'Yobas',
          'BØHM b2b Lasziv', 'Store Age', 'Gurke', 'Adex', 'Droglo', 'Albert',
          'Ventura', 'Invaders'],
   II:   [],
@@ -3955,9 +3956,11 @@ function edicionesDe(nombre){
 // El panel ocupa la línea entera, así que cae justo debajo del chip.
 function toggleDjPanel(chip, nombre){
   const abierto = chip.nextElementSibling?.classList.contains('dj-panel');
-  // Solo uno abierto a la vez: menos ruido en una lista de 25 nombres.
-  chip.closest('.dj-row').querySelectorAll('.dj-panel').forEach(p => p.remove());
-  chip.closest('.dj-row').querySelectorAll('.dj-chip').forEach(c => {
+  // Uno abierto en toda la pestaña, no uno por edición: si no, al recorrer
+  // el archivo se van quedando fichas abiertas por el camino.
+  const archivo = chip.closest('.tc');
+  archivo.querySelectorAll('.dj-panel').forEach(p => p.remove());
+  archivo.querySelectorAll('.dj-chip.on').forEach(c => {
     c.classList.remove('on'); c.setAttribute('aria-expanded', 'false');
   });
   if (abierto) return;
